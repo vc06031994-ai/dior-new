@@ -268,13 +268,17 @@
         letter-spacing: 0.5px;
     }
     
-    .dior-btn-primary { background: linear-gradient(135deg, #8b5cf6, #6366f1) !important; color: #ffffff !important; box-shadow: 0 4px 15px rgba(99,102,241,0.3) !important; }
-    .dior-btn-info { background: linear-gradient(135deg, #0284c7, #0ea5e9) !important; color: #ffffff !important; box-shadow: 0 4px 15px rgba(14,165,233,0.3) !important; }
-    .dior-btn-secondary { background: #64748b !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(100,116,139,0.2) !important; }
+    .dior-btn-primary { background: #1A528E !important; color: #ffffff !important; border: 1px solid #1A528E !important; box-shadow: 0 4px 12px rgba(26,82,142,0.18) !important; }
+    .dior-btn-info { background: #1A528E !important; color: #ffffff !important; border: 1px solid #1A528E !important; box-shadow: 0 4px 12px rgba(26,82,142,0.18) !important; }
+    .dior-btn-secondary { background: #1A528E !important; color: #ffffff !important; border: 1px solid #1A528E !important; box-shadow: 0 4px 12px rgba(26,82,142,0.18) !important; }
     
     .dior-btn:hover {
         transform: translateY(-2px);
-        filter: brightness(1.1);
+        background: #0B3768 !important;
+        border-color: #0B3768 !important;
+        color: #ffffff !important;
+        filter: none;
+        box-shadow: 0 5px 14px rgba(11,55,104,0.22) !important;
     }
     </style>
 
