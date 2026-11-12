@@ -146,7 +146,7 @@ $status_badges = [
                                         </div>
                                     </td>
                                     <td><code
-                                            style="font-size:12px;background:#f1f5f9;padding:2px 6px;border-radius:4px;"><?php echo $puid; ?></code>
+                                            style="font-size:12px;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#0F172A;"><?php echo $puid; ?></code>
                                     </td>
                                     <td><i class="fas fa-phone va-icon-blue"></i> <?php echo $phone; ?></td>
                                     <td><?php echo ($gender === 'Male' || $gender === 'male') ? '<i class="fas fa-mars va-icon-blue"></i> Male' : (($gender === 'Female' || $gender === 'female') ? '<i class="fas fa-venus va-icon-pink"></i> Female' : $gender); ?>

@@ -285,7 +285,7 @@
             if (count > 0) {
                 if (!existingBadge) {
                     existingBadge = document.createElement('span');
-                    existingBadge.className = 'dior-bulk-count-badge badge bg-danger text-white rounded-pill position-absolute top-0 start-100 translate-middle shadow-sm';
+                    existingBadge.className = 'dior-bulk-count-badge badge bg-danger text-white rounded-pill  start-100 translate-middle shadow-sm';
                     existingBadge.style.fontSize = '10px';
                     existingBadge.style.padding = '2px 6px';
                     existingBadge.style.pointerEvents = 'none';

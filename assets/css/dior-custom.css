@@ -1311,7 +1311,7 @@
 
 :is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-tab-panel:not(#tab-overview):not(#tab-doc-overview) table thead th[data-sortable="true"] i {
     font-size: 11px !important;
-    transition: transform 0.15s ease, color 0.15s ease !important;
+   the latest changes  transition: transform 0.15s ease, color 0.15s ease !important;
 }
 
 /* Bulk Action Toolbar - Center toolbar removed per user requirement, action moved to right-side toolbar icon */
@@ -1326,8 +1326,8 @@
 
 .dior-bulk-count-badge {
     position: absolute !important;
-    top: -6px !important;
-    right: -6px !important;
+    top: -40px !important;
+    right: 0px !important;
     font-size: 10px !important;
     padding: 2px 6px !important;
     border-radius: 50rem !important;
