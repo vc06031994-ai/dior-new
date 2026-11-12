@@ -276,6 +276,114 @@
         </div>
     </div>
 </section>
+
+<style id="dior-income-report-theme-colors">
+/* Dior Medical theme: navy + clinical blue */
+#tab-doc-accounts-income-report{
+    --dior-primary:#1A528E;
+    --dior-primary-dark:#0B3768;
+    --dior-primary-soft:#EAF2FB;
+    --dior-border:#DCE6F1;
+    --dior-text:#1E293B;
+}
+#tab-doc-accounts-income-report .dior-subtab-pill{
+    background:#1A528E!important;
+    border-color:#1A528E!important;
+    color:#fff!important;
+}
+#tab-doc-accounts-income-report .dior-subtab-pill:hover,
+#tab-doc-accounts-income-report .dior-subtab-pill.active{
+    background:#0B3768!important;
+    border-color:#0B3768!important;
+    color:#fff!important;
+}
+#tab-doc-accounts-income-report>.row.g-3.mb-4>.col-xl-3>.card{
+    border:1px solid var(--dior-border)!important;
+    border-top:3px solid var(--dior-primary)!important;
+    border-radius:12px!important;
+    box-shadow:0 3px 12px rgba(11,55,104,.06)!important;
+}
+#tab-doc-accounts-income-report>.row.g-3.mb-4>.col-xl-3:nth-child(2)>.card,
+#tab-doc-accounts-income-report>.row.g-3.mb-4>.col-xl-3:nth-child(3)>.card,
+#tab-doc-accounts-income-report>.row.g-3.mb-4>.col-xl-3:nth-child(4)>.card{
+    border-top-color:#3B82B8!important;
+}
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .badge{
+    background:var(--dior-primary-soft)!important;
+    color:var(--dior-primary)!important;
+    border:1px solid #D5E4F5!important;
+}
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .text-primary,
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .text-info{
+    color:var(--dior-primary)!important;
+}
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .text-success{
+    color:#16845B!important;
+}
+#tab-doc-accounts-income-report>.card.border-0.shadow-sm.rounded-4{
+    border:1px solid var(--dior-border)!important;
+    border-radius:14px!important;
+    box-shadow:0 3px 14px rgba(11,55,104,.055)!important;
+}
+#tab-doc-accounts-income-report h5 .text-primary,
+#tab-doc-accounts-income-report .va-title-box h2 .text-primary{
+    color:var(--dior-primary)!important;
+}
+#tab-doc-accounts-income-report #dior-income-chart-filter,
+#tab-doc-accounts-income-report #dior-income-table-year{
+    border-color:#C9D8E9!important;
+    color:var(--dior-primary-dark)!important;
+}
+#tab-doc-accounts-income-report #dior-income-chart-refresh{
+    background:var(--dior-primary)!important;
+    border-color:var(--dior-primary)!important;
+    color:#fff!important;
+}
+#tab-doc-accounts-income-report #dior-income-chart-refresh:hover{
+    background:var(--dior-primary-dark)!important;
+}
+#tab-doc-accounts-income-report .view-appointment-card{
+    border:1px solid var(--dior-border)!important;
+    border-radius:14px!important;
+    box-shadow:0 3px 14px rgba(11,55,104,.055)!important;
+}
+#tab-doc-accounts-income-report .va-title-box h2{
+    color:var(--dior-primary-dark)!important;
+}
+#tab-doc-accounts-income-report .va-title-line{
+    background:var(--dior-primary)!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table thead th{
+    background:#F0F5FA!important;
+    color:#496783!important;
+    border-color:#DCE6F1!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table tbody tr:hover{
+    background:#F5F9FE!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:first-child{
+    color:var(--dior-primary-dark)!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot{
+    background:#EAF2FB!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot td{
+    color:var(--dior-primary)!important;
+    border-color:#C9D8E9!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot td:last-child{
+    color:#16845B!important;
+}
+@media(max-width:767.98px){
+    #tab-doc-accounts-income-report #dior-income-report-table tbody tr{
+        border-color:#DCE6F1!important;
+    }
+    #tab-doc-accounts-income-report #dior-income-report-table tbody td:first-child{
+        color:#0B3768!important;
+    }
+}
+</style>
+
 <style id="dior-accounts-mobile-income-report">
 /* Accounts mobile responsive layout, aligned with Patient Records */
 
@@ -403,7 +511,7 @@
                     speed: 650
                 }
             },
-            colors: ['#1A528E', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'],
+            colors: ['#0B3768', '#1A528E', '#3B82B8', '#62A6C8', '#8AB8D6'],
             dataLabels: { enabled: false },
             stroke: {
                 curve: 'smooth',
@@ -444,7 +552,7 @@
                 }
             },
             grid: {
-                borderColor: '#f1f5f9',
+                borderColor: '#E6EEF6',
                 strokeDashArray: 4
             },
             legend: {
