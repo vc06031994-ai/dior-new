@@ -73,6 +73,9 @@
         var backdrop = document.getElementById('dior-doc-backdrop');
         if (sidebar) sidebar.classList.remove('mobile-open');
         if (backdrop) backdrop.classList.remove('active');
+        if (backdrop) backdrop.classList.remove('open');
+        document.body.classList.remove('dior-drawer-open');
+        document.body.style.removeProperty('overflow');
     };
 
     // Mobile drawer open helper
@@ -84,11 +87,32 @@
         if (isOpen) {
             sidebar.classList.remove('mobile-open');
             if (backdrop) backdrop.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('open');
+            document.body.classList.remove('dior-drawer-open');
+            document.body.style.removeProperty('overflow');
         } else {
             sidebar.classList.add('mobile-open');
             if (backdrop) backdrop.classList.add('active');
+            if (backdrop) backdrop.classList.add('open');
+            document.body.classList.add('dior-drawer-open');
+            document.body.style.overflow = 'hidden';
         }
     };
+
+    document.addEventListener('pointerdown', function (event) {
+        var backdrop = document.getElementById('dior-doc-backdrop');
+        var sidebar = document.getElementById('dior-doc-sidebar');
+        if (!backdrop || !sidebar || !sidebar.classList.contains('mobile-open')) return;
+        if (event.target === backdrop || backdrop.contains(event.target)) {
+            window.diorDocCloseMobile();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            window.diorDocCloseMobile();
+        }
+    });
 
     // Main tab switcher
     window.diorDocSwitchTab = function (tabId, updateUrl) {
@@ -250,4 +274,55 @@
     } else {
         boot();
     }
+})();
+
+
+/* Dior tab visibility recovery: keeps the selected panel visible if another
+   dashboard script or stale cached handler interferes with panel visibility. */
+(function () {
+    if (window.__diorTabVisibilityRecoveryInstalled) return;
+    window.__diorTabVisibilityRecoveryInstalled = true;
+    function normalize(id) {
+        id = String(id || '').trim();
+        if (id === 'patients' || id === 'doc-patients') return 'doc-patients-all';
+        if (id === 'appointments') return 'doc-appointments';
+        if (id === 'feedback' || id === 'doc-feedback' || id === 'reviews' || id === 'patient-review') return 'doc-patient-review';
+        if (id === 'notifications' || id === 'doc-notifications') return 'doc-notifications-system';
+        if (id === 'documents' || id === 'doc-documents') return 'doc-documents-upload';
+        return id;
+    }
+    var previous = window.diorDocSwitchTab;
+    window.diorDocSwitchTab = function (tabId, updateUrl) {
+        var id = normalize(tabId), result = false;
+        try { if (typeof previous === 'function') result = previous.apply(this, arguments); }
+        catch (error) { console.error('[Dior] Tab handler recovery:', error); }
+        var panel = document.getElementById('tab-' + id);
+        var content = document.getElementById('dior-doc-content');
+        if (!panel || !content) return result;
+        content.querySelectorAll(':scope > .dior-tab-panel').forEach(function (item) {
+            item.classList.remove('active');
+            item.setAttribute('hidden', 'hidden');
+            item.style.setProperty('display', 'none', 'important');
+        });
+        panel.classList.add('active');
+        panel.removeAttribute('hidden');
+        panel.style.setProperty('display', 'block', 'important');
+        panel.style.setProperty('visibility', 'visible', 'important');
+        panel.style.setProperty('opacity', '1', 'important');
+        document.querySelectorAll('#dior-doc-sidebar .dior-nav-btn[data-tab]').forEach(function (button) {
+            button.classList.toggle('active', button.getAttribute('data-tab') === id);
+        });
+        if (updateUrl !== false) {
+            try { window.history.replaceState(null, '', '#tab=' + encodeURIComponent(id)); } catch (e) {}
+        }
+        return true;
+    };
+    function sync() {
+        var match = window.location.hash.match(/^#tab=([^&]+)/);
+        var id = normalize(match ? decodeURIComponent(match[1]) : 'doc-overview');
+        if (document.getElementById('tab-' + id)) window.diorDocSwitchTab(id, false);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync, { once: true });
+    else window.setTimeout(sync, 0);
+    window.addEventListener('hashchange', sync);
 })();
