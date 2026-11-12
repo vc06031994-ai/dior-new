@@ -334,3 +334,40 @@
 
     </div>
 </section>
+<style id="dior-accounts-mobile-bill-list">
+/* Accounts mobile responsive layout, aligned with Patient Records */
+
+@media(max-width:767.98px){
+#dior-doctor-app #dior-doc-content #tab-doc-accounts-bill-list{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:14px 0 24px!important;overflow-x:clip;box-sizing:border-box!important}
+#tab-doc-accounts-bill-list>.mb-4:first-child{align-items:flex-start!important}
+#tab-doc-accounts-bill-list>.mb-4:first-child .va-breadcrumb-list{display:none!important}
+#tab-doc-accounts-bill-list .dior-subtab-nav-bar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:0!important;margin:0 0 16px!important}
+#tab-doc-accounts-bill-list .dior-subtab-pill{width:100%!important;min-width:0!important;min-height:40px!important;margin:0!important;padding:8px 5px!important;font-size:12px!important;white-space:normal!important}
+#tab-doc-accounts-bill-list .view-appointment-card{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow:hidden!important;box-sizing:border-box!important}
+#tab-doc-accounts-bill-list .va-header-container{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;padding:12px!important}
+#tab-doc-accounts-bill-list .va-actions-wrapper,#tab-doc-accounts-bill-list .dior-bs-search-group{width:100%!important;max-width:100%!important}
+#tab-doc-accounts-bill-list .va-actions-wrapper{display:flex!important;flex-wrap:wrap!important}
+#tab-doc-accounts-bill-list .va-actions-group{width:100%!important;display:flex!important;gap:8px!important}
+#tab-doc-accounts-bill-list .va-actions-group .va-icon-btn{flex:1!important}
+#tab-doc-accounts-bill-list .va-table-wrapper{width:100%!important;max-width:100%!important;overflow:hidden!important;padding:0 10px 12px!important;box-sizing:border-box!important}
+#tab-doc-accounts-bill-list .va-table{display:block!important;width:100%!important;min-width:0!important;table-layout:fixed!important}
+#tab-doc-accounts-bill-list .va-table thead{display:none!important}
+#tab-doc-accounts-bill-list .va-table tbody{display:grid!important;gap:10px!important;width:100%!important}
+#tab-doc-accounts-bill-list .va-table tbody tr{position:relative!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px 12px!important;width:100%!important;min-width:0!important;margin:0!important;padding:14px 12px 12px 42px!important;border:1px solid #E2E8F0!important;border-radius:14px!important;background:#fff!important;box-shadow:0 1px 3px rgba(15,23,42,.06)!important;box-sizing:border-box!important}
+#tab-doc-accounts-bill-list .va-table tbody td{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;gap:3px!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:12px!important}
+#tab-doc-accounts-bill-list .va-table tbody td:before{content:"";font-size:9px!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:uppercase!important;color:#8493A7!important}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(1){position:absolute!important;left:12px!important;top:15px!important;display:block!important}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(2):before{content:"Admission ID"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(3):before{content:"Patient"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(4):before{content:"Doctor"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(5):before{content:"Status"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(6):before{content:"Date"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(7):before{content:"Tax"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(8):before{content:"Discount"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(9):before{content:"Total"}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(3){font-weight:700!important;color:#12345A!important}
+#tab-doc-accounts-bill-list .va-table tbody td:nth-child(10){grid-column:1/-1;align-items:flex-end!important;padding-top:8px!important;border-top:1px solid #EDF1F6!important}
+#tab-doc-accounts-bill-list .va-row-actions{display:flex!important;gap:7px!important}
+}
+
+</style>
