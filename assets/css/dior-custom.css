@@ -1311,7 +1311,7 @@
 
 :is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-tab-panel:not(#tab-overview):not(#tab-doc-overview) table thead th[data-sortable="true"] i {
     font-size: 11px !important;
-   the latest changes  transition: transform 0.15s ease, color 0.15s ease !important;
+    the latest changes transition: transform 0.15s ease, color 0.15s ease !important;
 }
 
 /* Bulk Action Toolbar - Center toolbar removed per user requirement, action moved to right-side toolbar icon */
@@ -2826,11 +2826,11 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     }
 
     /* Wrapped label span inherits the tighter line-height */
-    .dior-auth-wrap .dior-btn-auth-primary > span,
-    .dior-auth-wrap .dior-btn-login-submit > span,
-    .dior-auth-wrap .dior-btn-reg-submit > span,
-    .entry-content .dior-auth-wrap .dior-btn-auth-primary > span,
-    .entry-content .dior-auth-wrap .dior-btn-reg-submit > span {
+    .dior-auth-wrap .dior-btn-auth-primary>span,
+    .dior-auth-wrap .dior-btn-login-submit>span,
+    .dior-auth-wrap .dior-btn-reg-submit>span,
+    .entry-content .dior-auth-wrap .dior-btn-auth-primary>span,
+    .entry-content .dior-auth-wrap .dior-btn-reg-submit>span {
         display: block !important;
         width: 100% !important;
         line-height: 1.32 !important;
@@ -27611,10 +27611,10 @@ body .media-modal .media-modal-close .media-modal-icon::before {
         max-width: 100% !important;
     }
 
-    .va-table{
-        padding:10px !important;
+    .va-table {
+        padding: 10px !important;
         border-radius: 0 !important;
-        border:0 !important;
+        border: 0 !important;
     }
 }
 
@@ -47796,6 +47796,7 @@ button.dior-page-btn {
    so the desktop dashboard (992px and up) remains unchanged.
    ========================================================================== */
 @media (max-width: 991.98px) {
+
     /* Keep the complete mobile drawer inside the dynamic viewport. The nav
        scrolls independently so the Pharmacy and lower links stay reachable. */
     #dior-doctor-app aside#dior-doc-sidebar,
@@ -47827,12 +47828,13 @@ button.dior-page-btn {
 }
 
 @media (max-width: 767.98px) {
+
     /* Appointment panels are allowed to shrink to the actual phone width. */
     #dior-doctor-app #dior-doc-content,
-    #dior-doctor-app #dior-doc-content > #tab-doc-appointments,
-    #dior-doctor-app #dior-doc-content > #tab-doc-appointments-view,
-    #dior-doctor-app #dior-doc-content > #tab-doc-appointments-book,
-    #dior-doctor-app #dior-doc-content > #tab-doc-appointments-edit {
+    #dior-doctor-app #dior-doc-content>#tab-doc-appointments,
+    #dior-doctor-app #dior-doc-content>#tab-doc-appointments-view,
+    #dior-doctor-app #dior-doc-content>#tab-doc-appointments-book,
+    #dior-doctor-app #dior-doc-content>#tab-doc-appointments-edit {
         box-sizing: border-box !important;
         width: 100% !important;
         min-width: 0 !important;
@@ -47846,11 +47848,11 @@ button.dior-page-btn {
         max-width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments > .mb-4 {
+    #dior-doctor-app #tab-doc-appointments>.mb-4 {
         align-items: flex-start !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments > .mb-4 > div:last-child {
+    #dior-doctor-app #tab-doc-appointments>.mb-4>div:last-child {
         width: 100% !important;
         justify-content: flex-start !important;
     }
@@ -47886,7 +47888,7 @@ button.dior-page-btn {
     }
 
     #dior-doctor-app #tab-doc-appointments .section-body,
-    #dior-doctor-app #tab-doc-appointments .section-body > .card,
+    #dior-doctor-app #tab-doc-appointments .section-body>.card,
     #dior-doctor-app #tab-doc-appointments #dior-calendar-container {
         width: 100% !important;
         min-width: 0 !important;
@@ -47894,17 +47896,17 @@ button.dior-page-btn {
         box-sizing: border-box !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments .section-body > .card {
+    #dior-doctor-app #tab-doc-appointments .section-body>.card {
         padding: 12px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments .section-body > .card > .row {
+    #dior-doctor-app #tab-doc-appointments .section-body>.card>.row {
         grid-template-columns: minmax(0, 1fr) !important;
         gap: 10px !important;
         min-width: 0 !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments .section-body > .card > .row > div:last-child {
+    #dior-doctor-app #tab-doc-appointments .section-body>.card>.row>div:last-child {
         min-width: 0 !important;
         width: 100% !important;
     }
@@ -47929,12 +47931,12 @@ button.dior-page-btn {
         padding-left: 6px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view > .d-flex:first-child {
+    #dior-doctor-app #tab-doc-appointments-view>.d-flex:first-child {
         align-items: flex-start !important;
         min-width: 0 !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view > .d-flex:first-child > div:last-child {
+    #dior-doctor-app #tab-doc-appointments-view>.d-flex:first-child>div:last-child {
         display: flex !important;
         flex: 1 1 100% !important;
         flex-wrap: wrap !important;
@@ -47943,7 +47945,7 @@ button.dior-page-btn {
         gap: 8px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view > .d-flex:first-child > div:last-child > .btn {
+    #dior-doctor-app #tab-doc-appointments-view>.d-flex:first-child>div:last-child>.btn {
         flex: 1 1 auto !important;
         min-width: 0 !important;
         min-height: 40px !important;
@@ -47987,7 +47989,7 @@ button.dior-page-btn {
         max-width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper > * {
+    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper>* {
         min-width: 0 !important;
         max-width: 100% !important;
     }
@@ -48034,7 +48036,7 @@ button.dior-page-btn {
     /* Book Appointment: constrain third-party shortcode output and iframe. */
     #dior-doctor-app #tab-doc-appointments-book,
     #dior-doctor-app #tab-doc-appointments-book .section-body,
-    #dior-doctor-app #tab-doc-appointments-book .section-body > .row,
+    #dior-doctor-app #tab-doc-appointments-book .section-body>.row,
     #dior-doctor-app #tab-doc-appointments-book .section-body .col-12,
     #dior-doctor-app #tab-doc-appointments-book .card,
     #dior-doctor-app #tab-doc-appointments-book .card-body,
@@ -48085,7 +48087,7 @@ button.dior-page-btn {
         max-width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit .row > [class*="col-"] {
+    #dior-doctor-app #tab-doc-appointments-edit .row>[class*="col-"] {
         flex: 0 0 100% !important;
         width: 100% !important;
         min-width: 0 !important;
@@ -48096,7 +48098,7 @@ button.dior-page-btn {
         padding: 14px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit .card > .d-flex.align-items-center.justify-content-between {
+    #dior-doctor-app #tab-doc-appointments-edit .card>.d-flex.align-items-center.justify-content-between {
         flex-wrap: wrap !important;
         align-items: flex-start !important;
         gap: 8px !important;
@@ -48136,13 +48138,13 @@ button.dior-page-btn {
     }
 
     /* Mobile View Appointments: KPI summary, controls, and rows match the card layout. */
-    #dior-doctor-app #tab-doc-appointments-view > .row.g-3.mb-4 {
+    #dior-doctor-app #tab-doc-appointments-view>.row.g-3.mb-4 {
         gap: 10px !important;
         margin-right: 0 !important;
         margin-left: 0 !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view > .row.g-3.mb-4 > .col-12 {
+    #dior-doctor-app #tab-doc-appointments-view>.row.g-3.mb-4>.col-12 {
         flex: 0 0 calc(50% - 5px) !important;
         width: calc(50% - 5px) !important;
         max-width: calc(50% - 5px) !important;
@@ -48150,7 +48152,7 @@ button.dior-page-btn {
         padding-left: 0 !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view > .row.g-3.mb-4 .card {
+    #dior-doctor-app #tab-doc-appointments-view>.row.g-3.mb-4 .card {
         min-height: 118px !important;
         padding: 14px !important;
     }
@@ -48163,11 +48165,11 @@ button.dior-page-btn {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper > .dior-bs-search-group {
+    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper>.dior-bs-search-group {
         grid-column: 1 / -1 !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper > div[style*="width"] {
+    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper>div[style*="width"] {
         width: 100% !important;
     }
 
@@ -48257,7 +48259,7 @@ button.dior-page-btn {
         text-align: left !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view #va-appointments-table tbody td:nth-child(7) > div {
+    #dior-doctor-app #tab-doc-appointments-view #va-appointments-table tbody td:nth-child(7)>div {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 7px !important;
@@ -48271,12 +48273,13 @@ button.dior-page-btn {
 }
 
 @media (max-width: 575.98px) {
+
     /* The phone calendar toolbar gets dedicated rows; all controls stay visible. */
     #dior-doctor-app #tab-doc-appointments {
         padding: 14px 6px 22px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments > .mb-4 h4 {
+    #dior-doctor-app #tab-doc-appointments>.mb-4 h4 {
         font-size: 21px !important;
     }
 
@@ -48298,7 +48301,7 @@ button.dior-page-btn {
         font-size: 16px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments .cal-toolbar > div:first-child {
+    #dior-doctor-app #tab-doc-appointments .cal-toolbar>div:first-child {
         grid-column: 1 !important;
         grid-row: 2 !important;
         width: 100% !important;
@@ -48339,7 +48342,7 @@ button.dior-page-btn {
     }
 
     /* Table filters become a two-column control grid instead of overflowing. */
-    #dior-doctor-app #tab-doc-appointments-view > .d-flex:first-child {
+    #dior-doctor-app #tab-doc-appointments-view>.d-flex:first-child {
         gap: 10px !important;
     }
 
@@ -48354,12 +48357,12 @@ button.dior-page-btn {
         gap: 8px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper > .dior-bs-search-group {
+    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper>.dior-bs-search-group {
         grid-column: 1 / -1 !important;
         width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper > div[style*="width"] {
+    #dior-doctor-app #tab-doc-appointments-view .va-actions-wrapper>div[style*="width"] {
         width: auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
@@ -48401,29 +48404,29 @@ button.dior-page-btn {
         padding: 12px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit .card > .d-flex.align-items-center.justify-content-between h5 {
+    #dior-doctor-app #tab-doc-appointments-edit .card>.d-flex.align-items-center.justify-content-between h5 {
         width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex {
         align-items: stretch !important;
         flex-direction: column !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex > div {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex>div {
         width: 100% !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex > div:first-child {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex>div:first-child {
         display: flex !important;
         flex-wrap: wrap !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex > div:first-child > .btn {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex>div:first-child>.btn {
         flex: 1 1 140px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex > div:last-child > .btn {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex>div:last-child>.btn {
         width: 100% !important;
     }
 
@@ -48642,7 +48645,7 @@ button.dior-page-btn {
         padding: 10px !important;
     }
 
-    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form > .card:last-child > .d-flex > div:first-child > .btn {
+    #dior-doctor-app #tab-doc-appointments-edit #dior-appointment-edit-form>.card:last-child>.d-flex>div:first-child>.btn {
         flex-basis: 100% !important;
         width: 100% !important;
     }
@@ -55254,15 +55257,16 @@ a.va-btn-primary:hover {
 
 /* Patient Dashboard Overview - Spacing between Prescriptions & Clinical Intake */
 #tab-overview .clinical-intake-card,
-#tab-overview #dior-overview-intake-card > .card,
+#tab-overview #dior-overview-intake-card>.card,
 .dior-patient-portal-wrap #tab-overview .clinical-intake-card,
-.dior-patient-portal-wrap #tab-overview #dior-overview-intake-card > .card {
+.dior-patient-portal-wrap #tab-overview #dior-overview-intake-card>.card {
     margin-top: 15px !important;
 }
 
 @media (max-width: 1100px) {
+
     #tab-overview.custom-patient-overview .clinical-intake-card,
-    #tab-overview.custom-patient-overview #dior-overview-intake-card > .card {
+    #tab-overview.custom-patient-overview #dior-overview-intake-card>.card {
         margin-top: 0 !important;
     }
 }
@@ -55302,9 +55306,9 @@ a.va-btn-primary:hover {
     }
 
     /* Page header: remove the 4px inset so title, cards and buttons share one left edge. */
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .mb-4:first-child,
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .row:first-child,
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .d-flex:first-child {
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.mb-4:first-child,
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.row:first-child,
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.d-flex:first-child {
         padding-left: 0 !important;
         padding-right: 0 !important;
         margin-left: 0 !important;
@@ -55316,7 +55320,8 @@ a.va-btn-primary:hover {
         margin-left: calc(var(--bs-gutter-x, 1.5rem) * -.5);
         margin-right: calc(var(--bs-gutter-x, 1.5rem) * -.5);
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .row:first-child {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.row:first-child {
         --bs-gutter-x: 0;
     }
 
@@ -55339,6 +55344,7 @@ a.va-btn-primary:hover {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .dior-subtab-pill {
         width: 100%;
         justify-content: center;
@@ -55351,22 +55357,25 @@ a.va-btn-primary:hover {
 }
 
 @media (max-width: 767.98px) {
+
     /* Header action buttons: full width, stacked. */
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .mb-4:first-child,
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .d-flex:first-child {
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.mb-4:first-child,
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.d-flex:first-child {
         flex-direction: column !important;
         align-items: stretch !important;
         gap: 12px !important;
         margin-bottom: 14px !important;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .mb-4:first-child > .d-flex:last-child,
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .d-flex:first-child > .d-flex:last-child {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.mb-4:first-child>.d-flex:last-child,
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.d-flex:first-child>.d-flex:last-child {
         flex-direction: column;
         align-items: stretch !important;
         width: 100%;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .mb-4:first-child .btn,
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen > .d-flex:first-child .btn {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.mb-4:first-child .btn,
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen>.d-flex:first-child .btn {
         width: 100%;
         justify-content: center;
     }
@@ -55376,33 +55385,40 @@ a.va-btn-primary:hover {
         padding: 12px !important;
         min-height: 0 !important;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card > .d-flex {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card>.d-flex {
         gap: 8px;
         flex-wrap: nowrap;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card > .d-flex > div:first-child {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card>.d-flex>div:first-child {
         min-width: 0;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card .text-uppercase {
         display: block;
         font-size: 10px !important;
         letter-spacing: 0 !important;
         line-height: 1.25;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card .stat-num {
         font-size: 26px !important;
         line-height: 1.1;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card > .d-flex > .badge {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card>.d-flex>.badge {
         flex: 0 0 auto;
         width: auto !important;
         padding: 8px !important;
         margin: 0 !important;
         position: static !important;
     }
-    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card > .d-flex > .badge i {
+
+    #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card>.d-flex>.badge i {
         font-size: 15px !important;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .stat-card .badge {
         white-space: normal;
         text-align: left;
@@ -55419,6 +55435,7 @@ a.va-btn-primary:hover {
         max-width: 100%;
         overflow-x: hidden;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .dior-hipaatizer-booking-wrapper * {
         max-width: 100% !important;
         box-sizing: border-box;
@@ -55430,6 +55447,7 @@ a.va-btn-primary:hover {
         flex: 0 0 100%;
         max-width: 100%;
     }
+
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .form-select,
     #dior-doctor-app #dior-doc-content .dior-tab-panel.dior-appt-screen .form-control {
         font-size: 14px;
