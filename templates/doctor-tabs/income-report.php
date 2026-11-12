@@ -276,6 +276,48 @@
         </div>
     </div>
 </section>
+<style id="dior-accounts-mobile-income-report">
+/* Accounts mobile responsive layout, aligned with Patient Records */
+
+@media(max-width:767.98px){
+#dior-doctor-app #dior-doc-content #tab-doc-accounts-income-report{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:14px 0 24px!important;overflow-x:clip;box-sizing:border-box!important}
+#tab-doc-accounts-income-report>.mb-4:first-child{align-items:flex-start!important}
+#tab-doc-accounts-income-report>.mb-4:first-child .va-breadcrumb-list{display:none!important}
+#tab-doc-accounts-income-report .dior-subtab-nav-bar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:0!important;margin:0 0 16px!important}
+#tab-doc-accounts-income-report .dior-subtab-pill{width:100%!important;min-width:0!important;min-height:40px!important;margin:0!important;padding:8px 5px!important;font-size:12px!important;white-space:normal!important}
+#tab-doc-accounts-income-report>.card,#tab-doc-accounts-income-report .view-appointment-card{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+#tab-doc-accounts-income-report>.card{padding:12px!important;margin-bottom:14px!important}
+#tab-doc-accounts-income-report .view-appointment-card{padding:0!important;overflow:hidden!important}
+#tab-doc-accounts-income-report .va-header-container{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;padding:12px!important}
+#tab-doc-accounts-income-report .va-actions-wrapper{width:100%!important;display:flex!important;flex-wrap:wrap!important}
+#tab-doc-accounts-income-report .va-table-wrapper{width:100%!important;max-width:100%!important;overflow:hidden!important;padding:0 10px 12px!important;box-sizing:border-box!important}
+#tab-doc-accounts-income-report #dior-income-report-table{display:block!important;width:100%!important;min-width:0!important;table-layout:fixed!important}
+#tab-doc-accounts-income-report #dior-income-report-table thead{display:none!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody{display:grid!important;gap:10px!important;width:100%!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody tr{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px 12px!important;width:100%!important;min-width:0!important;margin:0!important;padding:14px 12px!important;border:1px solid #E2E8F0!important;border-radius:14px!important;background:#fff!important;box-shadow:0 1px 3px rgba(15,23,42,.06)!important;box-sizing:border-box!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:3px!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:11px!important;text-align:left!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:before{font-size:9px!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:uppercase!important;color:#8493A7!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:first-child{grid-column:1/-1!important;padding-bottom:8px!important;border-bottom:1px solid #EDF1F6!important;font-size:14px!important;font-weight:700!important;color:#12345A!important}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(2):before{content:"January"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(3):before{content:"February"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(4):before{content:"March"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(5):before{content:"April"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(6):before{content:"May"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(7):before{content:"June"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(8):before{content:"July"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(9):before{content:"August"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(10):before{content:"September"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(11):before{content:"October"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(12):before{content:"November"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(13):before{content:"December"}
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:nth-child(14):before{content:"Yearly Total"}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot{display:block!important;width:100%!important;margin-top:10px!important}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot tr{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:12px!important;border:1px solid #E2E8F0!important;border-radius:12px!important;background:#fff!important}
+#tab-doc-accounts-income-report #dior-income-report-table tfoot td{display:block!important;min-width:0!important;padding:4px!important;border:0!important;white-space:normal!important;overflow-wrap:anywhere!important}
+}
+
+</style>
+
 
 <script>
 (function() {
