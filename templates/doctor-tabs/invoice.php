@@ -333,7 +333,7 @@
             <!-- Info Section -->
             <div class="dior-invoice-info">
                 <div class="dior-company-info">
-                    <img src="http://localhost/diormedical/wp-content/uploads/2026/08/logo.png" alt="MediDash Logo">
+                    <img src="https://diormedical.com/wp-content/uploads/2026/08/logo.png" alt="MediDash Logo">
                     <h3>MediDash Hospital</h3>
                     <p class="dior-address-text">
                         D 103, MediDash Hospital<br>
