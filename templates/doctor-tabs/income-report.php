@@ -114,9 +114,9 @@
                 </h5>
                 <p class="text-secondary small mb-0">Track clinical collections, departmental distributions, and periodic growth rates.</p>
             </div>
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap flex-shrink-0" style="min-width:0;">
                 <span class="text-secondary small fw-semibold d-none d-sm-inline">Period:</span>
-                <select id="dior-income-chart-filter" class="form-select form-select-sm rounded-3 py-1.5 fw-semibold" style="width: auto;">
+                <select id="dior-income-chart-filter" class="form-select form-select-sm rounded-3 py-1.5 fw-semibold" style="width: 168px; min-width: 168px; max-width: 100%;">
                     <option value="Monthly" selected>Monthly (Jan - Dec)</option>
                     <option value="Daily">Daily (Last 14 Days)</option>
                     <option value="Yearly">Yearly (5 Years)</option>
@@ -276,6 +276,44 @@
         </div>
     </div>
 </section>
+
+<style id="dior-income-report-chart-overlap-fix">
+#tab-doc-accounts-income-report #dior-income-chart-filter{
+    width:168px!important;
+    min-width:168px!important;
+    max-width:100%!important;
+    flex:0 1 168px!important;
+    white-space:nowrap!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-apex-chart{
+    min-width:0!important;
+    overflow:hidden!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-apex-chart .apexcharts-legend{
+    padding-top:8px!important;
+}
+#tab-doc-accounts-income-report #dior-income-report-apex-chart .apexcharts-toolbar{
+    z-index:5!important;
+}
+@media(max-width:767.98px){
+    #tab-doc-accounts-income-report .card.border-0.shadow-sm.rounded-4>.d-flex.flex-wrap{
+        align-items:flex-start!important;
+    }
+    #tab-doc-accounts-income-report .card.border-0.shadow-sm.rounded-4>.d-flex.flex-wrap>div:last-child{
+        width:100%!important;
+        justify-content:flex-start!important;
+    }
+    #tab-doc-accounts-income-report #dior-income-chart-filter{
+        width:auto!important;
+        min-width:0!important;
+        flex:1 1 150px!important;
+    }
+    #tab-doc-accounts-income-report #dior-income-report-apex-chart .apexcharts-legend{
+        justify-content:center!important;
+        gap:4px 8px!important;
+    }
+}
+</style>
 
 <style id="dior-income-report-color-unification">
 /* Keep all Income Report accents within Dior Medical's blue palette */
@@ -542,10 +580,12 @@
             series: d.series,
             chart: {
                 type: 'area',
-                height: 360,
+                height: 390,
                 fontFamily: 'inherit',
                 toolbar: {
                     show: true,
+                    offsetX: -4,
+                    offsetY: -6,
                     tools: {
                         download: true,
                         selection: true,
@@ -607,8 +647,9 @@
                 strokeDashArray: 4
             },
             legend: {
-                position: 'top',
-                horizontalAlign: 'right',
+                position: 'bottom',
+                horizontalAlign: 'center',
+                offsetY: 8,
                 fontSize: '13px',
                 fontWeight: 600,
                 labels: { colors: '#334155' },
