@@ -435,3 +435,155 @@ $status_badges = [
   }
 }
 </style>
+
+
+
+<style id="dior-all-patients-mobile-cards">
+/* All Patients: convert the wide data table into appointment-style cards on phones.
+   Desktop/tablet markup and the existing table/JS interactions remain unchanged. */
+@media (max-width: 767.98px) {
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all .va-table-wrapper {
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:visible!important;
+    overflow-y:visible!important;
+    border:0!important;
+    border-radius:0 0 14px 14px!important;
+    padding:0 10px 12px!important;
+    box-sizing:border-box!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-table,
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-table tbody {
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    border:0!important;
+    border-collapse:separate!important;
+    border-spacing:0 10px!important;
+    table-layout:auto!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-table thead {
+    display:none!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] {
+    position:relative!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    min-width:0!important;
+    margin:0 0 10px!important;
+    padding:12px 13px!important;
+    overflow:hidden!important;
+    background:#fff!important;
+    border:1px solid #dce5ef!important;
+    border-radius:14px!important;
+    box-shadow:0 2px 8px rgba(15,43,76,.045)!important;
+    box-sizing:border-box!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td {
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:12px!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:34px!important;
+    padding:7px 0!important;
+    overflow:visible!important;
+    border:0!important;
+    border-bottom:1px solid #edf1f6!important;
+    background:transparent!important;
+    text-align:right!important;
+    white-space:normal!important;
+    box-sizing:border-box!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(1) {
+    position:absolute!important;
+    top:12px!important;
+    right:12px!important;
+    z-index:2!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    width:auto!important;
+    min-height:24px!important;
+    padding:0!important;
+    border:0!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(2) {
+    justify-content:flex-start!important;
+    min-height:42px!important;
+    padding:0 34px 9px 0!important;
+    text-align:left!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(2) .va-user-profile {
+    display:flex!important;
+    align-items:center!important;
+    gap:10px!important;
+    min-width:0!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(2) .va-user-avatar {
+    flex:0 0 38px!important;
+    width:38px!important;
+    height:38px!important;
+    border-radius:50%!important;
+    object-fit:cover!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(2) .va-user-name {
+    font-weight:700!important;
+    color:#12345a!important;
+    text-align:left!important;
+    overflow-wrap:anywhere!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(3)::before { content:"Patient ID"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(4)::before { content:"Phone"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(5)::before { content:"Gender"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(6)::before { content:"Blood Group"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(7)::before { content:"Address"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(8)::before { content:"Status"; }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(n+3):nth-child(-n+8)::before {
+    flex:0 0 88px!important;
+    color:#8493a7!important;
+    font-size:10px!important;
+    font-weight:700!important;
+    letter-spacing:.035em!important;
+    text-align:left!important;
+    text-transform:uppercase!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(7) {
+    align-items:flex-start!important;
+    text-align:right!important;
+    overflow-wrap:anywhere!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr[data-patient-id] > td:nth-child(9) {
+    justify-content:flex-end!important;
+    padding:10px 0 0!important;
+    border:0!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody .va-row-actions {
+    display:flex!important;
+    flex-wrap:wrap!important;
+    justify-content:flex-end!important;
+    gap:7px!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody .va-row-actions .va-action-btn-sm {
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border-radius:8px!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr:not([data-patient-id]) {
+    display:block!important;
+    width:100%!important;
+  }
+  #dior-doctor-app #dior-doc-content #tab-doc-patients-all #ap-patients-tbody tr:not([data-patient-id]) td {
+    display:block!important;
+    width:100%!important;
+    text-align:center!important;
+  }
+}
+</style>
