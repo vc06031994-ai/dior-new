@@ -84,8 +84,7 @@
                         <td>HGYU89</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-1.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">SS</span>
                                 <span class="va-user-name">Sarah Smith</span>
                             </div>
                         </td>
@@ -109,8 +108,7 @@
                         <td>HGYU99</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-2.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">VK</span>
                                 <span class="va-user-name">Vishal Kumar</span>
                             </div>
                         </td>
@@ -134,8 +132,7 @@
                         <td>HGYU29</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-3.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">RM</span>
                                 <span class="va-user-name">Rahul Malhotra</span>
                             </div>
                         </td>
@@ -159,8 +156,7 @@
                         <td>HGYU36</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-4.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">PJ</span>
                                 <span class="va-user-name">Priya Jain</span>
                             </div>
                         </td>
@@ -184,8 +180,7 @@
                         <td>HGYU27</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-5.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">RP</span>
                                 <span class="va-user-name">Radhika Patel</span>
                             </div>
                         </td>
@@ -209,8 +204,7 @@
                         <td>HGYU12</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-6.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">SS</span>
                                 <span class="va-user-name">Sarah Smith</span>
                             </div>
                         </td>
@@ -234,8 +228,7 @@
                         <td>HGYU14</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-7.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">VK</span>
                                 <span class="va-user-name">Vishal Kumar</span>
                             </div>
                         </td>
@@ -259,8 +252,7 @@
                         <td>HGYU09</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-8.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">RM</span>
                                 <span class="va-user-name">Rahul Malhotra</span>
                             </div>
                         </td>
@@ -284,8 +276,7 @@
                         <td>HGYU80</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-9.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">PJ</span>
                                 <span class="va-user-name">Priya Jain</span>
                             </div>
                         </td>
@@ -309,8 +300,7 @@
                         <td>HGYU38</td>
                         <td>
                             <div class="va-user-profile">
-                                <img src="<?php echo esc_url(DIOR_PORTAL_URL . 'assets/images/users/user-1.png'); ?>"
-                                    alt="User" class="va-user-avatar">
+                                <span class="va-user-avatar va-user-initials" aria-hidden="true">RP</span>
                                 <span class="va-user-name">Radhika Patel</span>
                             </div>
                         </td>
@@ -334,6 +324,27 @@
 
     </div>
 </section>
+<style id="dior-bill-list-patient-initials">
+
+/* Patient name initials fallback for bill-list demo rows */
+#tab-doc-accounts-bill-list .va-user-initials{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    flex:0 0 36px!important;
+    width:36px!important;
+    height:36px!important;
+    min-width:36px!important;
+    border-radius:50%!important;
+    background:#1A528E!important;
+    color:#fff!important;
+    font-size:12px!important;
+    font-weight:700!important;
+    line-height:1!important;
+    letter-spacing:.02em!important;
+    text-transform:uppercase!important;
+}
+</style>
 <style id="dior-accounts-mobile-bill-list">
 /* Accounts mobile responsive layout, aligned with Patient Records */
 
