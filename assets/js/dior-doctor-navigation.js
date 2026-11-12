@@ -99,14 +99,60 @@
         }
     };
 
+    // Close the drawer when the user taps anywhere outside the sidebar.
+    // Do not treat the hamburger toggle as an outside click; it must remain a toggle.
     document.addEventListener('pointerdown', function (event) {
-        var backdrop = document.getElementById('dior-doc-backdrop');
         var sidebar = document.getElementById('dior-doc-sidebar');
-        if (!backdrop || !sidebar || !sidebar.classList.contains('mobile-open')) return;
-        if (event.target === backdrop || backdrop.contains(event.target)) {
+        if (!sidebar || !sidebar.classList.contains('mobile-open')) return;
+
+        var target = event.target;
+        if (sidebar.contains(target)) return;
+        if (target.closest && target.closest('.dior-mobile-menu-toggle')) return;
+
+        window.diorDocCloseMobile();
+    }, true);
+
+    // Add an explicit close control inside the mobile drawer.
+    function ensureMobileCloseButton() {
+        var sidebar = document.getElementById('dior-doc-sidebar');
+        if (!sidebar || sidebar.querySelector('.dior-mobile-drawer-close')) return;
+
+        var header = sidebar.querySelector('.dior-side-header') || sidebar;
+        var closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'dior-mobile-drawer-close';
+        closeButton.setAttribute('aria-label', 'Close navigation menu');
+        closeButton.setAttribute('title', 'Close menu');
+        closeButton.innerHTML = '&times;';
+        closeButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
             window.diorDocCloseMobile();
+        });
+        header.appendChild(closeButton);
+
+        if (!document.getElementById('dior-mobile-drawer-close-styles')) {
+            var style = document.createElement('style');
+            style.id = 'dior-mobile-drawer-close-styles';
+            style.textContent = `
+                .dior-mobile-drawer-close { display:none; }
+                @media (max-width: 767.98px) {
+                    #dior-doctor-app #dior-doc-sidebar .dior-side-header { position:relative; }
+                    #dior-doctor-app #dior-doc-sidebar .dior-mobile-drawer-close {
+                        display:flex; align-items:center; justify-content:center;
+                        position:absolute; top:12px; right:12px; z-index:20;
+                        width:34px; height:34px; padding:0; border:1px solid rgba(255,255,255,.35);
+                        border-radius:50%; background:rgba(255,255,255,.14);
+                        color:#fff; font-size:25px; line-height:1; cursor:pointer;
+                    }
+                    #dior-doctor-app #dior-doc-sidebar .dior-mobile-drawer-close:focus-visible {
+                        outline:2px solid #fff; outline-offset:2px;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         }
-    });
+    }
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
@@ -222,6 +268,7 @@
         var app = document.getElementById('dior-doctor-app');
         if (!app || app.__diorDoctorNavigationReady) return;
         app.__diorDoctorNavigationReady = true;
+        ensureMobileCloseButton();
 
         // Capture-phase event delegation for rock-solid click response
         app.addEventListener('click', function (event) {
