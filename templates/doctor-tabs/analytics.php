@@ -23,16 +23,16 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <span class="text-muted small fw-bold text-uppercase d-block mb-1">Total Consultations</span>
-                        <h2 class="fw-bold mb-0 text-primary">1,420</h2>
+                        <h2 class="fw-bold mb-0" style="color:#1A528E;">1,420</h2>
                     </div>
                     <div class="rounded-3 d-flex align-items-center justify-content-center"
-                        style="width: 48px; height: 48px; background: rgba(99, 102, 241, 0.12); color: #6366f1; font-size: 20px;">
+                        style="width: 48px; height: 48px; background: rgba(26, 82, 142, 0.10); color: #1A528E; font-size: 20px;">
                         <i class="fas fa-briefcase-medical"></i>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-3 pt-1">
                     <span class="badge rounded-pill px-2 py-1 small fw-semibold"
-                        style="background: rgba(99, 102, 241, 0.12); color: #6366f1;">
+                        style="background: rgba(26, 82, 142, 0.10); color: #1A528E;">
                         <i class="fas fa-arrow-trend-up me-1"></i>+12.4%
                     </span>
                     <span class="text-muted small">vs last month</span>
@@ -46,15 +46,15 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <span class="text-muted small fw-bold text-uppercase d-block mb-1">Outpatient Visits</span>
-                        <h2 class="fw-bold mb-0 text-success">980</h2>
+                        <h2 class="fw-bold mb-0" style="color:#2C6CB1;">980</h2>
                     </div>
                     <div class="rounded-3 d-flex align-items-center justify-content-center"
-                        style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-size: 20px;">
+                        style="width: 48px; height: 48px; background: rgba(44, 108, 177, 0.10); color: #2C6CB1; font-size: 20px;">
                         <i class="far fa-user"></i>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-3 pt-1">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-semibold">
+                    <span class="badge rounded-pill px-2 py-1 small fw-semibold" style="background:rgba(44,108,177,.12);color:#2C6CB1;border:1px solid rgba(44,108,177,.16);">
                         <i class="fas fa-circle-check me-1"></i>69% Total
                     </span>
                     <span class="text-muted small">OPD Volume</span>
@@ -68,16 +68,16 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <span class="text-muted small fw-bold text-uppercase d-block mb-1">Inpatient Admissions</span>
-                        <h2 class="fw-bold mb-0" style="color: #8b5cf6;">440</h2>
+                        <h2 class="fw-bold mb-0" style="color: #477EAB;">440</h2>
                     </div>
                     <div class="rounded-3 d-flex align-items-center justify-content-center"
-                        style="width: 48px; height: 48px; background: rgba(139, 92, 246, 0.12); color: #8b5cf6; font-size: 20px;">
+                        style="width: 48px; height: 48px; background: rgba(71, 126, 171, 0.12); color: #477EAB; font-size: 20px;">
                         <i class="fas fa-bed"></i>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-3 pt-1">
                     <span class="badge rounded-pill px-2 py-1 small fw-semibold"
-                        style="background: rgba(139, 92, 246, 0.12); color: #8b5cf6;">
+                        style="background: rgba(71, 126, 171, 0.12); color: #477EAB;">
                         <i class="fas fa-hotel me-1"></i>31% Total
                     </span>
                     <span class="text-muted small">IPD Ward</span>
@@ -91,15 +91,15 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <span class="text-muted small fw-bold text-uppercase d-block mb-1">Recovery Rate</span>
-                        <h2 class="fw-bold mb-0" style="color: #f59e0b;">94.2%</h2>
+                        <h2 class="fw-bold mb-0" style="color: #7198BC;">94.2%</h2>
                     </div>
                     <div class="rounded-3 d-flex align-items-center justify-content-center"
-                        style="width: 48px; height: 48px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-size: 20px;">
+                        style="width: 48px; height: 48px; background: rgba(113, 152, 188, 0.14); color: #7198BC; font-size: 20px;">
                         <i class="fas fa-shield-heart"></i>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-3 pt-1">
-                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2 py-1 small fw-semibold">
+                    <span class="badge rounded-pill px-2 py-1 small fw-semibold" style="background:rgba(113,152,188,.14);color:#477EAB;border:1px solid rgba(113,152,188,.2);">
                         <i class="fas fa-star me-1"></i>High Efficacy
                     </span>
                     <span class="text-muted small">Clinical Benchmark</span>
@@ -118,7 +118,7 @@
                         <i class="fas fa-chart-line text-primary me-2"></i>Patient Visit Trends
                     </h5>
                     <span class="badge rounded-pill px-3 py-1 small fw-semibold"
-                        style="background: rgba(99, 102, 241, 0.12); color: #6366f1;">Annual Stream</span>
+                        style="background: rgba(26, 82, 142, 0.10); color: #1A528E;">Annual Stream</span>
                 </div>
                 <div class="p-0">
                     <div id="dior-clinical-visit-trends-chart" style="min-height: 325px;"></div>
@@ -134,7 +134,7 @@
                         <i class="fas fa-chart-pie text-primary me-2"></i>Disease Distribution
                     </h5>
                     <span class="badge rounded-pill px-3 py-1 small fw-semibold"
-                        style="background: rgba(139, 92, 246, 0.12); color: #8b5cf6;">Specialties</span>
+                        style="background: rgba(71, 126, 171, 0.12); color: #477EAB;">Specialties</span>
                 </div>
                 <div class="p-0 d-flex align-items-center justify-content-center" style="min-height: 325px;">
                     <div id="dior-clinical-disease-distribution-chart" style="width: 100%; min-height: 310px;"></div>
@@ -526,6 +526,37 @@
 </style>
 
 
+<style id="dior-clinical-reports-brand-colors">
+/* Keep Clinical Reports aligned with the Dior Medical navy/blue interface. */
+#dior-doctor-app #dior-doc-content #tab-doc-analytics {
+    --dior-brand-primary:#1A528E;
+    --dior-brand-secondary:#2C6CB1;
+    --dior-brand-mid:#477EAB;
+    --dior-brand-soft:#7198BC;
+}
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .text-primary,
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .text-primary i {
+    color:#1A528E!important;
+}
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-primary,
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-info,
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-success {
+    color:#fff!important;
+    background-color:#1A528E!important;
+    border-color:#1A528E!important;
+}
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-primary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-info:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .btn-success:hover {
+    background-color:#143F6D!important;
+    border-color:#143F6D!important;
+}
+#dior-doctor-app #dior-doc-content #tab-doc-analytics .card {
+    border-color:#DFE8F1!important;
+}
+</style>
+
+
 <script>
 (function() {
     var trendsChart = null;
@@ -560,7 +591,7 @@
                         toolbar: { show: false },
                         fontFamily: 'inherit'
                     },
-                    colors: ['#008ffb', '#00e396'],
+                    colors: ['#1A528E', '#5B8DB8'],
                     dataLabels: { enabled: false },
                     stroke: { curve: 'smooth', width: 3 },
                     fill: {
@@ -599,7 +630,7 @@
                         height: 310,
                         fontFamily: 'inherit'
                     },
-                    colors: ['#3b82f6', '#8b5cf6', '#ef4444', '#06b6d4', '#10b981'],
+                    colors: ['#1A528E', '#2C6CB1', '#477EAB', '#7198BC', '#A3BED4'],
                     legend: {
                         position: 'bottom',
                         fontSize: '12px',
@@ -698,7 +729,7 @@
                             title: 'Edit Clinical Report',
                             text: 'Editing record for ' + patientName,
                             icon: 'info',
-                            confirmButtonColor: '#0d6efd'
+                            confirmButtonColor: '#1A528E'
                         });
                     }
                     return;
@@ -753,7 +784,7 @@
                         title: 'Add Clinical Report',
                         text: 'Record creation form will open here.',
                         icon: 'info',
-                        confirmButtonColor: '#0d6efd'
+                        confirmButtonColor: '#1A528E'
                     });
                 }
             });
