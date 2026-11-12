@@ -149,7 +149,7 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
             <div>
                 <h4 class="fw-bold text-dark mb-1 fs-5">Recent Clinical Reports</h4>
-                <div style="width: 48px; height: 3px; background: #0d6efd; border-radius: 2px;"></div>
+                <div style="width: 48px; height: 3px; background: #1A528E; border-radius: 2px;"></div>
             </div>
 
             <div class="d-flex flex-wrap align-items-center gap-2">
