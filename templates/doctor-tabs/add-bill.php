@@ -133,3 +133,25 @@
         </div>
     </div>
 </section>
+<style id="dior-accounts-mobile-add-bill">
+/* Accounts mobile responsive layout, aligned with Patient Records */
+
+@media(max-width:767.98px){
+#dior-doctor-app #dior-doc-content #tab-doc-accounts-add-bill{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:14px 0 24px!important;overflow-x:clip;box-sizing:border-box!important}
+#tab-doc-accounts-add-bill>.mb-4:first-child{align-items:flex-start!important}
+#tab-doc-accounts-add-bill>.mb-4:first-child .va-breadcrumb-list{display:none!important}
+#tab-doc-accounts-add-bill .dior-subtab-nav-bar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:0!important;margin:0 0 16px!important}
+#tab-doc-accounts-add-bill .dior-subtab-pill{width:100%!important;min-width:0!important;min-height:40px!important;margin:0!important;padding:8px 5px!important;font-size:12px!important;white-space:normal!important}
+#tab-doc-accounts-add-bill .view-appointment-card{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow:hidden!important;box-sizing:border-box!important}
+#tab-doc-accounts-add-bill .va-header-container{padding:12px!important}
+#tab-doc-accounts-add-bill .view-appointment-card>div[style*="padding: 20px"]{padding:12px!important}
+#tab-doc-accounts-add-bill form .row{margin-left:0!important;margin-right:0!important}
+#tab-doc-accounts-add-bill form .row>[class*="col-"]{padding-left:0!important;padding-right:0!important;width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+#tab-doc-accounts-add-bill .va-form-control{width:100%!important;max-width:100%!important;min-width:0!important;min-height:42px!important;box-sizing:border-box!important}
+#tab-doc-accounts-add-bill textarea.va-form-control{min-height:90px!important}
+#tab-doc-accounts-add-bill form .row:last-child .col-12{flex-wrap:wrap!important}
+#tab-doc-accounts-add-bill form .row:last-child button{flex:1 1 120px!important;min-height:42px!important}
+}
+
+</style>
+
