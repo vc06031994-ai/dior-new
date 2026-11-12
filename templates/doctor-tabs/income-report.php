@@ -277,6 +277,57 @@
     </div>
 </section>
 
+<style id="dior-income-report-color-unification">
+/* Keep all Income Report accents within Dior Medical's blue palette */
+#tab-doc-accounts-income-report .text-success,
+#tab-doc-accounts-income-report .text-info,
+#tab-doc-accounts-income-report .text-warning,
+#tab-doc-accounts-income-report .text-danger,
+#tab-doc-accounts-income-report .text-primary,
+#tab-doc-accounts-income-report .text-success *,
+#tab-doc-accounts-income-report .text-info *,
+#tab-doc-accounts-income-report .text-warning *,
+#tab-doc-accounts-income-report .text-danger *,
+#tab-doc-accounts-income-report .text-primary *{
+    color:#1A528E!important;
+}
+#tab-doc-accounts-income-report .bg-success,
+#tab-doc-accounts-income-report .bg-info,
+#tab-doc-accounts-income-report .bg-warning,
+#tab-doc-accounts-income-report .bg-danger{
+    background-color:#EAF2FB!important;
+}
+#tab-doc-accounts-income-report .border-success,
+#tab-doc-accounts-income-report .border-info,
+#tab-doc-accounts-income-report .border-warning,
+#tab-doc-accounts-income-report .border-danger{
+    border-color:#D5E4F5!important;
+}
+/* KPI icon badges and icon glyphs */
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .badge,
+#tab-doc-accounts-income-report>.row.g-3.mb-4 .badge i{
+    color:#1A528E!important;
+    background:#EAF2FB!important;
+    border-color:#D5E4F5!important;
+}
+/* Department icons use one consistent brand accent */
+#tab-doc-accounts-income-report #dior-income-report-table tbody td:first-child i{
+    color:#1A528E!important;
+}
+/* Combined revenue footer should not introduce a separate green accent */
+#tab-doc-accounts-income-report #dior-income-report-table tfoot td,
+#tab-doc-accounts-income-report #dior-income-report-table tfoot td:last-child{
+    color:#1A528E!important;
+}
+/* Keep success-style labels/icons visually consistent as well */
+#tab-doc-accounts-income-report .fa-circle-check,
+#tab-doc-accounts-income-report .fa-arrow-trend-up,
+#tab-doc-accounts-income-report .fa-calendar-check{
+    color:#1A528E!important;
+}
+</style>
+
+
 <style id="dior-income-report-theme-colors">
 /* Dior Medical theme: navy + clinical blue */
 #tab-doc-accounts-income-report{
