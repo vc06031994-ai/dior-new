@@ -155,9 +155,6 @@
             <div class="d-flex flex-wrap align-items-center gap-2">
                 <!-- Search Box -->
                 <div class="input-group input-group-sm rounded-3 border overflow-hidden" style="width: 250px;">
-                    <span class="input-group-text bg-white border-0 text-muted ps-3">
-                        <i class="fas fa-search"></i>
-                    </span>
                     <input type="text" id="dior-clinical-search-input" class="form-control border-0 shadow-none ps-2"
                         placeholder="Search records...">
                 </div>
@@ -373,6 +370,161 @@
         </div>
     </div>
 </section>
+
+
+<style id="dior-clinical-reports-mobile-cards">
+/* Clinical Reports responsive layout — desktop table remains unchanged. */
+@media (max-width: 767.98px) {
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics {
+        width:100%!important;
+        max-width:100%!important;
+        min-width:0!important;
+        padding-left:0!important;
+        padding-right:0!important;
+        box-sizing:border-box!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics > .card {
+        width:100%!important;
+        max-width:none!important;
+        min-width:0!important;
+        margin-left:0!important;
+        margin-right:0!important;
+        padding:12px!important;
+        border-radius:14px!important;
+        box-sizing:border-box!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics > .card > .d-flex:first-child {
+        align-items:flex-start!important;
+        gap:12px!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics .input-group {
+        width:100%!important;
+        max-width:100%!important;
+        flex:1 1 100%!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics .input-group input {
+        min-height:40px!important;
+        padding-left:12px!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics .table-responsive {
+        width:100%!important;
+        max-width:100%!important;
+        overflow:visible!important;
+        border:0!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-table,
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-table tbody {
+        display:block!important;
+        width:100%!important;
+        min-width:0!important;
+        margin:0!important;
+        border:0!important;
+        border-collapse:separate!important;
+        border-spacing:0!important;
+        table-layout:auto!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-table thead {
+        display:none!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr {
+        position:relative!important;
+        display:flex!important;
+        flex-direction:column!important;
+        width:100%!important;
+        min-width:0!important;
+        margin:0 0 12px!important;
+        padding:12px 13px!important;
+        overflow:hidden!important;
+        background:#fff!important;
+        border:1px solid #dce5ef!important;
+        border-radius:14px!important;
+        box-shadow:0 2px 8px rgba(15,43,76,.045)!important;
+        box-sizing:border-box!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td {
+        display:flex!important;
+        align-items:center!important;
+        justify-content:space-between!important;
+        gap:12px!important;
+        width:100%!important;
+        min-width:0!important;
+        min-height:34px!important;
+        padding:7px 0!important;
+        border:0!important;
+        border-bottom:1px solid #edf1f6!important;
+        background:transparent!important;
+        text-align:right!important;
+        white-space:normal!important;
+        overflow-wrap:anywhere!important;
+        box-sizing:border-box!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:first-child {
+        position:absolute!important;
+        top:14px!important;
+        right:13px!important;
+        z-index:2!important;
+        display:flex!important;
+        justify-content:flex-end!important;
+        width:auto!important;
+        min-height:22px!important;
+        padding:0!important;
+        border:0!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(2) {
+        justify-content:flex-start!important;
+        min-height:48px!important;
+        padding:0 36px 9px 0!important;
+        text-align:left!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(2) > div {
+        display:flex!important;
+        align-items:center!important;
+        gap:10px!important;
+        min-width:0!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(2) img {
+        flex:0 0 38px!important;
+        width:38px!important;
+        height:38px!important;
+        object-fit:cover!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(2) span {
+        font-weight:700!important;
+        color:#12345a!important;
+        text-align:left!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(3)::before { content:"Doctor"; }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(4)::before { content:"Diagnosis"; }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(5)::before { content:"Visit Date"; }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(6)::before { content:"Status"; }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(n+3):nth-child(-n+6)::before {
+        flex:0 0 82px!important;
+        color:#8493a7!important;
+        font-size:10px!important;
+        font-weight:700!important;
+        letter-spacing:.035em!important;
+        text-align:left!important;
+        text-transform:uppercase!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(7) {
+        justify-content:flex-end!important;
+        padding:10px 0 0!important;
+        border:0!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr > td:nth-child(7) > div {
+        display:flex!important;
+        justify-content:flex-end!important;
+        gap:8px!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics #dior-clinical-reports-tbody > tr:not(:has(td)) {
+        display:block!important;
+    }
+    #dior-doctor-app #dior-doc-content #tab-doc-analytics > .card > .d-flex.flex-wrap.align-items-center.justify-content-between.pt-3 {
+        align-items:flex-start!important;
+    }
+}
+</style>
+
 
 <script>
 (function() {
