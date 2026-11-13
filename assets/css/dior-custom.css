@@ -174,7 +174,7 @@
 
     --dior-info: #0284C7;
     --dior-info-bg: #E0F2FE;
-    --dior-info-text: #0369A1;
+    --dior-info-text: var(--dior-color-info);
 
     /* Neutrals & Surfaces */
     --dior-bg: #F8FAFC;
@@ -2074,7 +2074,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 .dior-auth-wrap .dior-auth-msg.success,
 .entry-content .dior-auth-wrap .dior-auth-msg.success {
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     color: #065F46 !important;
     line-height: 1.5 !important;
 }
@@ -3798,7 +3798,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     right: 8px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 5px !important;
     padding: 3px 8px !important;
     font-size: 11px !important;
@@ -9860,8 +9860,8 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 
 .dior-patient-portal-wrap .mr-quote-block {
     background: #F0F9FF;
-    border-color: #BAE6FD;
-    color: #0369A1;
+    border-color: var(--dior-color-border);
+    color: var(--dior-color-info);
     font-size: 13.5px;
     font-style: italic;
 }
@@ -12043,7 +12043,7 @@ body {
     background: #ECFDF5 !important;
     padding: 2px 7px !important;
     border-radius: 12px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     line-height: 1 !important;
     letter-spacing: 0.02em !important;
 }
@@ -12402,7 +12402,7 @@ body {
     background: #ECFDF5 !important;
     padding: 6px 14px !important;
     border-radius: 20px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     box-shadow: 0 2px 6px rgba(5,
             150,
             105,
@@ -13128,8 +13128,8 @@ body {
 
 .dior-st.ok {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-st.up {
@@ -13190,8 +13190,8 @@ body {
     gap: 6px !important;
     padding: 6px 14px !important;
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 20px !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -13630,7 +13630,7 @@ a.dior-btn-table-icon {
 
 .snap-icon.ok {
     background: #D1FAE5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 .snap-info strong {
@@ -13713,7 +13713,7 @@ a.dior-btn-table-icon {
 }
 
 .amount-text {
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-weight: 800 !important;
 }
 
@@ -13841,8 +13841,8 @@ a.dior-btn-table-icon {
 
 .qn-status-pill.status-success {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .qn-status-pill.status-warning {
@@ -14209,7 +14209,7 @@ a.dior-btn-table-icon {
 
 .price-row .fee {
     font-size: 17px !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-weight: 800 !important;
 }
 
@@ -15015,7 +15015,7 @@ body {
     background: #ECFDF5 !important;
     padding: 8px 16px !important;
     border-radius: 20px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-book-security-badge i,
@@ -15946,7 +15946,7 @@ body {
     top: 15px !important;
     height: 60px !important;
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 10px !important;
     display: flex !important;
     align-items: center !important;
@@ -15969,7 +15969,7 @@ body {
 
 .timeline-event-card .event-info span {
     font-size: 11px !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 /* ==========================================================================
@@ -16116,8 +16116,8 @@ body {
 /* Status variants */
 .dior-rx-card .rx-status-tag.status-ready {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-rx-card .rx-status-tag.status-routed {
@@ -16136,7 +16136,7 @@ body {
 .dior-rx-card .rx-status-tag.status-success {
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-rx-card .rx-drug-name {
@@ -17438,7 +17438,7 @@ body {
 #dior-doctor-app .dior-st.ok {
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 #dior-doctor-app .dior-st.pending {
@@ -17897,7 +17897,7 @@ button.dior-btn-sm.dior-btn-success,
 a.dior-btn-sm.dior-btn-success {
     background: linear-gradient(135deg,
             #059669 0%,
-            #047857 100%) !important;
+            var(--dior-color-success) 100%) !important;
     color: #FFFFFF !important;
     border: 1px solid rgba(255,
             255,
@@ -17912,7 +17912,7 @@ a.dior-btn-sm.dior-btn-success {
 button.dior-btn-sm.dior-btn-success:hover,
 a.dior-btn-sm.dior-btn-success:hover {
     background: linear-gradient(135deg,
-            #047857 0%,
+            var(--dior-color-success) 0%,
             #065F46 100%) !important;
     color: #FFFFFF !important;
     transform: translateY(-1px) !important;
@@ -18003,7 +18003,7 @@ a.dior-btn-sm.dior-btn-danger:hover {
 .dior-badge-pill.dior-badge-emerald {
     background: #ECFDF5 !important;
     color: #065F46 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-badge-pill.dior-badge-purple {
@@ -18190,7 +18190,7 @@ a.dior-btn-sm.dior-btn-danger:hover {
     animation: diorPulseSlow 1.8s infinite ease-in-out !important;
     background: linear-gradient(135deg,
             #059669,
-            #047857) !important;
+            var(--dior-color-success)) !important;
     box-shadow: 0 4px 20px rgba(5,
             150,
             105,
@@ -18913,7 +18913,7 @@ button.dior-avatar-quick-camera i {
     background: #ECFDF5 !important;
     padding: 2px 7px !important;
     border-radius: 12px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     line-height: 1 !important;
     letter-spacing: 0.02em !important;
 }
@@ -19636,7 +19636,7 @@ button.dior-avatar-quick-camera i {
     padding: 1px 5px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 4px !important;
     font-size: 9.5px !important;
     font-weight: 700 !important;
@@ -20520,7 +20520,7 @@ button.dior-page-btn {
     gap: 8px !important;
     padding: 9px 12px !important;
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 8px !important;
 }
 
@@ -20938,7 +20938,7 @@ button.dior-page-btn {
     padding: 1px 7px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     font-size: 9.5px !important;
@@ -21538,7 +21538,7 @@ button.dior-page-btn {
 
 .dior-ic-d1ca225dc9 {
     background: #ECFDF5 !important;
-    border: 1.5px solid #A7F3D0 !important;
+    border: 1.5px solid var(--dior-color-success-soft) !important;
     border-radius: 12px !important;
     padding: 16px 20px !important;
     margin-bottom: 20px !important;
@@ -21569,7 +21569,7 @@ button.dior-page-btn {
 }
 
 .dior-ic-7c0e3bda5e {
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-size: 13px !important;
 }
 
@@ -22976,7 +22976,7 @@ button.dior-page-btn {
 
 .dior-ic-4db3afa214 {
     background-color: #D1FAE5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-size: 10px !important;
     padding: 3px 8px !important;
     border-radius: 10px !important;
@@ -23460,7 +23460,7 @@ button.dior-page-btn {
 
 .dior-ic-9378edcfeb {
     background: #D1FAE5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     letter-spacing: 0.5px !important;
@@ -24098,7 +24098,7 @@ button.dior-page-btn {
     padding: 6px 11px !important;
     height: 28px !important;
     box-sizing: border-box !important;
-    background: linear-gradient(135deg, #059669, #047857) !important;
+    background: linear-gradient(135deg, #059669, var(--dior-color-success)) !important;
     color: #FFFFFF !important;
     border-radius: 6px !important;
     font-size: 11.5px !important;
@@ -26053,7 +26053,7 @@ body .media-modal .media-modal-close .media-modal-icon::before {
 }
 
 .dior-patient-portal-wrap .dior-tab-panel:not(#tab-overview) tbody tr:hover td {
-    background: #F8FBFE !important;
+    background: var(--dior-color-surface-muted) !important;
 }
 
 .dior-patient-portal-wrap .dior-tab-panel:not(#tab-overview) tbody tr:last-child td {
@@ -30880,7 +30880,7 @@ body .media-modal .media-modal-close .media-modal-icon::before {
 
 .notifications-tab-panel .badge-emerald {
     background: #d1fae5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 /* 2. Navigation & Cards */
@@ -33354,7 +33354,7 @@ body {
     background: #ECFDF5 !important;
     padding: 2px 7px !important;
     border-radius: 12px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     line-height: 1 !important;
     letter-spacing: 0.02em !important;
 }
@@ -33713,7 +33713,7 @@ body {
     background: #ECFDF5 !important;
     padding: 6px 14px !important;
     border-radius: 20px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     box-shadow: 0 2px 6px rgba(5,
             150,
             105,
@@ -34439,8 +34439,8 @@ body {
 
 .dior-st.ok {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-st.up {
@@ -34501,8 +34501,8 @@ body {
     gap: 6px !important;
     padding: 6px 14px !important;
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 20px !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -34941,7 +34941,7 @@ a.dior-btn-table-icon {
 
 .snap-icon.ok {
     background: #D1FAE5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 .snap-info strong {
@@ -35024,7 +35024,7 @@ a.dior-btn-table-icon {
 }
 
 .amount-text {
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-weight: 800 !important;
 }
 
@@ -35152,8 +35152,8 @@ a.dior-btn-table-icon {
 
 .qn-status-pill.status-success {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .qn-status-pill.status-warning {
@@ -35520,7 +35520,7 @@ a.dior-btn-table-icon {
 
 .price-row .fee {
     font-size: 17px !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     font-weight: 800 !important;
 }
 
@@ -36326,7 +36326,7 @@ body {
     background: #ECFDF5 !important;
     padding: 8px 16px !important;
     border-radius: 20px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-book-security-badge i,
@@ -37257,7 +37257,7 @@ body {
     top: 15px !important;
     height: 60px !important;
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 10px !important;
     display: flex !important;
     align-items: center !important;
@@ -37280,7 +37280,7 @@ body {
 
 .timeline-event-card .event-info span {
     font-size: 11px !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 /* ==========================================================================
@@ -37427,8 +37427,8 @@ body {
 /* Status variants */
 .dior-rx-card .rx-status-tag.status-ready {
     background: #ECFDF5 !important;
-    color: #047857 !important;
-    border: 1px solid #A7F3D0 !important;
+    color: var(--dior-color-success) !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-rx-card .rx-status-tag.status-routed {
@@ -37447,7 +37447,7 @@ body {
 .dior-rx-card .rx-status-tag.status-success {
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-rx-card .rx-drug-name {
@@ -38749,7 +38749,7 @@ body {
 #dior-doctor-app .dior-st.ok {
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 #dior-doctor-app .dior-st.pending {
@@ -39208,7 +39208,7 @@ button.dior-btn-sm.dior-btn-success,
 a.dior-btn-sm.dior-btn-success {
     background: linear-gradient(135deg,
             #059669 0%,
-            #047857 100%) !important;
+            var(--dior-color-success) 100%) !important;
     color: #FFFFFF !important;
     border: 1px solid rgba(255,
             255,
@@ -39223,7 +39223,7 @@ a.dior-btn-sm.dior-btn-success {
 button.dior-btn-sm.dior-btn-success:hover,
 a.dior-btn-sm.dior-btn-success:hover {
     background: linear-gradient(135deg,
-            #047857 0%,
+            var(--dior-color-success) 0%,
             #065F46 100%) !important;
     color: #FFFFFF !important;
     transform: translateY(-1px) !important;
@@ -39314,7 +39314,7 @@ a.dior-btn-sm.dior-btn-danger:hover {
 .dior-badge-pill.dior-badge-emerald {
     background: #ECFDF5 !important;
     color: #065F46 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
 }
 
 .dior-badge-pill.dior-badge-purple {
@@ -39501,7 +39501,7 @@ a.dior-btn-sm.dior-btn-danger:hover {
     animation: diorPulseSlow 1.8s infinite ease-in-out !important;
     background: linear-gradient(135deg,
             #059669,
-            #047857) !important;
+            var(--dior-color-success)) !important;
     box-shadow: 0 4px 20px rgba(5,
             150,
             105,
@@ -40224,7 +40224,7 @@ button.dior-avatar-quick-camera i {
     background: #ECFDF5 !important;
     padding: 2px 7px !important;
     border-radius: 12px !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     line-height: 1 !important;
     letter-spacing: 0.02em !important;
 }
@@ -40947,7 +40947,7 @@ button.dior-avatar-quick-camera i {
     padding: 1px 5px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 4px !important;
     font-size: 9.5px !important;
     font-weight: 700 !important;
@@ -41998,7 +41998,7 @@ button.dior-page-btn {
     font-size: 13px !important;
     font-weight: 700 !important;
     border: none !important;
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    background: linear-gradient(135deg, #059669 0%, var(--dior-color-success) 100%) !important;
     color: #FFFFFF !important;
     cursor: pointer !important;
     box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3) !important;
@@ -42170,7 +42170,7 @@ button.dior-page-btn {
     padding: 2px 8px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     font-size: 10px !important;
@@ -43751,7 +43751,7 @@ button.dior-page-btn {
 }
 
 .dior-ic-26845f938e {
-    background: linear-gradient(135deg, #D1FAE5, #A7F3D0) !important;
+    background: linear-gradient(135deg, #D1FAE5, var(--dior-color-success-soft)) !important;
     color: #059669 !important;
     width: 36px !important;
     height: 36px !important;
@@ -43946,7 +43946,7 @@ button.dior-page-btn {
     font-weight: 700 !important;
     color: #059669 !important;
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     padding: 2px 8px !important;
     border-radius: 12px !important;
 }
@@ -44122,7 +44122,7 @@ button.dior-page-btn {
     font-weight: 700 !important;
     color: #059669 !important;
     background: #ECFDF5 !important;
-    border: 1px solid #A7F3D0 !important;
+    border: 1px solid var(--dior-color-success-soft) !important;
     padding: 1px 6px !important;
     border-radius: 4px !important;
     letter-spacing: 0.3px !important;
@@ -47463,7 +47463,7 @@ button.dior-page-btn {
 }
 
 :is(.dior-doctor-wrap, .dior-admin-wrap) #tab-doc-appointments .fc-list-event:hover td {
-    background: #F8FBFE !important;
+    background: var(--dior-color-surface-muted) !important;
 }
 
 @media (max-width: 1100px) {
@@ -47688,7 +47688,7 @@ button.dior-page-btn {
 }
 
 :is(.dior-doctor-wrap, .dior-admin-wrap) #tab-doc-appointments .fc .fc-daygrid-day:hover {
-    background: #F8FBFE !important;
+    background: var(--dior-color-surface-muted) !important;
 }
 
 :is(.dior-doctor-wrap, .dior-admin-wrap) #tab-doc-appointments .fc .fc-daygrid-day-number {
@@ -52581,7 +52581,7 @@ a.va-btn-primary:hover {
 
 .notifications-tab-panel .badge-emerald {
     background: #d1fae5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 /* 2. Navigation & Cards */
@@ -55835,7 +55835,7 @@ a.va-btn-primary:hover {
 
 #dior-doctor-app #tab-doc-overview .stat-card .text-primary.bg-primary-subtle {
     background: var(--dior-color-primary-soft) !important;
-    border: 1px solid #D8E6F4;
+    border: 1px solid var(--dior-color-border);
     border-radius: var(--dior-radius-control) !important;
     color: var(--dior-color-primary) !important;
 }
@@ -55966,9 +55966,9 @@ a.va-btn-primary:hover {
 }
 
 #dior-doctor-app #tab-doc-overview .s-completed {
-    color: #047857;
+    color: var(--dior-color-success);
     background: #ECFDF5;
-    border-color: #A7F3D0;
+    border-color: var(--dior-color-success-soft);
 }
 
 #dior-doctor-app #tab-doc-overview .s-upcoming,
@@ -56188,7 +56188,7 @@ a.va-btn-primary:hover {
 }
 
 /* ==========================================================================
-   DOCTOR DASHBOARD — APPOINTMENT CALENDAR TEMPLATE STYLES
+   DOCTOR DASHBOARD - APPOINTMENT CALENDAR TEMPLATE STYLES
    Scope: #tab-doc-appointments only. Existing template data and JS unchanged.
    ========================================================================== */
 
@@ -56340,19 +56340,19 @@ a.va-btn-primary:hover {
 #dior-doctor-app #tab-doc-appointments #dior-doc-cal-stats .bg-primary-subtle {
     color: var(--dior-color-primary) !important;
     background: var(--dior-color-primary-soft) !important;
-    border-color: #D8E6F4 !important;
+    border-color: var(--dior-color-border) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-cal-stats .bg-info-subtle {
-    color: #0369A1 !important;
+    color: var(--dior-color-info) !important;
     background: #F0F9FF !important;
-    border-color: #BAE6FD !important;
+    border-color: var(--dior-color-border) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-cal-stats .bg-success-subtle {
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
     background: #ECFDF5 !important;
-    border-color: #A7F3D0 !important;
+    border-color: var(--dior-color-success-soft) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-cal-stats .bg-secondary-subtle {
@@ -56365,7 +56365,7 @@ a.va-btn-primary:hover {
     width: 48px !important;
     height: 48px !important;
     flex: 0 0 48px !important;
-    border: 1px solid #D8E6F4 !important;
+    border: 1px solid var(--dior-color-border) !important;
     border-radius: var(--dior-radius-control) !important;
     background: var(--dior-color-primary-soft) !important;
     color: var(--dior-color-primary) !important;
@@ -56534,7 +56534,7 @@ a.va-btn-primary:hover {
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-bs-cal-cell:hover {
-    background: #F8FBFE !important;
+    background: var(--dior-color-surface-muted) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-bs-cal-cell.is-other {
@@ -56615,8 +56615,8 @@ a.va-btn-primary:hover {
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-bs-cal-event.completed {
     background: #ECFDF5 !important;
-    border-color: #A7F3D0 !important;
-    color: #047857 !important;
+    border-color: var(--dior-color-success-soft) !important;
+    color: var(--dior-color-success) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-bs-cal-event.cancelled {
@@ -56627,8 +56627,8 @@ a.va-btn-primary:hover {
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-bs-cal-event.phone {
     background: #F0F9FF !important;
-    border-color: #BAE6FD !important;
-    color: #0369A1 !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-info) !important;
 }
 
 /* Selected-day panel and appointment cards */
@@ -56655,7 +56655,7 @@ a.va-btn-primary:hover {
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card #dior-doc-bs-cal-selected-count {
     padding: 5px 9px !important;
-    border: 1px solid #D8E6F4 !important;
+    border: 1px solid var(--dior-color-border) !important;
     border-radius: var(--dior-radius-pill) !important;
     background: var(--dior-color-primary-soft) !important;
     color: var(--dior-color-primary) !important;
@@ -56691,15 +56691,15 @@ a.va-btn-primary:hover {
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-cal-appointment .bg-primary-subtle {
-    border-color: #D8E6F4 !important;
+    border-color: var(--dior-color-border) !important;
     background: var(--dior-color-primary-soft) !important;
     color: var(--dior-color-primary) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-cal-appointment .bg-success-subtle {
-    border-color: #A7F3D0 !important;
+    border-color: var(--dior-color-success-soft) !important;
     background: #ECFDF5 !important;
-    color: #047857 !important;
+    color: var(--dior-color-success) !important;
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-cal-appointment .bg-danger-subtle {
@@ -56714,8 +56714,8 @@ a.va-btn-primary:hover {
 }
 
 #dior-doctor-app #tab-doc-appointments #dior-doc-calendar-card .dior-doc-cal-appointment .btn-success {
-    border-color: #047857 !important;
-    background: #047857 !important;
+    border-color: var(--dior-color-success) !important;
+    background: var(--dior-color-success) !important;
     color: #fff !important;
 }
 
