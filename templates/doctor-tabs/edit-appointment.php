@@ -210,16 +210,16 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
 
 // Match the dynamic status badge to the Appointment Calendar / View Appointments palette.
 $edit_status_badge_palette = [
-    'pending'     => 'bg-warning-subtle text-warning border-warning-subtle',
-    'confirmed'   => 'bg-success-subtle text-success border-success-subtle',
+    'pending' => 'bg-warning-subtle text-warning border-warning-subtle',
+    'confirmed' => 'bg-success-subtle text-success border-success-subtle',
     'in progress' => 'bg-info-subtle text-info border-info-subtle',
-    'completed'   => 'bg-primary-subtle text-primary border-primary-subtle',
-    'cancelled'   => 'bg-danger-subtle text-danger border-danger-subtle',
-    'canceled'    => 'bg-danger-subtle text-danger border-danger-subtle',
-    'no show'     => 'bg-secondary-subtle text-secondary border-secondary-subtle',
-    'success'     => 'bg-success-subtle text-success border-success-subtle',
-    'ready'       => 'bg-primary-subtle text-primary border-primary-subtle',
-    'scheduling'  => 'bg-info-subtle text-info border-info-subtle',
+    'completed' => 'bg-primary-subtle text-primary border-primary-subtle',
+    'cancelled' => 'bg-danger-subtle text-danger border-danger-subtle',
+    'canceled' => 'bg-danger-subtle text-danger border-danger-subtle',
+    'no show' => 'bg-secondary-subtle text-secondary border-secondary-subtle',
+    'success' => 'bg-success-subtle text-success border-success-subtle',
+    'ready' => 'bg-primary-subtle text-primary border-primary-subtle',
+    'scheduling' => 'bg-info-subtle text-info border-info-subtle',
 ];
 $initial_status_key = strtolower(trim(str_replace(['_', '-'], ' ', $initial_appointment_status)));
 $initial_status_badge_class = $edit_status_badge_palette[$initial_status_key] ?? $edit_status_badge_palette['ready'];
@@ -266,7 +266,7 @@ $initial_status_badge_class = $edit_status_badge_palette[$initial_status_key] ??
             </div>
             <div class="col-lg-5 col-md-6 col-12">
                 <label class="form-label small text-uppercase text-secondary fw-bold mb-1" for="dior-edit-appt-selector">
-                    <i class="fas fa-calendar-check text-primary me-1"></i> Select Appointment to Edit <span class="badge bg-info-subtle text-info ms-1 small fw-bold dior-edit-step-badge dior-edit-step-info">Step 2</span>
+                    <i class="fas fa-calendar-check text-primary me-1"></i> Select Appointment to Edit <span class="badge bg-primary text-primary ms-1 small fw-bold dior-edit-step-badge dior-edit-step-info">Step 2</span>
                 </label>
                 <select class="form-select rounded-3 py-2 fw-semibold dior-edit-selector dior-edit-selector-info" id="dior-edit-appt-selector" onchange="diorOnHeaderApptSelect(this.value)">
                     <option value="">-- Choose an appointment from records --</option>
@@ -694,7 +694,7 @@ $initial_status_badge_class = $edit_status_badge_palette[$initial_status_key] ??
                     <button type="submit" class="btn btn-primary rounded-3 px-4 py-2 fw-semibold shadow-sm" id="dior-edit-appt-submit-btn">
                         <i class="fas fa-calendar-check me-2"></i> Save &amp; Update Appointment
                     </button>
-                    <button type="button" class="btn btn-outline-secondary rounded-3 px-4 py-2 fw-semibold" onclick="diorResetEditApptForm()">
+                    <button type="button" class="btn btn-primary rounded-3 px-4 py-2 fw-semibold" onclick="diorResetEditApptForm()">
                         <i class="fas fa-rotate-left me-1"></i> Reset
                     </button>
                 </div>

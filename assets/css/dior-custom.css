@@ -57322,11 +57322,6 @@ a.va-btn-primary:hover {
     color: var(--dior-color-primary) !important;
 }
 
-#dior-doctor-app #tab-doc-appointments-edit .dior-edit-step-info {
-    background: var(--dior-color-info-soft) !important;
-    border-color: var(--dior-color-border) !important;
-    color: var(--dior-color-info) !important;
-}
 
 /* The selector fields use matching brand tints without changing option values or events. */
 #dior-doctor-app #tab-doc-appointments-edit .dior-edit-selector-primary {
