@@ -144,7 +144,7 @@
 
 :root {
     /* Brand Color Palette */
-    --dior-primary: #00346C;
+    --dior-primary: #1A528E;
     --dior-primary-hover: #00254D;
     --dior-primary-rgb: 0, 52, 108;
     --dior-primary-light: rgba(0, 52, 108, 0.08);
@@ -11105,13 +11105,8 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     --dior-danger: #DC2626;
     --dior-danger-bg: #FEF2F2;
 
-    --dior-font-primary: 'Montserrat',
-        'DMSans',
-        'DM Sans',
-        sans-serif;
-    --dior-font-heading: 'DMSans',
-        'Montserrat',
-        sans-serif;
+    --dior-font-primary: 'Montserrat', sans-serif;
+    --dior-font-heading: 'Montserrat', sans-serif;
 
     --dior-shadow-sm: 0 1px 3px 0 rgba(11,
             16,
@@ -32416,11 +32411,9 @@ body,
     --dior-danger: #DC2626;
     --dior-danger-bg: #FEF2F2;
 
-    --dior-font-primary: 'Montserrat',
-        'DMSans',
-        'DM Sans',
+    --dior-font-primary: 'Montserrat', ,
         sans-serif;
-    --dior-font-heading: 'DMSans',
+    --dior-font-heading:
         'Montserrat',
         sans-serif;
 
@@ -55467,8 +55460,8 @@ a.va-btn-primary:hover {
 /* 1. Design tokens */
 #dior-doctor-app,
 .dior-doctor-wrap {
-    --dior-color-primary: #00346C;
-    --dior-color-primary-hover: #00254D;
+    --dior-color-primary: #1A528E;
+    --dior-color-primary-hover: #00346C;
     --dior-color-primary-active: #001B3A;
     --dior-color-primary-soft: #F0F6FC;
     --dior-color-gold: #C5A059;
@@ -55493,8 +55486,8 @@ a.va-btn-primary:hover {
     --dior-color-info: #0284C7;
     --dior-color-info-soft: #F0F9FF;
 
-    --dior-font-body: "Roboto", Arial, sans-serif;
-    --dior-font-heading: "Roboto Slab", Georgia, serif;
+    --dior-font-body: "Montserrat", Arial, sans-serif;
+    --dior-font-heading: "Montserrat", Georgia, serif;
 
     --dior-space-1: 4px;
     --dior-space-2: 8px;

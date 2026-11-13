@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dior Medical — Edit Appointment
  * Tab: Edit Appointment (#tab-doc-appointments-edit)
@@ -7,7 +8,7 @@
 global $wpdb;
 $doctor_id = get_current_user_id();
 $doctor_nonce = wp_create_nonce('dior_doctor_nonce');
-$admin_nonce  = wp_create_nonce('dior_admin_nonce');
+$admin_nonce = wp_create_nonce('dior_admin_nonce');
 $table_appts = $wpdb->prefix . 'dior_appointments';
 $table_patients = $wpdb->prefix . 'dior_patients';
 $users_table = $wpdb->users;
@@ -39,8 +40,8 @@ $db_appointments = $wpdb->get_results("
 // 2. Fetch doctors list for consulting doctor dropdown
 $doctor_users = get_users([
     'role__in' => ['doctor', 'dior_doctor', 'administrator'],
-    'orderby'  => 'display_name',
-    'number'   => 50
+    'orderby' => 'display_name',
+    'number' => 50
 ]);
 
 // 3. Fetch comprehensive patient list from both dior_patients and wp_users
@@ -54,7 +55,7 @@ $known_patient_uids = [];
 $all_clinic_patients = [];
 if (!empty($db_patients)) {
     foreach ($db_patients as $p) {
-        $uid_key = (int)$p['user_id'];
+        $uid_key = (int) $p['user_id'];
         if ($uid_key > 0) {
             $known_patient_uids[$uid_key] = true;
         }
@@ -66,7 +67,7 @@ if (!empty($db_patients)) {
 $appt_patient_ids = $wpdb->get_col("SELECT DISTINCT patient_id FROM {$wpdb->prefix}dior_appointments WHERE is_deleted = 0 AND patient_id > 0");
 if (!empty($appt_patient_ids)) {
     foreach ($appt_patient_ids as $pid) {
-        $pid = (int)$pid;
+        $pid = (int) $pid;
         if (!isset($known_patient_uids[$pid])) {
             $u = get_userdata($pid);
             if ($u) {
@@ -74,16 +75,16 @@ if (!empty($appt_patient_ids)) {
                 $lname = get_user_meta($pid, 'last_name', true) ?: $u->last_name;
                 $p_code = get_user_meta($pid, 'patient_id', true) ?: ('DM-' . (10000 + $pid));
                 $all_clinic_patients[] = [
-                    'user_id'     => $pid,
-                    'first_name'  => $fname,
-                    'last_name'   => $lname,
+                    'user_id' => $pid,
+                    'first_name' => $fname,
+                    'last_name' => $lname,
                     'patient_uid' => $p_code,
-                    'phone'       => get_user_meta($pid, 'phone', true) ?: '',
-                    'email'       => $u->user_email,
-                    'gender'      => get_user_meta($pid, 'gender', true) ?: 'male',
-                    'dob'         => get_user_meta($pid, 'dob', true) ?: '',
+                    'phone' => get_user_meta($pid, 'phone', true) ?: '',
+                    'email' => $u->user_email,
+                    'gender' => get_user_meta($pid, 'gender', true) ?: 'male',
+                    'dob' => get_user_meta($pid, 'dob', true) ?: '',
                     'blood_group' => get_user_meta($pid, 'blood_group', true) ?: 'A+',
-                    'address'     => get_user_meta($pid, 'address', true) ?: '',
+                    'address' => get_user_meta($pid, 'address', true) ?: '',
                 ];
                 $known_patient_uids[$pid] = true;
             }
@@ -96,22 +97,22 @@ if (empty($all_clinic_patients)) {
     $raw_pat_users = get_users(['role__in' => ['patient', 'subscriber', 'customer'], 'number' => 100]);
     foreach ($raw_pat_users as $pu) {
         $all_clinic_patients[] = [
-            'user_id'     => $pu->ID,
-            'first_name'  => $pu->first_name ?: $pu->display_name,
-            'last_name'   => $pu->last_name,
+            'user_id' => $pu->ID,
+            'first_name' => $pu->first_name ?: $pu->display_name,
+            'last_name' => $pu->last_name,
             'patient_uid' => get_user_meta($pu->ID, 'patient_id', true) ?: ('DM-' . (10000 + $pu->ID)),
-            'phone'       => get_user_meta($pu->ID, 'phone', true) ?: '',
-            'email'       => $pu->user_email,
-            'gender'      => get_user_meta($pu->ID, 'gender', true) ?: 'male',
-            'dob'         => get_user_meta($pu->ID, 'dob', true) ?: '',
+            'phone' => get_user_meta($pu->ID, 'phone', true) ?: '',
+            'email' => $pu->user_email,
+            'gender' => get_user_meta($pu->ID, 'gender', true) ?: 'male',
+            'dob' => get_user_meta($pu->ID, 'dob', true) ?: '',
             'blood_group' => get_user_meta($pu->ID, 'blood_group', true) ?: 'A+',
-            'address'     => get_user_meta($pu->ID, 'address', true) ?: '',
+            'address' => get_user_meta($pu->ID, 'address', true) ?: '',
         ];
     }
 }
 
 // Sort all patients alphabetically
-usort($all_clinic_patients, function($a, $b) {
+usort($all_clinic_patients, function ($a, $b) {
     return strcasecmp(($a['first_name'] ?? '') . ' ' . ($a['last_name'] ?? ''), ($b['first_name'] ?? '') . ' ' . ($b['last_name'] ?? ''));
 });
 
@@ -121,70 +122,70 @@ $patients_appts_lookup = [];
 if (!empty($db_appointments)) {
     foreach ($db_appointments as $item) {
         $uid = $item['appt_uid'];
-        $p_id = (int)$item['patient_id'];
-        
-        $emergency_name  = get_user_meta($p_id, 'emergency_contact_name', true) ?: '';
+        $p_id = (int) $item['patient_id'];
+
+        $emergency_name = get_user_meta($p_id, 'emergency_contact_name', true) ?: '';
         $emergency_phone = get_user_meta($p_id, 'emergency_contact_phone', true) ?: '';
-        $emergency_rel   = get_user_meta($p_id, 'emergency_contact_relation', true) ?: 'parent';
-        
+        $emergency_rel = get_user_meta($p_id, 'emergency_contact_relation', true) ?: 'parent';
+
         $ins_provider = get_user_meta($p_id, 'dior_insurance_provider', true) ?: '';
-        $ins_policy   = get_user_meta($p_id, 'dior_insurance_policy', true) ?: '';
-        $ins_group    = get_user_meta($p_id, 'dior_insurance_group', true) ?: '';
-        $ins_holder   = get_user_meta($p_id, 'dior_insurance_holder', true) ?: '';
+        $ins_policy = get_user_meta($p_id, 'dior_insurance_policy', true) ?: '';
+        $ins_group = get_user_meta($p_id, 'dior_insurance_group', true) ?: '';
+        $ins_holder = get_user_meta($p_id, 'dior_insurance_holder', true) ?: '';
         $ins_relation = get_user_meta($p_id, 'dior_insurance_relation', true) ?: 'self';
-        
-        $med_conds   = get_user_meta($p_id, 'dior_medical_conditions', true) ?: '';
+
+        $med_conds = get_user_meta($p_id, 'dior_medical_conditions', true) ?: '';
         $medications = get_user_meta($p_id, 'dior_current_medications', true) ?: '';
-        $allergies   = get_user_meta($p_id, 'dior_allergies', true) ?: '';
-        $surgeries   = get_user_meta($p_id, 'dior_past_surgeries', true) ?: '';
+        $allergies = get_user_meta($p_id, 'dior_allergies', true) ?: '';
+        $surgeries = get_user_meta($p_id, 'dior_past_surgeries', true) ?: '';
 
         $appts_data_map[$uid] = [
-            'id'                     => (int)$item['id'],
-            'appt_uid'               => $uid,
-            'patient_id'             => $p_id,
-            'doctor_id'              => (int)($item['doctor_id'] ?: $doctor_id),
-            'condition_name'         => $item['condition_name'] ?: 'General Consultation',
-            'visit_type'             => $item['visit_type'] ?: 'Video Visit (HD)',
-            'status'                 => $item['status'] ?: 'Success',
-            'appt_date'              => $item['appt_date'] ?: current_time('Y-m-d'),
-            'appt_time'              => $item['appt_time'] ?: '10:00 AM',
-            'join_url'               => $item['join_url'] ?: '',
-            'payment_status'         => $item['payment_status'] ?: 'Paid',
-            'notes'                  => $item['notes'] ?: '',
-            'first_name'             => $item['patient_first_name'],
-            'last_name'              => $item['patient_last_name'],
-            'full_name'              => trim($item['patient_first_name'] . ' ' . $item['patient_last_name']),
-            'patient_uid'            => $item['patient_code'],
-            'phone'                  => $item['patient_phone'] ?: '',
-            'email'                  => $item['patient_email'] ?: '',
-            'gender'                 => $item['patient_gender'] ?: 'male',
-            'dob'                    => $item['patient_dob'] ?: '',
-            'blood_group'            => $item['patient_blood_group'] ?: 'A+',
-            'address'                => $item['patient_address'] ?: '',
+            'id' => (int) $item['id'],
+            'appt_uid' => $uid,
+            'patient_id' => $p_id,
+            'doctor_id' => (int) ($item['doctor_id'] ?: $doctor_id),
+            'condition_name' => $item['condition_name'] ?: 'General Consultation',
+            'visit_type' => $item['visit_type'] ?: 'Video Visit (HD)',
+            'status' => $item['status'] ?: 'Success',
+            'appt_date' => $item['appt_date'] ?: current_time('Y-m-d'),
+            'appt_time' => $item['appt_time'] ?: '10:00 AM',
+            'join_url' => $item['join_url'] ?: '',
+            'payment_status' => $item['payment_status'] ?: 'Paid',
+            'notes' => $item['notes'] ?: '',
+            'first_name' => $item['patient_first_name'],
+            'last_name' => $item['patient_last_name'],
+            'full_name' => trim($item['patient_first_name'] . ' ' . $item['patient_last_name']),
+            'patient_uid' => $item['patient_code'],
+            'phone' => $item['patient_phone'] ?: '',
+            'email' => $item['patient_email'] ?: '',
+            'gender' => $item['patient_gender'] ?: 'male',
+            'dob' => $item['patient_dob'] ?: '',
+            'blood_group' => $item['patient_blood_group'] ?: 'A+',
+            'address' => $item['patient_address'] ?: '',
             'emergency_contact_name' => $emergency_name,
-            'emergency_contact_phone'=> $emergency_phone,
+            'emergency_contact_phone' => $emergency_phone,
             'emergency_contact_relation' => $emergency_rel,
-            'insurance_provider'     => $ins_provider,
-            'insurance_policy_number'=> $ins_policy,
+            'insurance_provider' => $ins_provider,
+            'insurance_policy_number' => $ins_policy,
             'insurance_group_number' => $ins_group,
-            'insurance_holder_name'  => $ins_holder,
-            'insurance_relation'     => $ins_relation,
-            'medical_conditions'     => $med_conds,
-            'medications'            => $medications,
-            'allergies'              => $allergies,
-            'surgeries'              => $surgeries,
+            'insurance_holder_name' => $ins_holder,
+            'insurance_relation' => $ins_relation,
+            'medical_conditions' => $med_conds,
+            'medications' => $medications,
+            'allergies' => $allergies,
+            'surgeries' => $surgeries,
         ];
 
         if (!isset($patients_appts_lookup[$p_id])) {
             $patients_appts_lookup[$p_id] = [];
         }
         $patients_appts_lookup[$p_id][] = [
-            'uid'            => $uid,
-            'patient_name'   => trim($item['patient_first_name'] . ' ' . $item['patient_last_name']),
-            'appt_date'      => $item['appt_date'],
-            'appt_time'      => $item['appt_time'],
-            'status'         => $item['status'] ?: 'Success',
-            'visit_type'     => $item['visit_type'] ?: 'Video Visit (HD)',
+            'uid' => $uid,
+            'patient_name' => trim($item['patient_first_name'] . ' ' . $item['patient_last_name']),
+            'appt_date' => $item['appt_date'],
+            'appt_time' => $item['appt_time'],
+            'status' => $item['status'] ?: 'Success',
+            'visit_type' => $item['visit_type'] ?: 'Video Visit (HD)',
             'condition_name' => $item['condition_name'] ?: 'General Consultation'
         ];
     }
@@ -202,7 +203,7 @@ if (!empty($url_appt_param) && isset($appts_data_map[$url_appt_param])) {
 
 $initial_patient_id = '';
 if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
-    $initial_patient_id = (int)$appts_data_map[$first_appt_uid]['patient_id'];
+    $initial_patient_id = (int) $appts_data_map[$first_appt_uid]['patient_id'];
 }
 ?>
 <section class="dior-tab-panel dior-appt-screen appointment-form-wrapper" id="tab-doc-appointments-edit" style="display: none;">
@@ -234,10 +235,11 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
                 </label>
                 <select class="form-select rounded-3 py-2 fw-semibold" id="dior-edit-patient-selector" onchange="diorOnHeaderPatientSelect(this.value)">
                     <option value="">-- All Patients (View All Appointments) --</option>
-                    <?php foreach ($all_clinic_patients as $cp): 
-                        $p_id = (int)$cp['user_id'];
+                    <?php
+                    foreach ($all_clinic_patients as $cp):
+                        $p_id = (int) $cp['user_id'];
                         $p_cnt = isset($patients_appts_lookup[$p_id]) ? count($patients_appts_lookup[$p_id]) : 0;
-                    ?>
+                        ?>
                         <option value="<?php echo $p_id; ?>" <?php selected($initial_patient_id, $p_id); ?>>
                             <?php echo esc_html(trim($cp['first_name'] . ' ' . $cp['last_name'])) . ' (' . esc_html($cp['patient_uid']) . ')' . ($p_cnt > 0 ? " — {$p_cnt} Appt" . ($p_cnt > 1 ? 's' : '') : ' — No Appts'); ?>
                         </option>
@@ -385,7 +387,7 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
                     </label>
                     <div class="input-group gap-2">
                         <input type="url" class="form-control rounded-start-3 py-2" id="edit-join-url" name="join_url" placeholder="https://zoom.us/j/...">
-                        <button type="button" class="btn btn-outline-secondary px-3" onclick="diorTestMeetingLink()" title="Open Link">
+                        <button type="button" class="btn btn-primary px-3" onclick="diorTestMeetingLink()" title="Open Link">
                             <i class="fas fa-arrow-up-right-from-square"></i>
                         </button>
                     </div>
@@ -470,9 +472,10 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
                         <i class="fas fa-user-check text-primary me-1"></i> Patient Assignment <span class="text-danger">*</span>
                     </label>
                     <select class="form-select rounded-3 py-2 fw-semibold" id="edit-patient-select" onchange="diorOnPatientAssignedChange(this.value)">
-                        <?php foreach ($all_clinic_patients as $cp): 
-                            $p_id = (int)$cp['user_id'];
-                        ?>
+                        <?php
+                        foreach ($all_clinic_patients as $cp):
+                            $p_id = (int) $cp['user_id'];
+                            ?>
                             <option value="<?php echo $p_id; ?>"
                                 data-code="<?php echo esc_attr($cp['patient_uid']); ?>"
                                 data-firstname="<?php echo esc_attr($cp['first_name']); ?>"

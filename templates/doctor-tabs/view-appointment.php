@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View Appointment Tab — Dynamic, DB-connected.
  * Uses the shared Dior Dashboard design system for typography, buttons, cards, badges and form controls.
@@ -218,9 +219,9 @@ $status_badges = [
                     <div>
                         <span class="text-muted small fw-semibold text-uppercase">Upcoming Visits</span>
                         <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-upcoming"><?php echo esc_html($upcoming_appts); ?></h3>
-                        <span class="badge bg-info-subtle text-info rounded-pill mt-2 px-2 py-1 small">Scheduled Ahead</span>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small">Scheduled Ahead</span>
                     </div>
-                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-info">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary">
                         <i class="fas fa-clock"></i>
                     </div>
                 </div>
@@ -232,9 +233,9 @@ $status_badges = [
                     <div>
                         <span class="text-muted small fw-semibold text-uppercase">Completed</span>
                         <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-completed"><?php echo esc_html($completed_appts); ?></h3>
-                        <span class="badge bg-success-subtle text-success rounded-pill mt-2 px-2 py-1 small">Consultations Done</span>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small">Consultations Done</span>
                     </div>
-                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-success">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary">
                         <i class="fas fa-circle-check"></i>
                     </div>
                 </div>
@@ -246,9 +247,9 @@ $status_badges = [
                     <div>
                         <span class="text-muted small fw-semibold text-uppercase">Pending Action</span>
                         <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-pending"><?php echo esc_html($pending_appts); ?></h3>
-                        <span class="badge bg-warning-subtle text-warning rounded-pill mt-2 px-2 py-1 small">Needs Review</span>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small">Needs Review</span>
                     </div>
-                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-warning">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary">
                         <i class="fas fa-hourglass-half"></i>
                     </div>
                 </div>
@@ -347,7 +348,8 @@ $status_badges = [
                 </thead>
                 <tbody id="va-appointments-tbody">
                     <?php if (!empty($appointments)): ?>
-                        <?php foreach ($appointments as $a):
+                        <?php
+                        foreach ($appointments as $a):
                             $fname = trim(($a['first_name'] ?? '') . ' ' . ($a['last_name'] ?? ''));
                             if (empty($fname)) {
                                 $fname = !empty($a['user_display_name']) ? $a['user_display_name'] : 'Patient #' . ($a['patient_id'] ?? '');
@@ -517,7 +519,7 @@ $status_badges = [
                                         </button>
                                         <?php if (strtolower($status) !== 'cancelled'): ?>
                                             <button type="button"
-                                                class="btn btn-outline-danger btn-sm rounded-3 fw-semibold va-cancel-appt-btn"
+                                                class="btn btn-primary btn-sm rounded-3 fw-semibold va-cancel-appt-btn"
                                                 data-uid="<?php echo $uid; ?>" data-name="<?php echo esc_attr($fname); ?>"
                                                 title="Cancel Appointment"
                                                >
