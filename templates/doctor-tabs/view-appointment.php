@@ -163,8 +163,7 @@ $status_badges = [
         <div>
             <h4 class="mb-1 text-dark fw-bold fs-5 d-flex align-items-center gap-2">
                 <span
-                    class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
-                   >
+                    class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center">
                     <i class="fas fa-calendar-check fs-6"></i>
                 </span>
                 View Appointments
@@ -199,8 +198,7 @@ $status_badges = [
                 class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase"
-                           >Total Bookings</span>
+                        <span class="text-secondary small fw-semibold text-uppercase">Total Bookings</span>
                         <div class="stat-num fs-1 fw-bold text-dark mt-1" id="va-kpi-total">
                             <?php echo esc_html($total_appts); ?></div>
                     </div>
@@ -219,8 +217,7 @@ $status_badges = [
                 class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase"
-                           >Upcoming Visits</span>
+                        <span class="text-secondary small fw-semibold text-uppercase">Upcoming Visits</span>
                         <div class="stat-num fs-1 fw-bold text-primary mt-1" id="va-kpi-upcoming">
                             <?php echo esc_html($upcoming_appts); ?></div>
                     </div>
@@ -240,8 +237,7 @@ $status_badges = [
                 class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase"
-                           >Completed</span>
+                        <span class="text-secondary small fw-semibold text-uppercase">Completed</span>
                         <div class="stat-num fs-1 fw-bold text-success mt-1" id="va-kpi-completed">
                             <?php echo esc_html($completed_appts); ?></div>
                     </div>
@@ -261,8 +257,7 @@ $status_badges = [
                 class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase"
-                           >Pending Action</span>
+                        <span class="text-secondary small fw-semibold text-uppercase">Pending Action</span>
                         <div class="stat-num fs-1 fw-bold text-warning mt-1" id="va-kpi-pending">
                             <?php echo esc_html($pending_appts); ?></div>
                     </div>
@@ -584,8 +579,7 @@ $status_badges = [
                 class="modal-header border-bottom py-3 px-4 bg-white d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-2">
                     <span
-                        class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
-                       >
+                        class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center">
                         <i class="fas fa-calendar-check"></i>
                     </span>
                     <div>
@@ -625,8 +619,7 @@ $status_badges = [
                 <!-- Patient & Attending Doctor Info (Clean 2-Column Minimalist Layout) -->
                 <div class="row g-4 pb-3 border-bottom mb-3">
                     <div class="col-md-6 col-12">
-                        <div class="small text-uppercase text-secondary fw-semibold mb-1"
-                           >
+                        <div class="small text-uppercase text-secondary fw-semibold mb-1">
                             <i class="fas fa-hospital-user text-primary me-1"></i> Patient Information
                         </div>
                         <div class="fw-bold text-dark fs-6" id="dtl-patient-name">—</div>
@@ -643,8 +636,7 @@ $status_badges = [
                     </div>
 
                     <div class="col-md-6 col-12">
-                        <div class="small text-uppercase text-secondary fw-semibold mb-1"
-                           >
+                        <div class="small text-uppercase text-secondary fw-semibold mb-1">
                             <i class="fas fa-user-doctor text-primary me-1"></i> Attending Physician
                         </div>
                         <div class="fw-bold text-dark fs-6" id="dtl-doctor-name">—</div>
@@ -654,8 +646,7 @@ $status_badges = [
                 </div>
 
                 <!-- Consultation & Scheduling Details (Clean 4-col Definition Grid) -->
-                <div class="small text-uppercase text-secondary fw-semibold mb-2"
-                   >
+                <div class="small text-uppercase text-secondary fw-semibold mb-2">
                     <i class="fas fa-notes-medical text-primary me-1"></i> Consultation &amp; Scheduling
                 </div>
                 <div class="row g-3 pb-3 border-bottom mb-3">
@@ -731,13 +722,11 @@ $status_badges = [
                         <div class="col-12">
                             <div class="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between">
                                 <div>
-                                    <div class="small text-uppercase text-secondary fw-semibold"
-                                       >Patient</div>
+                                    <div class="small text-uppercase text-secondary fw-semibold">Patient</div>
                                     <div class="fw-bold text-dark fs-6" id="va-resched-patient-name">—</div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="small text-uppercase text-secondary fw-semibold"
-                                       >Current Schedule</div>
+                                    <div class="small text-uppercase text-secondary fw-semibold">Current Schedule</div>
                                     <div class="badge bg-light text-secondary border rounded-pill px-2 py-1 small"
                                         id="va-resched-current-time">—</div>
                                 </div>
