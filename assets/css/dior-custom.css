@@ -760,7 +760,7 @@
 :is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .va-title-line {
     width: 32px !important;
     height: 3px !important;
-    background: var(--dior-accent-blue) !important;
+    background: var(--dior-primary) !important;
     border-radius: 2px !important;
     margin-top: 6px !important;
 }
@@ -57516,7 +57516,7 @@ a.va-btn-primary:hover {
         overflow: hidden !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td {
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -57538,7 +57538,7 @@ a.va-btn-primary:hover {
         box-shadow: none !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td::before {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td::before {
         content: attr(data-label);
         display: block !important;
         margin-bottom: 5px !important;
@@ -57551,7 +57551,7 @@ a.va-btn-primary:hover {
     }
 
     /* Selection checkbox sits in a compact card toolbar without consuming a data column. */
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > .cn-select-cell {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>.cn-select-cell {
         grid-column: 1 / -1 !important;
         grid-row: 1 !important;
         align-items: flex-end !important;
@@ -57570,7 +57570,7 @@ a.va-btn-primary:hover {
         height: 17px !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > .cn-id-cell {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>.cn-id-cell {
         grid-column: 1 / -1 !important;
         grid-row: 2 !important;
         padding-top: 2px !important;
@@ -57578,7 +57578,7 @@ a.va-btn-primary:hover {
         font-size: 11px !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td:nth-child(3) {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td:nth-child(3) {
         grid-column: 1 / -1 !important;
         grid-row: 3 !important;
         padding-top: 10px !important;
@@ -57611,12 +57611,12 @@ a.va-btn-primary:hover {
         font-weight: 700 !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td:nth-child(4) {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td:nth-child(4) {
         grid-column: 1 / -1 !important;
         grid-row: 4 !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > .cn-complaint-cell {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>.cn-complaint-cell {
         grid-column: 1 / -1 !important;
         grid-row: 5 !important;
         max-height: none !important;
@@ -57624,22 +57624,22 @@ a.va-btn-primary:hover {
         white-space: normal !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td:nth-child(6) {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td:nth-child(6) {
         grid-column: 1 / 2 !important;
         grid-row: 6 !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td:nth-child(7) {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td:nth-child(7) {
         grid-column: 2 / 3 !important;
         grid-row: 6 !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > td:nth-child(8) {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>td:nth-child(8) {
         grid-column: 1 / -1 !important;
         grid-row: 7 !important;
     }
 
-    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id] > .cn-actions-cell {
+    #dior-doctor-app #tab-doc-consultation-notes #cn-table tbody tr[data-id]>.cn-actions-cell {
         grid-column: 1 / -1 !important;
         grid-row: 8 !important;
         align-items: center !important;
