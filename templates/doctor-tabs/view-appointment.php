@@ -1,7 +1,8 @@
 <?php
 /**
- * View Appointment Tab — Dynamic, DB-connected
- * 100% Native Bootstrap 5 Components & Utilities (Zero Custom CSS)
+ * View Appointment Tab — Dynamic, DB-connected.
+ * Uses the shared Dior Dashboard design system for typography, buttons, cards, badges and form controls.
+ * Keep presentation in Bootstrap utilities and assets/css/dior-custom.css; do not add inline CSS here.
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -143,26 +144,27 @@ foreach ($appointments as $item) {
     }
 }
 
-// 100% Native Bootstrap 5 status badges
+// Status badge variants use the same shared Bootstrap/Dior Dashboard palette as Home.
 $status_badges = [
-    'Pending' => 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-    'Confirmed' => 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-    'In Progress' => 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-    'Completed' => 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-    'Cancelled' => 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-    'No Show' => 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2.5 py-1 small fw-semibold',
+    'Pending' => 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 small fw-semibold',
+    'Confirmed' => 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-semibold',
+    'In Progress' => 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1 small fw-semibold',
+    'Completed' => 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small fw-semibold',
+    'Cancelled' => 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small fw-semibold',
+    'No Show' => 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small fw-semibold',
 ];
 ?>
 
-<section class="dior-tab-panel dior-appt-screen" id="tab-doc-appointments-view" style="display: none;">
+<!-- Shared Dior Dashboard styling: use the global component system for cards, buttons, typography, badges and form controls. -->
+<section class="dior-tab-panel dior-appt-screen" id="tab-doc-appointments-view">
 
-    <!-- Hero Header (100% Native Bootstrap 5) -->
+    <!-- Page Header — shared Dashboard title and action-button styles. -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <h4 class="mb-1 text-dark fw-bold fs-5 d-flex align-items-center gap-2">
                 <span
                     class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
-                    style="width: 38px; height: 38px;">
+                   >
                     <i class="fas fa-calendar-check fs-6"></i>
                 </span>
                 View Appointments
@@ -190,7 +192,7 @@ $status_badges = [
         </div>
     </div>
 
-    <!-- Quick Stat KPI Bar (100% Bootstrap 5 Cards) -->
+    <!-- Summary Statistics — same global stat-card pattern as Dashboard Home. -->
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-sm-6 col-12">
             <div
@@ -198,11 +200,11 @@ $status_badges = [
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
                         <span class="text-secondary small fw-semibold text-uppercase"
-                            style="letter-spacing: 0.5px; font-size: 11px;">Total Bookings</span>
+                           >Total Bookings</span>
                         <div class="stat-num fs-1 fw-bold text-dark mt-1" id="va-kpi-total">
                             <?php echo esc_html($total_appts); ?></div>
                     </div>
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-3 p-2.5">
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-3 p-2">
                         <i class="fas fa-calendar-days fs-5"></i>
                     </span>
                 </div>
@@ -218,17 +220,17 @@ $status_badges = [
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
                         <span class="text-secondary small fw-semibold text-uppercase"
-                            style="letter-spacing: 0.5px; font-size: 11px;">Upcoming Visits</span>
+                           >Upcoming Visits</span>
                         <div class="stat-num fs-1 fw-bold text-primary mt-1" id="va-kpi-upcoming">
                             <?php echo esc_html($upcoming_appts); ?></div>
                     </div>
-                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-3 p-2.5">
+                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-3 p-2">
                         <i class="fas fa-clock fs-5"></i>
                     </span>
                 </div>
                 <div class="mt-2 text-secondary small">
                     <span
-                        class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-0.5 fw-semibold">Scheduled
+                        class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1 fw-semibold">Scheduled
                         ahead</span>
                 </div>
             </div>
@@ -239,17 +241,17 @@ $status_badges = [
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
                         <span class="text-secondary small fw-semibold text-uppercase"
-                            style="letter-spacing: 0.5px; font-size: 11px;">Completed</span>
+                           >Completed</span>
                         <div class="stat-num fs-1 fw-bold text-success mt-1" id="va-kpi-completed">
                             <?php echo esc_html($completed_appts); ?></div>
                     </div>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-3 p-2.5">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-3 p-2">
                         <i class="fas fa-circle-check fs-5"></i>
                     </span>
                 </div>
                 <div class="mt-2 text-secondary small">
                     <span
-                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5 fw-semibold">Consultations
+                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 fw-semibold">Consultations
                         done</span>
                 </div>
             </div>
@@ -260,24 +262,24 @@ $status_badges = [
                 <div class="d-flex align-items-start justify-content-between">
                     <div>
                         <span class="text-secondary small fw-semibold text-uppercase"
-                            style="letter-spacing: 0.5px; font-size: 11px;">Pending Action</span>
+                           >Pending Action</span>
                         <div class="stat-num fs-1 fw-bold text-warning mt-1" id="va-kpi-pending">
                             <?php echo esc_html($pending_appts); ?></div>
                     </div>
-                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-3 p-2.5">
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-3 p-2">
                         <i class="fas fa-hourglass-half fs-5"></i>
                     </span>
                 </div>
                 <div class="mt-2 text-secondary small">
                     <span
-                        class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5 fw-semibold">Needs
+                        class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 fw-semibold">Needs
                         review</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Table Card (Standard View Appointment Card) -->
+    <!-- Appointment Registry — shared global card, header, form-control and table styles. -->
     <div class="view-appointment-card">
 
         <!-- Controls Header Bar -->
@@ -291,23 +293,23 @@ $status_badges = [
             <div class="va-actions-wrapper">
                 <!-- Bulk Selection Toolbar (reveals when items checked) -->
                 <div id="va-bulk-bar" class="d-none align-items-center gap-2">
-                    <span class="badge bg-primary text-white rounded-pill px-2.5 py-1 small fw-semibold"
+                    <span class="badge bg-primary text-white rounded-pill px-2 py-1 small fw-semibold"
                         id="va-selected-count">0 Selected</span>
                     <button type="button"
-                        class="btn btn-outline-success btn-sm rounded-3 px-2.5 py-1 shadow-none fw-semibold"
+                        class="btn btn-outline-success btn-sm rounded-3 px-2 py-1 shadow-none fw-semibold"
                         id="va-bulk-complete-btn" title="Mark as Completed">
                         <i class="fas fa-check me-1"></i>Complete
                     </button>
                 </div>
 
                 <!-- Search, Filters & Actions -->
-                <div class="input-group input-group-sm dior-bs-search-group" style="width: 220px;">
+                <div class="input-group input-group-sm dior-bs-search-group flex-fill">
                     <input type="text" id="va-appt-search" class="form-control border-start-0 ps-0 shadow-none"
                         placeholder="Search patient, doctor, UID...">
                 </div>
 
                 <!-- Doctor / Physician Filter -->
-                <div style="width: 175px;">
+                <div class="flex-fill">
                     <select id="va-doctor-filter" class="form-select form-select-sm shadow-none">
                         <option value="">All Doctors</option>
                         <?php foreach ($doctor_list as $doc_item): ?>
@@ -318,7 +320,7 @@ $status_badges = [
                 </div>
 
                 <!-- Status Filter -->
-                <div style="width: 140px;">
+                <div class="flex-fill">
                     <select id="va-status-filter" class="form-select form-select-sm shadow-none">
                         <option value="">All Statuses</option>
                         <option value="Confirmed">Confirmed</option>
@@ -330,7 +332,7 @@ $status_badges = [
                 </div>
 
                 <!-- Date Range Filter -->
-                <div style="width: 125px;">
+                <div class="flex-fill">
                     <select id="va-date-filter" class="form-select form-select-sm shadow-none">
                         <option value="">All Dates</option>
                         <option value="today">Today</option>
@@ -353,7 +355,7 @@ $status_badges = [
             <table class="va-table table table-hover align-middle mb-0" id="va-appointments-table">
                 <thead>
                     <tr>
-                        <th style="width: 45px;" class="text-center">
+                        <th class="text-center">
                             <input type="checkbox" class="va-checkbox form-check-input" id="va-select-all"
                                 aria-label="Select all rows">
                         </th>
@@ -363,7 +365,7 @@ $status_badges = [
                         <th>DATE &amp; TIME <i class="fas fa-sort"></i></th>
                         <th>CONTACT <i class="fas fa-sort"></i></th>
                         <th>STATUS <i class="fas fa-sort"></i></th>
-                        <th style="text-align: right;">ACTIONS</th>
+                        <th>ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody id="va-appointments-tbody">
@@ -386,7 +388,7 @@ $status_badges = [
                             $uid = esc_attr($uid_raw);
                             $patient_id = !empty($a['patient_id']) ? (int) $a['patient_id'] : (!empty($a['patient_user_id']) ? (int) $a['patient_user_id'] : 0);
                             $status = esc_html($a['status'] ?? 'Pending');
-                            $badge = $status_badges[$status] ?? 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2.5 py-1 small fw-semibold';
+                            $badge = $status_badges[$status] ?? 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small fw-semibold';
                             $date_raw = !empty($a['appt_date']) ? $a['appt_date'] : (!empty($a['date']) ? $a['date'] : '');
                             // If still empty, fall back to created_at date
                             if (empty($date_raw) && !empty($a['created_at'])) {
@@ -464,7 +466,7 @@ $status_badges = [
                                                 title="View Patient Profile">
                                                 <?php echo $fname; ?>
                                             </span>
-                                            <div class="d-flex align-items-center gap-1.5" style="font-size: 11px;">
+                                            <div class="d-flex align-items-center gap-1">
                                                 <span class="text-secondary"><?php echo $patient_uid; ?></span>
                                                 <span class="text-secondary opacity-50">&bull;</span>
                                                 <a href="javascript:void(0)"
@@ -479,7 +481,7 @@ $status_badges = [
                                 </td>
 
                                 <td>
-                                    <div class="d-flex flex-column" style="max-width: 240px;">
+                                    <div class="d-flex flex-column">
                                         <span class="text-dark small fw-semibold text-truncate d-block"
                                             title="<?php echo esc_attr($condition); ?>"><?php echo $condition; ?></span>
                                     </div>
@@ -489,7 +491,7 @@ $status_badges = [
                                         <span class="text-dark small fw-semibold va-cell-date">
                                             <i class="far fa-calendar text-primary me-1"></i><?php echo $date_fmt; ?>
                                         </span>
-                                        <span class="text-secondary small va-cell-time" style="font-size: 11px;">
+                                        <span class="text-secondary small va-cell-time">
                                             <i class="far fa-clock me-1"></i><?php echo $time; ?>
                                         </span>
                                     </div>
@@ -508,40 +510,40 @@ $status_badges = [
                                     <span class="<?php echo $badge; ?> va-badge text-nowrap"><?php echo $status; ?></span>
                                 </td>
                                 <td class="text-end text-nowrap">
-                                    <div class="d-inline-flex align-items-center justify-content-end gap-1.5 flex-nowrap">
+                                    <div class="d-inline-flex align-items-center justify-content-end gap-1 flex-nowrap">
                                         <?php if ($is_video && !empty($join_url) && !in_array(strtolower($status), ['completed', 'cancelled', 'no show'], true)): ?>
                                             <a href="<?php echo $join_url; ?>" data-dior-meeting-join
                                                 data-appt-uid="<?php echo esc_attr($uid); ?>"
                                                 data-meeting-nonce="<?php echo esc_attr(wp_create_nonce('dior_meeting_started')); ?>"
                                                 data-status-nonce="<?php echo esc_attr($nonce); ?>" target="_blank"
                                                 rel="noopener noreferrer"
-                                                class="btn btn-success btn-sm rounded-pill shadow-none va-join-meeting-btn"
+                                                class="btn btn-primary btn-sm rounded-3 fw-semibold va-join-meeting-btn"
                                                 title="Join Zoom Meeting"
-                                                style="padding:4px 10px!important;font-size:12px!important;font-weight:600!important;line-height:1.3!important;"><i
+                                               ><i
                                                     class="fas fa-video me-1"></i>Join Meeting</a>
                                         <?php endif; ?>
                                         <button type="button"
-                                            class="btn btn-outline-primary btn-sm rounded-pill va-view-patient-btn shadow-none"
+                                            class="btn btn-outline-primary btn-sm rounded-3 fw-semibold va-view-patient-btn"
                                             data-patient-id="<?php echo $patient_id; ?>" title="View Patient Profile"
-                                            style="padding: 4px 10px !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1.3 !important;">
+                                           >
                                             <i class="fas fa-eye me-1"></i>View
                                         </button>
 
                                         <button type="button"
-                                            class="btn btn-outline-primary btn-sm rounded-pill va-resched-appt-btn shadow-none"
+                                            class="btn btn-outline-primary btn-sm rounded-3 fw-semibold va-resched-appt-btn"
                                             data-uid="<?php echo $uid; ?>" data-appt-uid="<?php echo $uid; ?>"
                                             data-name="<?php echo esc_attr($fname); ?>"
                                             data-date="<?php echo esc_attr($date_raw); ?>"
                                             data-time="<?php echo esc_attr($time); ?>" title="Reschedule Appointment"
-                                            style="padding: 4px 10px !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1.3 !important;">
+                                           >
                                             <i class="fas fa-calendar-alt me-1"></i>Reschedule
                                         </button>
                                         <?php if (strtolower($status) !== 'cancelled'): ?>
                                             <button type="button"
-                                                class="btn btn-outline-danger btn-sm rounded-pill va-cancel-appt-btn shadow-none"
+                                                class="btn btn-outline-danger btn-sm rounded-3 fw-semibold va-cancel-appt-btn"
                                                 data-uid="<?php echo $uid; ?>" data-name="<?php echo esc_attr($fname); ?>"
                                                 title="Cancel Appointment"
-                                                style="padding: 4px 10px !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1.3 !important;">
+                                               >
                                                 <i class="fas fa-ban me-1"></i>Cancel
                                             </button>
                                         <?php endif; ?>
@@ -571,7 +573,7 @@ $status_badges = [
 </section>
 
 <!-- ========================================================================= -->
-<!-- 1. VIEW APPOINTMENT DETAILS MODAL (100% Native Bootstrap 5 Minimalist Standard - Rule 3.F) -->
+<!-- 1. VIEW APPOINTMENT DETAILS MODAL — shared Dashboard modal and form-control styles. -->
 <!-- ========================================================================= -->
 <div class="modal fade" id="diorAppointmentDetailsModal" tabindex="-1"
     aria-labelledby="diorAppointmentDetailsModalLabel" aria-hidden="true">
@@ -583,7 +585,7 @@ $status_badges = [
                 <div class="d-flex align-items-center gap-2">
                     <span
                         class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
-                        style="width: 36px; height: 36px;">
+                       >
                         <i class="fas fa-calendar-check"></i>
                     </span>
                     <div>
@@ -595,12 +597,12 @@ $status_badges = [
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <span id="dtl-status-badge"
-                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 small fw-semibold">Success</span>
+                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small fw-semibold">Success</span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
 
-            <!-- Modal Body (Clean Simple Layout - Rule 3.F) -->
+            <!-- Modal Body — shared Dashboard typography and spacing utilities. -->
             <div class="modal-body p-4 bg-white">
 
                 <!-- Telehealth Video Alert (Clean, subtle banner) -->
@@ -615,7 +617,7 @@ $status_badges = [
                         </div>
                     </div>
                     <a id="dtl-join-video-btn" href="#" target="_blank" rel="noopener noreferrer"
-                        class="btn btn-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold shadow-sm">
+                        class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-sm">
                         <i class="fas fa-video me-1"></i>Join Video Call
                     </a>
                 </div>
@@ -624,7 +626,7 @@ $status_badges = [
                 <div class="row g-4 pb-3 border-bottom mb-3">
                     <div class="col-md-6 col-12">
                         <div class="small text-uppercase text-secondary fw-semibold mb-1"
-                            style="font-size: 11px; letter-spacing: 0.5px;">
+                           >
                             <i class="fas fa-hospital-user text-primary me-1"></i> Patient Information
                         </div>
                         <div class="fw-bold text-dark fs-6" id="dtl-patient-name">—</div>
@@ -642,7 +644,7 @@ $status_badges = [
 
                     <div class="col-md-6 col-12">
                         <div class="small text-uppercase text-secondary fw-semibold mb-1"
-                            style="font-size: 11px; letter-spacing: 0.5px;">
+                           >
                             <i class="fas fa-user-doctor text-primary me-1"></i> Attending Physician
                         </div>
                         <div class="fw-bold text-dark fs-6" id="dtl-doctor-name">—</div>
@@ -653,31 +655,31 @@ $status_badges = [
 
                 <!-- Consultation & Scheduling Details (Clean 4-col Definition Grid) -->
                 <div class="small text-uppercase text-secondary fw-semibold mb-2"
-                    style="font-size: 11px; letter-spacing: 0.5px;">
+                   >
                     <i class="fas fa-notes-medical text-primary me-1"></i> Consultation &amp; Scheduling
                 </div>
                 <div class="row g-3 pb-3 border-bottom mb-3">
                     <div class="col-sm-3 col-6">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">
+                        <div class="small text-uppercase text-secondary fw-semibold">
                             Appointment Date</div>
                         <div class="fw-bold text-dark mt-1" id="dtl-date">—</div>
                     </div>
                     <div class="col-sm-3 col-6">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">Time Slot
+                        <div class="small text-uppercase text-secondary fw-semibold">Time Slot
                         </div>
                         <div class="fw-bold text-dark mt-1" id="dtl-time">—</div>
                     </div>
                     <div class="col-sm-3 col-6">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">Visit Mode
+                        <div class="small text-uppercase text-secondary fw-semibold">Visit Mode
                         </div>
                         <div class="fw-bold text-dark mt-1" id="dtl-visit-type">—</div>
                     </div>
                     <div class="col-sm-3 col-6">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">Payment
+                        <div class="small text-uppercase text-secondary fw-semibold">Payment
                             Status</div>
                         <div class="mt-1" id="dtl-payment-wrap">
                             <span
-                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small fw-semibold"
+                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-semibold"
                                 id="dtl-payment-status">Paid</span>
                         </div>
                     </div>
@@ -686,12 +688,12 @@ $status_badges = [
                 <!-- Reason & Clinical Notes (Clean Minimalist Text) -->
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">Reason /
+                        <div class="small text-uppercase text-secondary fw-semibold">Reason /
                             Chief Complaint</div>
                         <div class="text-dark fw-semibold mt-1" id="dtl-condition">—</div>
                     </div>
                     <div class="col-12">
-                        <div class="small text-uppercase text-secondary fw-semibold" style="font-size: 11px;">Clinical
+                        <div class="small text-uppercase text-secondary fw-semibold">Clinical
                             Notes &amp; Intake Remarks</div>
                         <div class="text-secondary small mt-1" id="dtl-notes">—</div>
                     </div>
@@ -709,7 +711,7 @@ $status_badges = [
 </div>
 
 <!-- ========================================================================= -->
-<!-- 1.5 RESCHEDULE APPOINTMENT MODAL (100% Native Bootstrap 5 Minimalist Standard) -->
+<!-- 1.5 RESCHEDULE APPOINTMENT MODAL — shared Dashboard modal and form-control styles. -->
 <!-- ========================================================================= -->
 <div class="modal fade" id="diorRescheduleApptModal" tabindex="-1" aria-labelledby="diorRescheduleApptModalLabel"
     aria-hidden="true">
@@ -730,12 +732,12 @@ $status_badges = [
                             <div class="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between">
                                 <div>
                                     <div class="small text-uppercase text-secondary fw-semibold"
-                                        style="font-size: 11px;">Patient</div>
+                                       >Patient</div>
                                     <div class="fw-bold text-dark fs-6" id="va-resched-patient-name">—</div>
                                 </div>
                                 <div class="text-end">
                                     <div class="small text-uppercase text-secondary fw-semibold"
-                                        style="font-size: 11px;">Current Schedule</div>
+                                       >Current Schedule</div>
                                     <div class="badge bg-light text-secondary border rounded-pill px-2 py-1 small"
                                         id="va-resched-current-time">—</div>
                                 </div>
@@ -775,7 +777,7 @@ $status_badges = [
 </div>
 
 <!-- ========================================================================= -->
-<!-- 2. EDIT APPOINTMENT MODAL (100% Native Bootstrap 5 Minimalist Standard) -->
+<!-- 2. EDIT APPOINTMENT MODAL — shared Dashboard modal and form-control styles. -->
 <!-- ========================================================================= -->
 <div class="modal fade" id="diorViewApptEditModal" tabindex="-1" aria-labelledby="diorViewApptEditModalLabel"
     aria-hidden="true">
@@ -897,11 +899,11 @@ $status_badges = [
         var activeViewingRow = null;
 
         var statusBadgeMap = {
-            'success': 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-            'in progress': 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-            'completed': 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-            'cancelled': 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small fw-semibold',
-            'no show': 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2.5 py-1 small fw-semibold'
+            'success': 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-semibold',
+            'in progress': 'badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1 small fw-semibold',
+            'completed': 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small fw-semibold',
+            'cancelled': 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small fw-semibold',
+            'no show': 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small fw-semibold'
         };
 
         function initViewAppt() {
@@ -1061,7 +1063,7 @@ $status_badges = [
             // Prev Button
             var prevBtn = document.createElement('button');
             prevBtn.type = 'button';
-            prevBtn.className = 'btn btn-sm btn-outline-secondary rounded-3 px-2.5 shadow-none' + (currentPage === 1 ? ' disabled' : '');
+            prevBtn.className = 'btn btn-sm btn-outline-secondary rounded-3 px-2 shadow-none' + (currentPage === 1 ? ' disabled' : '');
             prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
             prevBtn.addEventListener('click', function () {
                 if (currentPage > 1) renderPage(currentPage - 1);
@@ -1083,7 +1085,7 @@ $status_badges = [
             // Next Button
             var nextBtn = document.createElement('button');
             nextBtn.type = 'button';
-            nextBtn.className = 'btn btn-sm btn-outline-secondary rounded-3 px-2.5 shadow-none' + (currentPage === pages ? ' disabled' : '');
+            nextBtn.className = 'btn btn-sm btn-outline-secondary rounded-3 px-2 shadow-none' + (currentPage === pages ? ' disabled' : '');
             nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
             nextBtn.addEventListener('click', function () {
                 if (currentPage < pages) renderPage(currentPage + 1);
@@ -1237,7 +1239,7 @@ $status_badges = [
                             row.dataset.status = 'Completed';
                             var badge = row.querySelector('.va-badge');
                             if (badge) {
-                                badge.className = 'va-badge ' + (statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1 small fw-semibold');
+                                badge.className = 'va-badge ' + (statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-2 py-1 small fw-semibold');
                                 badge.textContent = 'Completed';
                             }
                             var cb = row.querySelector('.va-row-check');
@@ -1298,7 +1300,7 @@ $status_badges = [
 
             var elBadge = document.getElementById('dtl-status-badge');
             if (elBadge) {
-                var badgeCls = statusBadgeMap[status.toLowerCase()] || 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3 py-1.5 small fw-semibold';
+                var badgeCls = statusBadgeMap[status.toLowerCase()] || 'badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3 py-1 small fw-semibold';
                 elBadge.className = badgeCls;
                 elBadge.textContent = status;
             }
@@ -1359,7 +1361,7 @@ $status_badges = [
             }
             if (elPayStatus) {
                 elPayStatus.textContent = paymentStatus;
-                elPayStatus.className = 'badge rounded-pill px-2.5 py-1 small fw-semibold ' +
+                elPayStatus.className = 'badge rounded-pill px-2 py-1 small fw-semibold ' +
                     (paymentStatus.toLowerCase() === 'paid' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning border border-warning-subtle');
             }
             if (elCond) elCond.textContent = condition;
@@ -1451,11 +1453,11 @@ $status_badges = [
                                     row.dataset.status = 'Completed';
                                     var badge = row.querySelector('.va-badge');
                                     if (badge) {
-                                        badge.className = 'va-badge ' + (statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1 small fw-semibold');
+                                        badge.className = 'va-badge ' + (statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-2 py-1 small fw-semibold');
                                         badge.textContent = 'Completed';
                                     }
                                     if (elBadge) {
-                                        elBadge.className = statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 small fw-semibold';
+                                        elBadge.className = statusBadgeMap['completed'] || 'badge bg-primary-subtle text-primary rounded-pill px-3 py-1 small fw-semibold';
                                         elBadge.textContent = 'Completed';
                                     }
                                     btn.innerHTML = '<i class="fas fa-check me-1"></i>Already Completed';
@@ -1557,13 +1559,13 @@ $status_badges = [
                                 row.dataset.status = 'Cancelled';
                                 var badge = row.querySelector('.va-badge');
                                 if (badge) {
-                                    badge.className = 'va-badge ' + (statusBadgeMap['cancelled'] || 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small fw-semibold');
+                                    badge.className = 'va-badge ' + (statusBadgeMap['cancelled'] || 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small fw-semibold');
                                     badge.textContent = 'Cancelled';
                                 }
                             }
                             var dtlBadge = document.getElementById('dtl-status-badge');
                             if (dtlBadge) {
-                                dtlBadge.className = statusBadgeMap['cancelled'] || 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1.5 small fw-semibold';
+                                dtlBadge.className = statusBadgeMap['cancelled'] || 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 small fw-semibold';
                                 dtlBadge.textContent = 'Cancelled';
                             }
                             var dtlCancelBtn = document.getElementById('dtl-action-cancel-btn');
@@ -1723,7 +1725,7 @@ $status_badges = [
 
                                 var badge = row.querySelector('.va-badge');
                                 if (badge) {
-                                    badge.className = 'va-badge ' + (statusBadgeMap['confirmed'] || 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small fw-semibold');
+                                    badge.className = 'va-badge ' + (statusBadgeMap['confirmed'] || 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-semibold');
                                     badge.textContent = 'Confirmed';
                                 }
                                 var cfBtn = row.querySelector('.va-confirm-appt-btn');
@@ -1736,7 +1738,7 @@ $status_badges = [
                             if (dtlTime) dtlTime.textContent = formattedTime;
                             var dtlBadge = document.getElementById('dtl-status-badge');
                             if (dtlBadge) {
-                                dtlBadge.className = statusBadgeMap['confirmed'] || 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 small fw-semibold';
+                                dtlBadge.className = statusBadgeMap['confirmed'] || 'badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small fw-semibold';
                                 dtlBadge.textContent = 'Confirmed';
                             }
 
@@ -2119,7 +2121,7 @@ $status_badges = [
 
                                     var badge = targetRow.querySelector('.va-badge');
                                     if (badge) {
-                                        var badgeClass = statusBadgeMap[status.toLowerCase()] || 'badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1 small fw-semibold';
+                                        var badgeClass = statusBadgeMap[status.toLowerCase()] || 'badge bg-secondary-subtle text-secondary rounded-pill px-2 py-1 small fw-semibold';
                                         badge.className = 'va-badge ' + badgeClass;
                                         badge.textContent = status;
                                     }
