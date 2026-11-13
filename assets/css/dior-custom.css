@@ -57157,3 +57157,155 @@ a.va-btn-primary:hover {
     background: var(--dior-color-primary-soft) !important;
     color: var(--dior-color-primary) !important;
 }
+
+/* VIEW APPOINTMENTS — KPI cards aligned to the Appointment Calendar card pattern. */
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats {
+    --bs-gutter-x: 14px;
+    --bs-gutter-y: 14px;
+    margin-bottom: 20px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats>[class*="col-"] {
+    min-width: 0 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats>[class*="col-"]>.card {
+    min-height: 126px !important;
+    padding: 18px !important;
+    border: 1px solid var(--dior-color-border) !important;
+    border-radius: var(--dior-radius-card) !important;
+    background: var(--dior-color-surface) !important;
+    box-shadow: var(--dior-shadow-card) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .card>.d-flex {
+    gap: 12px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .text-uppercase {
+    color: var(--dior-color-text-muted) !important;
+    font-family: var(--dior-font-body) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .045em !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats h3 {
+    color: var(--dior-color-primary) !important;
+    font-family: var(--dior-font-body) !important;
+    font-size: 29px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 5px 8px !important;
+    border: 1px solid transparent !important;
+    border-radius: var(--dior-radius-pill) !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .bg-primary-subtle {
+    color: var(--dior-color-primary) !important;
+    background: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-border) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .bg-info-subtle {
+    color: var(--dior-color-info) !important;
+    background: var(--dior-color-info-soft) !important;
+    border-color: var(--dior-color-border) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .bg-success-subtle {
+    color: var(--dior-color-success) !important;
+    background: var(--dior-color-success-soft) !important;
+    border-color: var(--dior-color-success-soft) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .bg-warning-subtle {
+    color: #B45309 !important;
+    background: #FEF3C7 !important;
+    border-color: #FDE68A !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    flex: 0 0 48px !important;
+    border: 1px solid var(--dior-color-border) !important;
+    border-radius: var(--dior-radius-control) !important;
+    font-size: 19px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon-primary {
+    background: var(--dior-color-primary-soft) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon-info {
+    background: var(--dior-color-info-soft) !important;
+    color: var(--dior-color-info) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon-success {
+    background: var(--dior-color-success-soft) !important;
+    color: var(--dior-color-success) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon-warning {
+    background: #FEF3C7 !important;
+    color: #D97706 !important;
+    border-color: #FDE68A !important;
+}
+
+@media (max-width: 767.98px) {
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats {
+        --bs-gutter-x: 10px;
+        --bs-gutter-y: 10px;
+        margin-bottom: 14px !important;
+    }
+
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats>[class*="col-"] {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats>[class*="col-"]>.card {
+        min-height: 112px !important;
+        padding: 12px !important;
+    }
+
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats h3 {
+        font-size: 24px !important;
+    }
+
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats .card>.d-flex {
+        gap: 8px !important;
+    }
+
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        flex-basis: 36px !important;
+        font-size: 15px !important;
+    }
+}
+
+@media (max-width: 380px) {
+    #dior-doctor-app #tab-doc-appointments-view #va-summary-stats .dior-cal-stat-icon {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        flex-basis: 32px !important;
+        font-size: 13px !important;
+    }
+}
