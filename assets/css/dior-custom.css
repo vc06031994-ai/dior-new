@@ -320,3 +320,387 @@
         animation-iteration-count: 1 !important;
     }
 }
+
+/* ==========================================================================
+   DOCTOR DASHBOARD — OVERVIEW TEMPLATE
+   Shared dashboard tokens are defined above. Keep this block scoped to Overview.
+   ========================================================================== */
+#dior-doctor-app #tab-doc-overview {
+    color: var(--dior-color-text);
+    font-family: var(--dior-font-body);
+}
+
+#dior-doctor-app #tab-doc-overview .content-head {
+    margin-bottom: 24px !important;
+}
+
+#dior-doctor-app #tab-doc-overview .content-head h1 {
+    color: var(--dior-color-text) !important;
+    font-family: var(--dior-font-heading) !important;
+    font-size: clamp(22px, 2vw, 28px) !important;
+    font-weight: 700 !important;
+    line-height: 1.25;
+}
+
+#dior-doctor-app #tab-doc-overview .content-head p {
+    color: var(--dior-color-text-muted) !important;
+    font-size: 13px;
+}
+
+#dior-doctor-app #tab-doc-overview .card {
+    background: var(--dior-color-surface) !important;
+    border: 1px solid var(--dior-color-border) !important;
+    border-radius: var(--dior-radius-card) !important;
+    box-shadow: var(--dior-shadow-card) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .stat-card,
+#dior-doctor-app #tab-doc-overview .schedule-card,
+#dior-doctor-app #tab-doc-overview .table-card,
+#dior-doctor-app #tab-doc-overview .profile,
+#dior-doctor-app #tab-doc-overview .tasks,
+#dior-doctor-app #tab-doc-overview .follow,
+#dior-doctor-app #tab-doc-overview .reviews,
+#dior-doctor-app #tab-doc-overview .sessions {
+    padding: 20px !important;
+}
+
+#dior-doctor-app #tab-doc-overview .stat-num {
+    color: var(--dior-color-primary) !important;
+    font-family: var(--dior-font-body) !important;
+    font-size: clamp(26px, 2.4vw, 34px) !important;
+    font-weight: 700 !important;
+    line-height: 1.1;
+}
+
+#dior-doctor-app #tab-doc-overview .stat-card .text-primary.bg-primary-subtle {
+    background: var(--dior-color-primary-soft) !important;
+    border: 1px solid #D8E6F4;
+    border-radius: var(--dior-radius-control) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .stat-label {
+    color: var(--dior-color-text-secondary) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-title,
+#dior-doctor-app #tab-doc-overview .section-title {
+    color: var(--dior-color-text) !important;
+    font-family: var(--dior-font-heading) !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    line-height: 1.35;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-title > i,
+#dior-doctor-app #tab-doc-overview .section-title > i,
+#dior-doctor-app #tab-doc-overview .profile .text-primary,
+#dior-doctor-app #tab-doc-overview .tasks-body > div > i,
+#dior-doctor-app #tab-doc-overview .sessions-scroll i {
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-slot {
+    display: grid;
+    grid-template-columns: 72px 14px minmax(0, 1fr);
+    gap: 10px;
+    align-items: stretch;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--dior-color-border);
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-slot:last-child {
+    border-bottom: 0;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-time {
+    color: var(--dior-color-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    padding-top: 12px;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-timeline {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-timeline:before {
+    position: absolute;
+    top: 0;
+    bottom: -10px;
+    width: 1px;
+    background: var(--dior-color-border);
+    content: "";
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-slot:last-child .schedule-timeline:before {
+    display: none;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-dot {
+    position: relative;
+    z-index: 1;
+    width: 9px;
+    height: 9px;
+    margin-top: 15px;
+    border: 2px solid var(--dior-color-primary);
+    border-radius: 50%;
+    background: #fff;
+}
+
+#dior-doctor-app #tab-doc-overview .schedule-appt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--dior-color-border);
+    border-radius: var(--dior-radius-control);
+    background: var(--dior-color-surface);
+}
+
+#dior-doctor-app #tab-doc-overview .s-appt-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+#dior-doctor-app #tab-doc-overview .s-patient-img {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#dior-doctor-app #tab-doc-overview .s-patient-name {
+    margin: 0 0 3px;
+    color: var(--dior-color-text);
+    font-family: var(--dior-font-body);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#dior-doctor-app #tab-doc-overview .s-patient-id {
+    margin: 0;
+    color: var(--dior-color-text-muted);
+    font-size: 11px;
+}
+
+#dior-doctor-app #tab-doc-overview .s-appt-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border: 1px solid transparent;
+    border-radius: var(--dior-radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#dior-doctor-app #tab-doc-overview .s-completed {
+    color: #047857;
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+}
+
+#dior-doctor-app #tab-doc-overview .s-upcoming,
+#dior-doctor-app #tab-doc-overview .s-progress {
+    color: var(--dior-color-primary);
+    background: var(--dior-color-primary-soft);
+    border-color: #C7D9EB;
+}
+
+#dior-doctor-app #tab-doc-overview .s-cancelled {
+    color: #B91C1C;
+    background: #FEF2F2;
+    border-color: #FECACA;
+}
+
+#dior-doctor-app #tab-doc-overview .table-responsive {
+    border-radius: var(--dior-radius-control);
+}
+
+#dior-doctor-app #tab-doc-overview .table {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+
+#dior-doctor-app #tab-doc-overview .table thead th {
+    padding: 12px 10px;
+    background: #F8FAFC !important;
+    color: var(--dior-color-text-secondary) !important;
+    font-family: var(--dior-font-body);
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .025em;
+    white-space: nowrap;
+}
+
+#dior-doctor-app #tab-doc-overview .table tbody td {
+    padding: 12px 10px;
+    border-color: var(--dior-color-border);
+    color: var(--dior-color-text-secondary);
+    vertical-align: middle;
+}
+
+#dior-doctor-app #tab-doc-overview .table tbody tr:hover > * {
+    background: var(--dior-color-primary-soft);
+}
+
+#dior-doctor-app #tab-doc-overview .table .text-dark,
+#dior-doctor-app #tab-doc-overview .tasks-body b,
+#dior-doctor-app #tab-doc-overview .follow-body b,
+#dior-doctor-app #tab-doc-overview .sessions-scroll b {
+    color: var(--dior-color-text) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .view-all {
+    color: var(--dior-color-primary) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+#dior-doctor-app #tab-doc-overview .view-all:hover {
+    color: var(--dior-color-primary-hover) !important;
+    text-decoration: underline !important;
+}
+
+#dior-doctor-app #tab-doc-overview .profile img {
+    border-color: var(--dior-color-border) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .profile h4 {
+    color: var(--dior-color-text) !important;
+    font-family: var(--dior-font-heading) !important;
+    font-size: 15px !important;
+}
+
+#dior-doctor-app #tab-doc-overview .tasks-body > div,
+#dior-doctor-app #tab-doc-overview .follow-body > div,
+#dior-doctor-app #tab-doc-overview .reviews-scroll > div,
+#dior-doctor-app #tab-doc-overview .sessions-scroll > div {
+    border-color: var(--dior-color-border) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .reviews-scroll .text-warning {
+    color: var(--dior-color-gold) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .btn {
+    min-height: 34px;
+    font-family: var(--dior-font-body) !important;
+    font-size: 12px;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+#dior-doctor-app #tab-doc-overview .btn-primary {
+    background: var(--dior-color-primary) !important;
+    border-color: var(--dior-color-primary) !important;
+    color: #fff !important;
+}
+
+#dior-doctor-app #tab-doc-overview .btn-primary:hover,
+#dior-doctor-app #tab-doc-overview .btn-primary:focus-visible {
+    background: var(--dior-color-primary-hover) !important;
+    border-color: var(--dior-color-primary-hover) !important;
+    color: #fff !important;
+}
+
+#dior-doctor-app #tab-doc-overview .btn-outline-primary {
+    background: #fff !important;
+    border-color: var(--dior-color-primary) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .btn-outline-primary:hover,
+#dior-doctor-app #tab-doc-overview .btn-outline-primary:focus-visible {
+    background: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-primary-hover) !important;
+    color: var(--dior-color-primary-hover) !important;
+}
+
+#dior-doctor-app #tab-doc-overview .badge {
+    font-family: var(--dior-font-body);
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0;
+}
+
+#dior-doctor-app #tab-doc-overview .dior-card-scrollable {
+    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-width: thin;
+}
+
+#dior-doctor-app #tab-doc-overview .dior-card-scrollable::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+#dior-doctor-app #tab-doc-overview .dior-card-scrollable::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #CBD5E1;
+}
+
+@media (max-width: 767px) {
+    #dior-doctor-app #tab-doc-overview .stat-card,
+    #dior-doctor-app #tab-doc-overview .schedule-card,
+    #dior-doctor-app #tab-doc-overview .table-card,
+    #dior-doctor-app #tab-doc-overview .profile,
+    #dior-doctor-app #tab-doc-overview .tasks,
+    #dior-doctor-app #tab-doc-overview .follow,
+    #dior-doctor-app #tab-doc-overview .reviews,
+    #dior-doctor-app #tab-doc-overview .sessions {
+        padding: 14px !important;
+    }
+
+    #dior-doctor-app #tab-doc-overview .schedule-slot {
+        grid-template-columns: 58px 10px minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    #dior-doctor-app #tab-doc-overview .schedule-appt {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+        padding: 9px;
+    }
+
+    #dior-doctor-app #tab-doc-overview .s-appt-right {
+        padding-left: 48px;
+    }
+
+    #dior-doctor-app #tab-doc-overview .table {
+        min-width: 650px;
+    }
+}
+
+@media (max-width: 420px) {
+    #dior-doctor-app #tab-doc-overview .schedule-slot {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    #dior-doctor-app #tab-doc-overview .schedule-timeline {
+        display: none;
+    }
+
+    #dior-doctor-app #tab-doc-overview .schedule-time {
+        padding-top: 0;
+    }
+
+    #dior-doctor-app #tab-doc-overview .s-appt-right {
+        padding-left: 0;
+    }
+}
+
