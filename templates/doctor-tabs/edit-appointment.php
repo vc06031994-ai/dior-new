@@ -202,9 +202,27 @@ if (!empty($url_appt_param) && isset($appts_data_map[$url_appt_param])) {
 }
 
 $initial_patient_id = '';
+$initial_appointment_status = 'Ready';
 if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
     $initial_patient_id = (int) $appts_data_map[$first_appt_uid]['patient_id'];
+    $initial_appointment_status = sanitize_text_field($appts_data_map[$first_appt_uid]['status'] ?? 'Ready');
 }
+
+// Match the dynamic status badge to the Appointment Calendar / View Appointments palette.
+$edit_status_badge_palette = [
+    'pending'     => 'bg-warning-subtle text-warning border-warning-subtle',
+    'confirmed'   => 'bg-success-subtle text-success border-success-subtle',
+    'in progress' => 'bg-info-subtle text-info border-info-subtle',
+    'completed'   => 'bg-primary-subtle text-primary border-primary-subtle',
+    'cancelled'   => 'bg-danger-subtle text-danger border-danger-subtle',
+    'canceled'    => 'bg-danger-subtle text-danger border-danger-subtle',
+    'no show'     => 'bg-secondary-subtle text-secondary border-secondary-subtle',
+    'success'     => 'bg-success-subtle text-success border-success-subtle',
+    'ready'       => 'bg-primary-subtle text-primary border-primary-subtle',
+    'scheduling'  => 'bg-info-subtle text-info border-info-subtle',
+];
+$initial_status_key = strtolower(trim(str_replace(['_', '-'], ' ', $initial_appointment_status)));
+$initial_status_badge_class = $edit_status_badge_palette[$initial_status_key] ?? $edit_status_badge_palette['ready'];
 ?>
 <section class="dior-tab-panel dior-appt-screen appointment-form-wrapper" id="tab-doc-appointments-edit" style="display: none;">
     <!-- Breadcrumb & Header (100% Native Bootstrap 5) -->
@@ -231,9 +249,9 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
         <div class="row g-3 align-items-center">
             <div class="col-lg-5 col-md-6 col-12">
                 <label class="form-label small text-uppercase text-secondary fw-bold mb-1" for="dior-edit-patient-selector">
-                    <i class="fas fa-user-injured text-primary me-1"></i> Select Patient <span class="badge bg-primary-subtle text-primary ms-1 small fw-bold">Step 1</span>
+                    <i class="fas fa-user-injured text-primary me-1"></i> Select Patient <span class="badge bg-primary-subtle text-primary ms-1 small fw-bold dior-edit-step-badge dior-edit-step-primary">Step 1</span>
                 </label>
-                <select class="form-select rounded-3 py-2 fw-semibold" id="dior-edit-patient-selector" onchange="diorOnHeaderPatientSelect(this.value)">
+                <select class="form-select rounded-3 py-2 fw-semibold dior-edit-selector dior-edit-selector-primary" id="dior-edit-patient-selector" onchange="diorOnHeaderPatientSelect(this.value)">
                     <option value="">-- All Patients (View All Appointments) --</option>
                     <?php
                     foreach ($all_clinic_patients as $cp):
@@ -248,9 +266,9 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
             </div>
             <div class="col-lg-5 col-md-6 col-12">
                 <label class="form-label small text-uppercase text-secondary fw-bold mb-1" for="dior-edit-appt-selector">
-                    <i class="fas fa-calendar-check text-primary me-1"></i> Select Appointment to Edit <span class="badge bg-info-subtle text-info ms-1 small fw-bold">Step 2</span>
+                    <i class="fas fa-calendar-check text-primary me-1"></i> Select Appointment to Edit <span class="badge bg-info-subtle text-info ms-1 small fw-bold dior-edit-step-badge dior-edit-step-info">Step 2</span>
                 </label>
-                <select class="form-select rounded-3 py-2 fw-semibold" id="dior-edit-appt-selector" onchange="diorOnHeaderApptSelect(this.value)">
+                <select class="form-select rounded-3 py-2 fw-semibold dior-edit-selector dior-edit-selector-info" id="dior-edit-appt-selector" onchange="diorOnHeaderApptSelect(this.value)">
                     <option value="">-- Choose an appointment from records --</option>
                     <?php if (!empty($db_appointments)): ?>
                         <?php foreach ($db_appointments as $a_opt): ?>
@@ -264,11 +282,11 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
                 </select>
             </div>
             <div class="col-lg-2 col-md-12 d-flex flex-wrap align-items-center justify-content-lg-end gap-2 pt-lg-3">
-                <span id="dior-selected-appt-badge" class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 small fw-semibold">
+                <span id="dior-selected-appt-badge" class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 small fw-semibold dior-edit-appt-id-badge">
                     <span id="dior-badge-appt-id"><?php echo !empty($first_appt_uid) ? '#' . esc_html($first_appt_uid) : 'No Appt Selected'; ?></span>
                 </span>
-                <span id="dior-selected-status-badge" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 small fw-semibold">
-                    <span id="dior-badge-status-text">Ready</span>
+                <span id="dior-selected-status-badge" class="badge <?php echo esc_attr($initial_status_badge_class); ?> border rounded-pill px-3 py-2 small fw-semibold dior-edit-status-badge">
+                    <span id="dior-badge-status-text"><?php echo esc_html($initial_appointment_status); ?></span>
                 </span>
                 <button type="button" class="btn btn-outline-primary btn-sm rounded-3 fw-semibold px-3 py-2" onclick="if(typeof diorAdminSwitchTab==='function') diorAdminSwitchTab('doc-appointments-view'); else if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-appointments-view');">
                     <i class="fas fa-table-list me-1"></i> View All
@@ -696,6 +714,43 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
     window.diorAllPatientsList     = <?php echo json_encode(array_values($all_clinic_patients)); ?>;
     window.diorCurrentActiveEditUid = '<?php echo esc_js($first_appt_uid); ?>';
 
+    // Keep the selected appointment badge synchronized with the shared appointment status palette.
+    window.diorSetEditStatusBadge = function(status) {
+        var badge = document.getElementById('dior-selected-status-badge');
+        var label = document.getElementById('dior-badge-status-text');
+        var value = String(status || 'Ready').trim();
+        var key = value.toLowerCase().replace(/[_-]+/g, ' ');
+        var palette = {
+            'pending': 'bg-warning-subtle text-warning border-warning-subtle',
+            'confirmed': 'bg-success-subtle text-success border-success-subtle',
+            'in progress': 'bg-info-subtle text-info border-info-subtle',
+            'completed': 'bg-primary-subtle text-primary border-primary-subtle',
+            'cancelled': 'bg-danger-subtle text-danger border-danger-subtle',
+            'canceled': 'bg-danger-subtle text-danger border-danger-subtle',
+            'no show': 'bg-secondary-subtle text-secondary border-secondary-subtle',
+            'success': 'bg-success-subtle text-success border-success-subtle',
+            'ready': 'bg-primary-subtle text-primary border-primary-subtle',
+            'scheduling': 'bg-info-subtle text-info border-info-subtle'
+        };
+        if (badge) {
+            badge.classList.remove(
+                'bg-primary-subtle', 'text-primary', 'border-primary-subtle',
+                'bg-info-subtle', 'text-info', 'border-info-subtle',
+                'bg-success-subtle', 'text-success', 'border-success-subtle',
+                'bg-warning-subtle', 'text-warning', 'border-warning-subtle',
+                'bg-danger-subtle', 'text-danger', 'border-danger-subtle',
+                'bg-secondary-subtle', 'text-secondary', 'border-secondary-subtle'
+            );
+            (palette[key] || palette.ready).split(' ').forEach(function(className) {
+                badge.classList.add(className);
+            });
+        }
+        if (label) label.textContent = value;
+    };
+
+    // Apply the selected appointment's actual status on initial render.
+    window.diorSetEditStatusBadge('<?php echo esc_js($initial_appointment_status); ?>');
+
     window.diorSetTimePreset = function(timeVal, btnEl) {
         var input = document.getElementById('edit-appt-time-input');
         if (input) input.value = timeVal;
@@ -838,8 +893,7 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
 
         var badgeId = document.getElementById('dior-badge-appt-id');
         if (badgeId) badgeId.textContent = 'New Appt';
-        var badgeStatus = document.getElementById('dior-badge-status-text');
-        if (badgeStatus) badgeStatus.textContent = 'Scheduling';
+        window.diorSetEditStatusBadge('Scheduling');
         var dispUid = document.getElementById('dior-display-appt-uid');
         if (dispUid) dispUid.textContent = 'New Appointment';
 
@@ -965,8 +1019,7 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
         // Header Badges
         var badgeId = document.getElementById('dior-badge-appt-id');
         if (badgeId) badgeId.textContent = '#' + uid;
-        var badgeStatus = document.getElementById('dior-badge-status-text');
-        if (badgeStatus) badgeStatus.textContent = data.status || 'Success';
+        window.diorSetEditStatusBadge(data.status || 'Success');
         var dispUid = document.getElementById('dior-display-appt-uid');
         if (dispUid) dispUid.textContent = uid;
         var dispPatCode = document.getElementById('dior-display-patient-code');
@@ -1123,8 +1176,7 @@ if (!empty($first_appt_uid) && isset($appts_data_map[$first_appt_uid])) {
                     if (dispUid) dispUid.textContent = newUid;
                     var badgeId = document.getElementById('dior-badge-appt-id');
                     if (badgeId) badgeId.textContent = '#' + newUid;
-                    var statusBadge = document.getElementById('dior-badge-status-text');
-                    if (statusBadge) statusBadge.textContent = fd.get('status');
+                    window.diorSetEditStatusBadge(fd.get('status'));
 
                     // If it was a new appointment, add it to lookup tables
                     if (!window.diorAllAppointmentsData[newUid]) {
