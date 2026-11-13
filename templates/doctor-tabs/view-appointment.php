@@ -191,84 +191,66 @@ $status_badges = [
         </div>
     </div>
 
-    <!-- Summary Statistics — same global stat-card pattern as Dashboard Home. -->
-    <div class="row g-3 mb-4">
+    <!--
+        KPI Cards — mirror the shared card structure used by Appointment Calendar (appointments.php).
+        Keep these IDs and PHP values intact; shared visual styling is maintained in dior-custom.css.
+    -->
+    <div class="row g-3 mb-4" id="va-summary-stats">
         <div class="col-xl-3 col-sm-6 col-12">
-            <div
-                class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
-                <div class="d-flex align-items-start justify-content-between">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase">Total Bookings</span>
-                        <div class="stat-num fs-1 fw-bold text-dark mt-1" id="va-kpi-total">
-                            <?php echo esc_html($total_appts); ?></div>
+                        <span class="text-muted small fw-semibold text-uppercase">Total Bookings</span>
+                        <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-total"><?php echo esc_html($total_appts); ?></h3>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small">
+                            <i class="fas fa-chart-line me-1"></i>All records across clinic
+                        </span>
                     </div>
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-3 p-2">
-                        <i class="fas fa-calendar-days fs-5"></i>
-                    </span>
-                </div>
-                <div class="mt-2 text-secondary small">
-                    <span class="text-primary fw-semibold"><i class="fas fa-chart-line me-1"></i>All records</span>
-                    across clinic
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary">
+                        <i class="fas fa-calendar-days"></i>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 col-12">
-            <div
-                class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
-                <div class="d-flex align-items-start justify-content-between">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase">Upcoming Visits</span>
-                        <div class="stat-num fs-1 fw-bold text-primary mt-1" id="va-kpi-upcoming">
-                            <?php echo esc_html($upcoming_appts); ?></div>
+                        <span class="text-muted small fw-semibold text-uppercase">Upcoming Visits</span>
+                        <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-upcoming"><?php echo esc_html($upcoming_appts); ?></h3>
+                        <span class="badge bg-info-subtle text-info rounded-pill mt-2 px-2 py-1 small">Scheduled Ahead</span>
                     </div>
-                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-3 p-2">
-                        <i class="fas fa-clock fs-5"></i>
-                    </span>
-                </div>
-                <div class="mt-2 text-secondary small">
-                    <span
-                        class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1 fw-semibold">Scheduled
-                        ahead</span>
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-info">
+                        <i class="fas fa-clock"></i>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 col-12">
-            <div
-                class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
-                <div class="d-flex align-items-start justify-content-between">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase">Completed</span>
-                        <div class="stat-num fs-1 fw-bold text-success mt-1" id="va-kpi-completed">
-                            <?php echo esc_html($completed_appts); ?></div>
+                        <span class="text-muted small fw-semibold text-uppercase">Completed</span>
+                        <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-completed"><?php echo esc_html($completed_appts); ?></h3>
+                        <span class="badge bg-success-subtle text-success rounded-pill mt-2 px-2 py-1 small">Consultations Done</span>
                     </div>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-3 p-2">
-                        <i class="fas fa-circle-check fs-5"></i>
-                    </span>
-                </div>
-                <div class="mt-2 text-secondary small">
-                    <span
-                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 fw-semibold">Consultations
-                        done</span>
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-success">
+                        <i class="fas fa-circle-check"></i>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 col-12">
-            <div
-                class="card stat-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 bg-white d-flex flex-column justify-content-between">
-                <div class="d-flex align-items-start justify-content-between">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-secondary small fw-semibold text-uppercase">Pending Action</span>
-                        <div class="stat-num fs-1 fw-bold text-warning mt-1" id="va-kpi-pending">
-                            <?php echo esc_html($pending_appts); ?></div>
+                        <span class="text-muted small fw-semibold text-uppercase">Pending Action</span>
+                        <h3 class="fw-bold mb-0 text-primary mt-1" id="va-kpi-pending"><?php echo esc_html($pending_appts); ?></h3>
+                        <span class="badge bg-warning-subtle text-warning rounded-pill mt-2 px-2 py-1 small">Needs Review</span>
                     </div>
-                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-3 p-2">
-                        <i class="fas fa-hourglass-half fs-5"></i>
-                    </span>
-                </div>
-                <div class="mt-2 text-secondary small">
-                    <span
-                        class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 fw-semibold">Needs
-                        review</span>
+                    <div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-warning">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
                 </div>
             </div>
         </div>
