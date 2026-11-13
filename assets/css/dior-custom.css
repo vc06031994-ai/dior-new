@@ -57003,3 +57003,157 @@ a.va-btn-primary:hover {
     }
 }
 
+/* ==========================================================================
+   APPOINTMENT CALENDAR - REMOVE TEMPLATE INLINE CSS AND ALIGN PRIMARY ACTION
+   Calendar component styling is maintained here, not in template markup.
+   ========================================================================== */
+
+/* Reusable header icon and summary-card icon treatments */
+#dior-doctor-app #tab-doc-appointments .dior-cal-heading-icon {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    flex: 0 0 36px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-stat-icon {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    flex: 0 0 52px !important;
+    border: 1px solid var(--dior-color-border) !important;
+    border-radius: var(--dior-radius-control) !important;
+    font-size: 22px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-stat-icon-primary {
+    background: var(--dior-color-primary-soft) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-stat-icon-info {
+    background: var(--dior-color-info-soft) !important;
+    color: var(--dior-color-info) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-stat-icon-success {
+    background: var(--dior-color-success-soft) !important;
+    color: var(--dior-color-success) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-stat-icon-neutral {
+    background: #F1F5F9 !important;
+    color: var(--dior-color-text-muted) !important;
+}
+
+/* Same Book Appointment action appearance on Home and Appointment Calendar */
+#dior-doctor-app #dior-doc-content #tab-doc-overview > .mb-4:first-child > button.btn-primary,
+#dior-doctor-app #dior-doc-content #tab-doc-appointments.dior-tab-panel.dior-appt-screen > .mb-4:first-child > button.dior-cal-primary-action {
+    display: inline-flex !important;
+    min-height: 40px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 8px 16px !important;
+    border: 1px solid var(--dior-color-primary) !important;
+    border-radius: var(--dior-radius-control) !important;
+    background: var(--dior-color-primary) !important;
+    color: #FFFFFF !important;
+    font-family: var(--dior-font-body) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-overview > .mb-4:first-child > button.btn-primary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-appointments.dior-tab-panel.dior-appt-screen > .mb-4:first-child > button.dior-cal-primary-action:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-overview > .mb-4:first-child > button.btn-primary:focus-visible,
+#dior-doctor-app #dior-doc-content #tab-doc-appointments.dior-tab-panel.dior-appt-screen > .mb-4:first-child > button.dior-cal-primary-action:focus-visible {
+    border-color: var(--dior-color-primary-hover) !important;
+    background: var(--dior-color-primary-hover) !important;
+    color: #FFFFFF !important;
+    box-shadow: none !important;
+}
+
+/* Calendar controls previously defined as template style attributes */
+#dior-doctor-app #tab-doc-appointments .dior-cal-icon-nav-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    flex: 0 0 36px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-month-title {
+    min-width: 150px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-filter-group {
+    width: auto !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-filter-select {
+    min-width: 125px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-weekday-row {
+    font-size: 11px !important;
+    letter-spacing: .8px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-weekday {
+    width: 14.28% !important;
+    padding: 10px 4px !important;
+    text-align: center !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-selected-label {
+    font-size: 11px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-selected-body {
+    max-height: 480px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-legend {
+    font-size: 11px !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-doc-cal-dot.is-video {
+    background: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-doc-cal-dot.is-phone {
+    background: var(--dior-color-info) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-doc-cal-dot.is-confirmed {
+    background: var(--dior-color-success) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-doc-cal-dot.is-cancelled {
+    background: var(--dior-color-danger) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-empty-icon {
+    color: var(--dior-color-text-muted) !important;
+    font-size: 2.2rem !important;
+}
+
+#dior-doctor-app #tab-doc-appointments .dior-cal-view-hidden {
+    display: none !important;
+}
+
+/* Scheduled and HD Live Room are visit categories, not semantic status colors.
+   Keep both on the same Dior brand treatment as Patient Records. */
+#dior-doctor-app #tab-doc-appointments #dior-doc-cal-stats .bg-primary-subtle {
+    border-color: var(--dior-color-border) !important;
+    background: var(--dior-color-primary-soft) !important;
+    color: var(--dior-color-primary) !important;
+}
+
