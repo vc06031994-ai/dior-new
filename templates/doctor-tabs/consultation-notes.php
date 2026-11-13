@@ -1,6 +1,7 @@
 <?php
 /**
- * Consultation Notes Tab — Dynamic, DB-connected
+ * Consultation Notes Tab — Dynamic, DB-connected.
+ * Mobile table rows are presented as labelled note cards; desktop keeps the full table layout.
  * Actions: Add (popup with patient select), Edit, Delete
  */
 global $wpdb;
@@ -41,11 +42,11 @@ if (empty($patients)) {
     }
 }
 ?>
-<section class="dior-tab-panel" id="tab-doc-consultation-notes" style="display:none;">
+<section class="dior-tab-panel dior-consultation-notes-screen" id="tab-doc-consultation-notes" style="display:none;">
     <!-- Breadcrumb -->
-    <div class="mb-4" style="display:flex;justify-content:space-between;align-items:center;padding:0 5px;">
+    <div class="mb-4 cn-page-heading">
         <div>
-            <h4 class="mb-0 text-dark" style="font-size:20px;font-weight:700;">Consultation Notes</h4>
+            <h4 class="mb-0 text-dark cn-page-title">Consultation Notes</h4>
         </div>
         <div>
             <ul class="va-breadcrumb-list">
@@ -63,8 +64,8 @@ if (empty($patients)) {
                 <h2><i class="fas fa-notes-medical text-primary me-2"></i>Consultation Notes</h2>
                 <div class="va-title-line"></div>
             </div>
-            <div class="va-actions-box" style="display:flex;align-items:center;gap:10px;">
-                <div class="input-group input-group-sm dior-bs-search-group" style="width: 240px;">
+            <div class="va-actions-box cn-toolbar-actions">
+                <div class="input-group input-group-sm dior-bs-search-group cn-search-wrap">
 
                     <input type="text" id="cn-search" class="dior-search-input form-control border-start-0 ps-0"
                         placeholder="Search records...">
@@ -79,19 +80,19 @@ if (empty($patients)) {
         </div>
 
         <!-- Table -->
-        <div class="va-table-wrapper">
-            <table class="va-table table table-hover" id="cn-table">
+        <div class="va-table-wrapper cn-table-wrapper">
+            <table class="va-table table table-hover cn-responsive-table" id="cn-table">
                 <thead>
                     <tr>
-                        <th style="width:50px;text-align:center;"><input type="checkbox"
+                        <th class="cn-select-heading"><input type="checkbox"
                                 class="va-checkbox form-check-input" id="cn-select-all"></th>
                         <th>ID</th>
-                        <th>PATIENT NAME <i class="fas fa-sort" style="color:#ccc;"></i></th>
+                        <th>PATIENT NAME <i class="fas fa-sort cn-sort-icon"></i></th>
                         <th>DATE</th>
                         <th>CHIEF COMPLAINT</th>
                         <th>DIAGNOSIS</th>
                         <th>DOCTOR</th>
-                        <th>STATUS <i class="fas fa-sort" style="color:#ccc;"></i></th>
+                        <th>STATUS <i class="fas fa-sort cn-sort-icon"></i></th>
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
@@ -120,25 +121,24 @@ if (empty($patients)) {
                             ]));
                             ?>
                             <tr data-id="<?php echo $nid; ?>" data-pid="<?php echo $pid; ?>">
-                                <td style="text-align:center;"><input type="checkbox"
-                                        class="va-checkbox cn-row-check form-check-input"></td>
-                                <td style="font-size:12px;color:#64748b;"><?php echo substr($uid, 0, 10); ?>…</td>
-                                <td>
-                                    <div class="va-user-profile">
-                                        <div
-                                            style="width:36px;height:36px;border-radius:50%;background:#E0E7FF;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1A528E;font-size:14px;flex-shrink:0;">
+                                <td class="cn-select-cell"><input type="checkbox"
+                                        class="va-checkbox cn-row-check form-check-input" aria-label="Select consultation note"></td>
+                                <td data-label="Note ID" class="cn-id-cell"><?php echo substr($uid, 0, 10); ?>…</td>
+                                <td data-label="Patient Name">
+                                    <div class="va-user-profile cn-patient-profile">
+                                        <div class="cn-patient-avatar">
                                             <?php echo $init; ?>
                                         </div>
                                         <span class="va-user-name"><?php echo $fname; ?></span>
                                     </div>
                                 </td>
-                                <td><i class="far fa-calendar va-icon-blue"></i> <?php echo $date_f; ?></td>
-                                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                                <td data-label="Date"><i class="far fa-calendar va-icon-blue"></i> <?php echo $date_f; ?></td>
+                                <td data-label="Chief Complaint" class="cn-complaint-cell"
                                     title="<?php echo $complaint; ?>"><?php echo $complaint; ?></td>
-                                <td><?php echo $diagnosis; ?></td>
-                                <td><?php echo esc_html($n['attestation_author'] ?? $doc_name); ?></td>
-                                <td><span class="va-badge <?php echo $badge; ?>"><?php echo ucfirst($status); ?></span></td>
-                                <td>
+                                <td data-label="Diagnosis"><?php echo $diagnosis; ?></td>
+                                <td data-label="Doctor"><?php echo esc_html($n['attestation_author'] ?? $doc_name); ?></td>
+                                <td data-label="Status"><span class="va-badge <?php echo $badge; ?>"><?php echo ucfirst($status); ?></span></td>
+                                <td data-label="Actions" class="cn-actions-cell">
                                     <div class="va-row-actions">
                                         <button class="va-action-btn-sm va-btn-edit cn-edit-btn btn"
                                             data-note="<?php echo $note_enc; ?>" title="Edit Note"><i
