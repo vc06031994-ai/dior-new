@@ -57309,3 +57309,100 @@ a.va-btn-primary:hover {
         font-size: 13px !important;
     }
 }
+
+
+/* EDIT APPOINTMENT — selector and status colors aligned with Appointment Calendar statistics. */
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-step-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 5px 9px !important;
+    border: 1px solid transparent !important;
+    border-radius: var(--dior-radius-pill) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-step-primary {
+    background: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-step-info {
+    background: var(--dior-color-info-soft) !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-info) !important;
+}
+
+/* Patient and appointment selectors inherit the matching step color without changing their behavior. */
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-selector-primary {
+    background-color: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-border-strong) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-selector-info {
+    background-color: var(--dior-color-info-soft) !important;
+    border-color: var(--dior-color-border-strong) !important;
+    color: var(--dior-color-info) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-selector-primary:focus,
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-selector-info:focus {
+    border-color: var(--dior-color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 52, 108, .12) !important;
+    outline: 0 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-appt-id-badge {
+    background: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+/* Appointment status badge follows the same status-to-color mapping as View Appointments. */
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 76px !important;
+    font-weight: 700 !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-warning-subtle {
+    background: var(--dior-color-warning-soft) !important;
+    border-color: #FDE68A !important;
+    color: var(--dior-color-warning) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-success-subtle {
+    background: var(--dior-color-success-soft) !important;
+    border-color: var(--dior-color-success-soft) !important;
+    color: var(--dior-color-success) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-info-subtle {
+    background: var(--dior-color-info-soft) !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-info) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-primary-subtle {
+    background: var(--dior-color-primary-soft) !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-primary) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-danger-subtle {
+    background: var(--dior-color-danger-soft) !important;
+    border-color: #FECACA !important;
+    color: var(--dior-color-danger) !important;
+}
+
+#dior-doctor-app #tab-doc-appointments-edit .dior-edit-status-badge.bg-secondary-subtle {
+    background: #F1F5F9 !important;
+    border-color: var(--dior-color-border) !important;
+    color: var(--dior-color-text-secondary) !important;
+}
