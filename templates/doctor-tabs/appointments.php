@@ -1,9 +1,12 @@
 <?php
+
 /**
  * Dior Medical — Doctor Appointment Calendar
  * Patient portal calendar layout and interactions, powered by doctor-scoped appointment records.
  */
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 $doctor_calendar_appointments = isset($appointments) && is_array($appointments) ? $appointments : [];
 $doctor_calendar_events = [];
@@ -15,9 +18,11 @@ $doctor_calendar_today = current_time('Y-m-d');
 
 foreach ($doctor_calendar_appointments as $index => $appointment) {
     $appointment_date = sanitize_text_field($appointment['date'] ?? ($appointment['appt_date'] ?? ''));
-    if (!$appointment_date) continue;
+    if (!$appointment_date)
+        continue;
     $date_timestamp = strtotime($appointment_date);
-    if (!$date_timestamp) continue;
+    if (!$date_timestamp)
+        continue;
     $appointment_date = date('Y-m-d', $date_timestamp);
 
     $patient_id = absint($appointment['patient_id'] ?? 0);
@@ -25,13 +30,17 @@ foreach ($doctor_calendar_appointments as $index => $appointment) {
     $patient_name = sanitize_text_field($appointment['patient_name'] ?? '');
     if (!$patient_name && $patient_user) {
         $patient_name = trim($patient_user->first_name . ' ' . $patient_user->last_name);
-        if (!$patient_name) $patient_name = $patient_user->display_name;
+        if (!$patient_name)
+            $patient_name = $patient_user->display_name;
     }
-    if (!$patient_name) $patient_name = 'Patient';
+    if (!$patient_name)
+        $patient_name = 'Patient';
 
     $doctor_name = sanitize_text_field($appointment['provider'] ?? ($appointment['doctor_name'] ?? ''));
-    if (!$doctor_name) $doctor_name = wp_get_current_user()->display_name;
-    if (stripos($doctor_name, 'Dr.') === false && stripos($doctor_name, 'Dr ') === false) $doctor_name = 'Dr. ' . $doctor_name;
+    if (!$doctor_name)
+        $doctor_name = wp_get_current_user()->display_name;
+    if (stripos($doctor_name, 'Dr.') === false && stripos($doctor_name, 'Dr ') === false)
+        $doctor_name = 'Dr. ' . $doctor_name;
 
     $status = sanitize_text_field($appointment['status'] ?? 'Scheduled');
     $type = sanitize_text_field($appointment['type'] ?? ($appointment['visit_type'] ?? 'Video Visit (HD)'));
@@ -43,9 +52,12 @@ foreach ($doctor_calendar_appointments as $index => $appointment) {
     $status_lc = strtolower($status);
     $type_lc = strtolower($type);
     $doctor_calendar_total++;
-    if (in_array($status_lc, ['confirmed','scheduled','pending','active','in-queue'], true)) $doctor_calendar_upcoming++;
-    if (in_array($status_lc, ['completed','done','past'], true)) $doctor_calendar_completed++;
-    if (strpos($type_lc, 'video') !== false || strpos($type_lc, 'telehealth') !== false) $doctor_calendar_video++;
+    if (in_array($status_lc, ['confirmed', 'scheduled', 'pending', 'active', 'in-queue'], true))
+        $doctor_calendar_upcoming++;
+    if (in_array($status_lc, ['completed', 'done', 'past'], true))
+        $doctor_calendar_completed++;
+    if (strpos($type_lc, 'video') !== false || strpos($type_lc, 'telehealth') !== false)
+        $doctor_calendar_video++;
 
     $doctor_calendar_events[] = [
         'id' => $appt_uid,
@@ -89,10 +101,10 @@ $doctor_calendar_json = wp_json_encode($doctor_calendar_events, JSON_HEX_TAG | J
     </div>
 
     <div class="row g-3 mb-4" id="dior-doc-cal-stats">
-        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Total Consultations</span><h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($doctor_calendar_total); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-calendar-check me-1"></i> Patient Records</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary"><i class="fas fa-calendar-check"></i></div></div></div></div>
-        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Upcoming Visits</span><h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($doctor_calendar_upcoming); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-clock me-1"></i> Scheduled</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-info"><i class="fas fa-clock"></i></div></div></div></div>
-        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Telehealth Video</span><h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($doctor_calendar_video); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-video me-1"></i> HD Live Room</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-success"><i class="fas fa-video"></i></div></div></div></div>
-        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Completed Visits</span><h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($doctor_calendar_completed); ?></h3><span class="badge bg-secondary-subtle text-secondary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-circle-check me-1"></i> Finalized</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-neutral"><i class="fas fa-circle-check"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Total Consultations</span><h3 class="fw-bold mb-0 text-primary mt-1"><?php echo esc_html($doctor_calendar_total); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-calendar-check me-1"></i> Patient Records</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-primary"><i class="fas fa-calendar-check"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Upcoming Visits</span><h3 class="fw-bold mb-0 text-primary mt-1"><?php echo esc_html($doctor_calendar_upcoming); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-clock me-1"></i> Scheduled</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-info"><i class="fas fa-clock"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Telehealth Video</span><h3 class="fw-bold mb-0 text-primary mt-1"><?php echo esc_html($doctor_calendar_video); ?></h3><span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-video me-1"></i> HD Live Room</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-success"><i class="fas fa-video"></i></div></div></div></div>
+        <div class="col-xl-3 col-sm-6 col-12"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><div class="d-flex align-items-center justify-content-between"><div><span class="text-muted small fw-semibold text-uppercase">Completed Visits</span><h3 class="fw-bold mb-0 text-primary mt-1"><?php echo esc_html($doctor_calendar_completed); ?></h3><span class="badge bg-secondary-subtle text-secondary rounded-pill mt-2 px-2 py-1 small"><i class="fas fa-circle-check me-1"></i> Finalized</span></div><div class="rounded-4 d-flex align-items-center justify-content-center dior-cal-stat-icon dior-cal-stat-icon-neutral"><i class="fas fa-circle-check"></i></div></div></div></div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden" id="dior-doc-calendar-card">
@@ -147,7 +159,7 @@ $doctor_calendar_json = wp_json_encode($doctor_calendar_events, JSON_HEX_TAG | J
     function filtered(){return events.filter(function(a){var t=(a.type||'').toLowerCase(),s=(a.status||'').toLowerCase();if(typeFilter==='video'&&t.indexOf('video')<0&&t.indexOf('telehealth')<0)return false;if(typeFilter==='phone'&&t.indexOf('phone')<0&&t.indexOf('audio')<0)return false;if(typeFilter==='clinic'&&t.indexOf('clinic')<0&&t.indexOf('person')<0)return false;if(statusFilter==='confirmed'&&['confirmed','scheduled','pending','active','in-queue'].indexOf(s)<0)return false;if(statusFilter==='completed'&&['completed','done','past'].indexOf(s)<0)return false;if(statusFilter==='cancelled'&&s!=='cancelled'&&s!=='canceled')return false;return true;});}
     function safe(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     function statusClass(s){s=(s||'').toLowerCase();return s==='completed'||s==='done'?'completed':(s==='cancelled'||s==='canceled'?'cancelled':'');}
-    function showDetails(a){var html='<div class="text-start"><p><strong>Patient:</strong> '+safe(a.patient_name)+'</p><p><strong>Doctor:</strong> '+safe(a.doctor_name)+'</p><p><strong>Condition:</strong> '+safe(a.condition)+'</p><p><strong>Date &amp; Time:</strong> '+safe(dateLabel(a.date))+' at '+safe(a.time)+'</p><p><strong>Visit Type:</strong> '+safe(a.type)+'</p><p><strong>Status:</strong> '+safe(a.status)+'</p>';if(a.join_url&&/^https:\/\//i.test(a.join_url))html+='<a class="btn dior-btn-primary mt-2" href="'+safe(a.join_url)+'" target="_blank" rel="noopener noreferrer" data-dior-meeting-join data-appt-uid="'+safe(a.id)+'"><i class="fas fa-video me-1"></i> Join Video Consultation</a>';html+='</div>';if(window.Swal&&typeof Swal.fire==='function'){Swal.fire({title:'Appointment Details',html:html,showConfirmButton:true,confirmButtonText:'Close',buttonsStyling:false,customClass:{popup:'dior-doctor-wrap rounded-4',confirmButton:'btn dior-btn-primary'}});}else{window.alert(a.patient_name+'\n'+dateLabel(a.date)+' '+a.time+'\n'+a.status);}}
+    function showDetails(a){var html='<div class="text-start"><p><strong>Patient:</strong> '+safe(a.patient_name)+'</p><p><strong>Doctor:</strong> '+safe(a.doctor_name)+'</p><p><strong>Condition:</strong> '+safe(a.condition)+'</p><p><strong>Date &amp; Time:</strong> '+safe(dateLabel(a.date))+' at '+safe(a.time)+'</p><p><strong>Visit Type:</strong> '+safe(a.type)+'</p><p><strong>Status:</strong> '+safe(a.status)+'</p>';if(a.join_url&&/^https:\/\//i.test(a.join_url))html+='<a class="btn dior-btn-primary mt-2 w-100" href="'+safe(a.join_url)+'" target="_blank" rel="noopener noreferrer" data-dior-meeting-join data-appt-uid="'+safe(a.id)+'"><i class="fas fa-video me-1"></i> Join Video Consultation</a>';html+='</div>';if(window.Swal&&typeof Swal.fire==='function'){Swal.fire({title:'Appointment Details',html:html,showConfirmButton:true,confirmButtonText:'Close',buttonsStyling:false,customClass:{popup:'dior-doctor-wrap rounded-4',confirmButton:'btn dior-btn-primary'}});}else{window.alert(a.patient_name+'\n'+dateLabel(a.date)+' '+a.time+'\n'+a.status);}}
     function appointmentCard(a){var s=statusClass(a.status),video=(a.type||'').toLowerCase().indexOf('video')>=0||(a.type||'').toLowerCase().indexOf('telehealth')>=0;var html='<div class="dior-doc-cal-appointment"><div class="d-flex justify-content-between align-items-center gap-2 mb-2"><strong class="text-dark">'+safe(a.patient_name)+'</strong><span class="badge rounded-pill '+(s==='completed'?'bg-success-subtle text-success':s==='cancelled'?'bg-danger-subtle text-danger':'bg-primary-subtle text-primary')+'">'+safe(a.status)+'</span></div><div class="small text-muted mb-1"><i class="far fa-clock me-1 text-primary"></i>'+safe(a.time)+'</div><div class="small text-secondary mb-2">'+safe(a.condition)+' · '+safe(a.type)+'</div><button type="button" class="btn btn-outline-primary btn-sm w-100" data-cal-details="'+safe(a.id)+'"><i class="fas fa-eye me-1"></i> View Details</button>';if(video&&a.join_url&&/^https:\/\//i.test(a.join_url))html+='<a class="btn btn-success btn-sm w-100 mt-2" href="'+safe(a.join_url)+'" target="_blank" rel="noopener noreferrer" data-dior-meeting-join data-appt-uid="'+safe(a.id)+'"><i class="fas fa-video me-1"></i> Join Consultation</a>';return html+'</div>';}
     function renderSelected(){var body=$('dior-doc-bs-cal-selected-body'),head=$('dior-doc-bs-cal-selected-header'),count=$('dior-doc-bs-cal-selected-count');if(!body)return;head.textContent=dateLabel(selectedDate);var list=filtered().filter(function(a){return a.date===selectedDate;});count.textContent=list.length+' Visit'+(list.length===1?'':'s');body.innerHTML=list.length?'<div class="d-flex flex-column gap-3">'+list.map(appointmentCard).join('')+'</div>':'<div class="text-center py-4 text-muted"><div class="mb-3 dior-cal-empty-icon"><i class="far fa-calendar-xmark"></i></div><h6 class="text-dark fw-bold mb-1">No Consultations</h6><p class="small text-muted mb-3">There are no appointments scheduled for this date.</p><button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" data-cal-book><i class="fas fa-calendar-plus me-1"></i> Schedule Consultation</button></div>';}
     function renderMonth(){var body=$('dior-doc-bs-cal-grid-body'),title=$('dior-doc-bs-cal-title');if(!body)return;var y=currentDate.getFullYear(),m=currentDate.getMonth();title.textContent=monthNames[m]+' '+y;var map={};filtered().forEach(function(a){if(!map[a.date])map[a.date]=[];map[a.date].push(a);});var first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate(),total=first+days>35?42:35,today=ymd(new Date()),html='';for(var i=0;i<total;i++){if(i%7===0)html+='<tr>';var day,cellDate,other=false;if(i<first){day=prevDays-first+i+1;var pm=m===0?11:m-1,py=m===0?y-1:y;cellDate=ymd(new Date(py,pm,day));other=true;}else if(i<first+days){day=i-first+1;cellDate=ymd(new Date(y,m,day));}else{day=i-first-days+1;var nm=m===11?0:m+1,ny=m===11?y+1:y;cellDate=ymd(new Date(ny,nm,day));other=true;}var items=map[cellDate]||[];html+='<td class="dior-doc-bs-cal-cell'+(other?' is-other':'')+(cellDate===today?' is-today':'')+(cellDate===selectedDate?' is-selected':'')+'" data-cal-date="'+cellDate+'"><div class="dior-doc-bs-cal-day-head"><span class="dior-doc-bs-cal-day-num">'+day+'</span>'+(items.length?'<span class="badge bg-primary rounded-pill">'+items.length+'</span>':'')+'</div>';items.slice(0,2).forEach(function(a){var c=statusClass(a.status),type=(a.type||'').toLowerCase();var cls=c||((type.indexOf('phone')>=0||type.indexOf('audio')>=0)?'phone':'');html+='<div class="dior-doc-bs-cal-event '+cls+'" data-cal-details="'+safe(a.id)+'" title="'+safe(a.patient_name+' · '+a.time)+'">'+safe((a.time||'').split('-')[0].trim())+' '+safe(a.patient_name)+'</div>';});if(items.length>2)html+='<div class="small text-muted fw-bold">+'+(items.length-2)+' more</div>';html+='</td>';if(i%7===6)html+='</tr>';}body.innerHTML=html;renderSelected();}
