@@ -71140,3 +71140,179 @@ a.va-btn-primary:hover {
         flex: 1 1 100% !important;
     }
 }
+
+/* ==========================================================================
+   DOCTOR SIDEBAR — "Collapse Menu" toggle
+
+   1) Hidden on tablet/mobile. The old rule
+        .dior-doctor-wrap .dior-doc-collapse-btn { display: none !important }
+      was outranked by
+        :is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap)
+        .dior-side-nav .dior-nav-btn { display: flex !important }
+      (0,2,0 vs 0,3,0) — both !important, so specificity decided and the
+      button leaked into the mobile drawer, where the drawer's × button is
+      the right affordance. The selector below is 0,4,0, so it wins.
+
+   2) Desktop gets a calmer treatment: a soft translucent plate with a
+      hairline separator, instead of a bare white label floating on navy.
+   ========================================================================== */
+
+/* ---------- 1. Remove from the mobile drawer ---------------------------- */
+@media (max-width: 1024.98px) {
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn,
+    #dior-doctor-app #dior-doc-sidebar .dior-side-nav .dior-doc-collapse-btn {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+/* ---------- 2. Desktop styling ----------------------------------------- */
+@media (min-width: 1025px) {
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn {
+        margin: 16px 8px 10px !important;
+        padding: 9px 12px !important;
+        width: calc(100% - 16px) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 9px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: rgba(255, 255, 255, 0.82) !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em !important;
+        box-shadow: none !important;
+        transition: background-color 0.18s ease, border-color 0.18s ease,
+            color 0.18s ease !important;
+    }
+
+    /* Hairline that separates the toggle from the nav list. */
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn::before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        top: -17px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+    }
+
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn {
+        position: relative !important;
+    }
+
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn:hover,
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn:focus-visible {
+        background: rgba(255, 255, 255, 0.13) !important;
+        border-color: rgba(255, 255, 255, 0.22) !important;
+        color: #FFFFFF !important;
+        outline: none !important;
+    }
+
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn:active {
+        background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn i {
+        width: 20px !important;
+        min-width: 20px !important;
+        font-size: 13px !important;
+        color: inherit !important;
+        opacity: 0.9 !important;
+    }
+
+    .dior-doctor-wrap .dior-side-nav .dior-doc-collapse-btn:hover i {
+        opacity: 1 !important;
+    }
+
+    /* Collapsed rail: icon-only tile, centred, no label gutter. */
+    .dior-doctor-wrap.dior-sidebar-collapsed .dior-side-nav .dior-doc-collapse-btn {
+        width: 100% !important;
+        margin: 14px 0 0 0 !important;
+        padding: 10px 0 !important;
+        gap: 0 !important;
+        justify-content: center !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .dior-doctor-wrap.dior-sidebar-collapsed .dior-side-nav .dior-doc-collapse-btn::before {
+        left: 0;
+        right: 0;
+    }
+}
+
+/* The patient sidebar has the identical toggle and the identical cascade
+   defect: `.dior-patient-portal-wrap .dior-patient-collapse-btn` (0,2,0)
+   loses to `:is(...) .dior-side-nav .dior-nav-btn` (0,3,0). Both dashboards
+   must behave the same, so the patient toggle is hidden at the same
+   breakpoint and styled with the same plate on desktop. */
+@media (max-width: 1024.98px) {
+    .dior-patient-portal-wrap .dior-side-nav .dior-patient-collapse-btn {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .dior-patient-portal-wrap .dior-side-nav .dior-patient-collapse-btn {
+        margin: 16px 8px 10px !important;
+        padding: 9px 12px !important;
+        width: calc(100% - 16px) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 9px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: rgba(255, 255, 255, 0.82) !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        box-shadow: none !important;
+        transition: background-color 0.18s ease, border-color 0.18s ease,
+            color 0.18s ease !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-patient-collapse-btn:hover,
+    .dior-patient-portal-wrap .dior-side-nav .dior-patient-collapse-btn:focus-visible {
+        background: rgba(255, 255, 255, 0.13) !important;
+        border-color: rgba(255, 255, 255, 0.22) !important;
+        color: #FFFFFF !important;
+        outline: none !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-patient-collapse-btn i {
+        width: 20px !important;
+        min-width: 20px !important;
+        font-size: 13px !important;
+        color: inherit !important;
+        opacity: 0.9 !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-patient-collapse-btn {
+        width: 100% !important;
+        margin: 14px 0 0 0 !important;
+        padding: 10px 0 !important;
+        gap: 0 !important;
+        justify-content: center !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+}

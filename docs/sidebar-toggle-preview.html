@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sidebar “Collapse Menu” Toggle — Fix &amp; Restyle</title>
+    <style>
+        :root {
+            --ink: #0F172A;
+            --muted: #64748B;
+            --line: #E2E8F0;
+            --navy: #00346C;
+            --bg: #F8FAFC;
+            --ok: #0F7B47;
+            --bad: #B91C1C;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 20px 64px;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.6 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .wrap { max-width: 1080px; margin: 0 auto; }
+
+        h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; color: var(--navy); }
+        h2 { font-size: 18px; margin: 38px 0 12px; color: var(--navy); }
+        .sub { color: var(--muted); margin: 0 0 26px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 0 0 18px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        }
+
+        .shot { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+        .shot.narrow { max-width: 300px; }
+
+        ul { margin: 8px 0 0; padding-left: 20px; }
+        li { margin: 0 0 8px; }
+
+        code {
+            background: #F1F5F9;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 1px 5px;
+            font-size: 12.5px;
+            word-break: break-word;
+        }
+
+        pre {
+            background: #0F172A;
+            color: #E2E8F0;
+            padding: 14px 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 12.5px;
+            line-height: 1.55;
+            margin: 12px 0 0;
+        }
+
+        pre .win { color: #86EFAC; }
+        pre .lose { color: #FCA5A5; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+        .pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .pill.bad { background: #FEE2E2; color: var(--bad); }
+        .pill.ok { background: #DCFCE7; color: var(--ok); }
+
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: start; }
+        .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 8px; }
+        .label.ok { color: var(--ok); }
+        .note { background: #F8FAFC; border-left: 3px solid var(--navy); padding: 10px 14px; margin: 14px 0 0; border-radius: 0 8px 8px 0; }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>Sidebar “Collapse Menu” Toggle</h1>
+        <p class="sub">Mobile drawer se hata diya, aur desktop par ek proper soft plate style de diya — dono
+            dashboards (doctor + patient) me same.</p>
+
+        <h2>1. Mobile par button kyun dikh raha tha</h2>
+        <div class="card">
+            <p>CSS me pehle se <code>display:none</code> likha hua tha, par woh <strong>kabhi apply hi nahi
+                    hota tha</strong>. Do <code>!important</code> rules aapas me clash kar rahi thin, aur jeet
+                specificity se hui:</p>
+            <pre><span class="lose">LOSE  (0,2,0)</span>  .dior-doctor-wrap .dior-doc-collapse-btn
+                 { display: none !important }        ← mobile hide rule
+
+<span class="win">WINS  (0,3,0)</span>  :is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap)
+                 .dior-side-nav .dior-nav-btn
+                 { display: flex !important }        ← generic nav-button rule</pre>
+            <p class="note"><strong>Important:</strong> jab dono declarations <code>!important</code> hon, cascade
+                ka faisla <em>specificity</em> se hota hai — source order se nahi. Isliye hide rule neeche hone ke
+                baawajood bhi haar gayi, aur button drawer me chala aaya. Naya selector <code>0,4,0</code> hai,
+                isliye ab reliably jeetta hai.</p>
+            <p class="note"><strong>Patient dashboard me bhi bilkul yahi bug tha</strong> — same toggle, same
+                cascade clash. Dono ek saath fix kiye, warna ek dashboard theek hota aur doosre me button reh
+                jaata.</p>
+        </div>
+
+        <h2>2. Mobile / tablet — button gone</h2>
+        <div class="grid">
+            <div>
+                <p class="label ok">390px — drawer khula, “Collapse Menu” nahi hai</p>
+                <img class="shot narrow" src="screenshots/sidebar-mobile-open.png" alt="Mobile drawer">
+            </div>
+            <div class="card">
+                <p><strong>Ab mobile par:</strong></p>
+                <ul>
+                    <li>Tablet aur phone dono par button nahi dikhta (≤1024px).</li>
+                    <li>Sirf <code>display:none</code> nahi — height/margin/padding sab zero, taki koi khali gap ya
+                        invisible tap-target na bache.</li>
+                    <li>Drawer band karne ke liye top-right ka <strong>× button</strong> hi use hota hai, jo pehle
+                        se maujood hai.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>3. Desktop — naya style</h2>
+        <div class="card">
+            <img class="shot" src="screenshots/sidebar-desktop.png" alt="Desktop sidebar">
+        </div>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Pehle</th>
+                    <th>Ab</th>
+                </tr>
+                <tr>
+                    <td>Background</td>
+                    <td>transparent — label seedha navy par float kar raha tha</td>
+                    <td>soft white plate <code>rgba(255,255,255,.06)</code> + 1px hairline border, 9px radius</td>
+                </tr>
+                <tr>
+                    <td>Separator</td>
+                    <td>poori width ki solid hairline</td>
+                    <td>inset hairline with 8px gutter — nav list se saaf alag dikhta hai</td>
+                </tr>
+                <tr>
+                    <td>Hover</td>
+                    <td>plate <code>.10</code> opacity</td>
+                    <td>plate <code>.13</code> + border highlight + pure white label</td>
+                </tr>
+                <tr>
+                    <td>Text</td>
+                    <td>14px, weight 600</td>
+                    <td>13px, weight 600, slight letter-spacing — nav rows se chhota, taaki secondary action lage</td>
+                </tr>
+                <tr>
+                    <td>Focus</td>
+                    <td>none</td>
+                    <td>same hover treatment (keyboard accessible, visible focus)</td>
+                </tr>
+                <tr>
+                    <td>Icon</td>
+                    <td>15px</td>
+                    <td>13px, hover par full opacity</td>
+                </tr>
+            </table>
+        </div>
+
+        <h2>4. Collapsed rail</h2>
+        <div class="card">
+            <img class="shot" src="screenshots/sidebar-collapsed.png" alt="Collapsed sidebar">
+        </div>
+        <div class="card">
+            <p>Sidebar collapse hone par toggle ek <strong>56px centred icon tile</strong> ban jaata hai — label
+                chhup jaata hai, plate halka ho jaata hai (<code>.04</code>), separator full width. Koi layout shift
+                nahi, icon dead-centre.</p>
+        </div>
+
+        <h2>5. Verification</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Width</th>
+                    <th>Doctor dashboard</th>
+                    <th>Patient dashboard</th>
+                </tr>
+                <tr><td>390px</td><td><span class="pill ok">hidden</span></td><td><span class="pill ok">hidden</span></td></tr>
+                <tr><td>820px</td><td><span class="pill ok">hidden</span></td><td><span class="pill ok">hidden</span></td></tr>
+                <tr><td>1024px</td><td><span class="pill ok">hidden</span></td><td><span class="pill ok">hidden</span></td></tr>
+                <tr><td>1440px</td><td><span class="pill ok">visible</span> 219×38, soft plate</td><td><span class="pill ok">visible</span></td></tr>
+            </table>
+            <p class="note"><strong>Regression:</strong> popup theme suite, settings page checks (1440/1024/820/390/320)
+                aur documents E2E — sab pass, zero console errors. Collapse/expand behaviour aur localStorage state
+                jaisa tha waisa hi hai.</p>
+        </div>
+
+        <h2>6. Files</h2>
+        <div class="card">
+            <p><code>assets/css/dior-custom.css</code> — end me do scoped blocks. Sirf CSS: koi PHP/JS change nahi,
+                isliye collapse toggle ka JS behaviour, submenu state aur localStorage untouched hain.</p>
+        </div>
+    </div>
+</body>
+
+</html>
