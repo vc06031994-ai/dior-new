@@ -445,7 +445,26 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
               $ha_date = !empty($next_appointment['date']) ? $next_appointment['date'] : $ha_date;
               $ha_time = !empty($next_appointment['time']) ? $next_appointment['time'] : $ha_time;
               $ha_avatar = !empty($next_appointment['avatar']) ? $next_appointment['avatar'] : '';
-              $ha_join_url = !empty($next_appointment['join_url']) ? $next_appointment['join_url'] : '';
+              // Meeting link resolution order:
+              //   1. the appointment's own Zoom/Jitsi join_url
+              //   2. the doctor's Telehealth URL from Settings → Practice
+              //   3. nothing — the card falls back to the details modal
+              // Without step 2 a patient whose appointment was created before the
+              // Zoom credentials were configured had no way into the room, even
+              // though the provider had published a meeting link.
+              $ha_join_url = !empty($next_appointment['join_url']) ? trim((string) $next_appointment['join_url']) : '';
+              if ($ha_join_url === '') {
+                $ha_doc_uid = !empty($next_appointment['doctor_user_id']) ? (int) $next_appointment['doctor_user_id'] : 0;
+                if (!$ha_doc_uid && !empty($next_appointment['doctor_id'])) {
+                  $ha_doc_uid = (int) $next_appointment['doctor_id'];
+                }
+                if ($ha_doc_uid > 0) {
+                  $ha_doc_zoom = trim((string) get_user_meta($ha_doc_uid, 'doctor_zoom_link', true));
+                  if ($ha_doc_zoom !== '' && preg_match('#^https://#i', $ha_doc_zoom)) {
+                    $ha_join_url = $ha_doc_zoom;
+                  }
+                }
+              }
               $ha_status = !empty($next_appointment['status']) ? $next_appointment['status'] : '';
 
               $doc_id = !empty($next_appointment['doctor_id']) ? $next_appointment['doctor_id'] : (!empty($next_appointment['provider_id']) ? $next_appointment['provider_id'] : 0);
@@ -493,8 +512,15 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
                     <i class="fas fa-video me-2"></i>Join Video Consultation Room
                   </a>
                 <?php else: ?>
+                  <?php
+                  // No meeting link yet (Zoom credentials missing or the link was
+                  // not created). Open the Telemedicine details modal, which is the
+                  // same fallback the Telemedicine tab itself uses for these rows.
+                  $next_uid = !empty($next_appointment['id']) ? $next_appointment['id'] : (!empty($next_appointment['appt_uid']) ? $next_appointment['appt_uid'] : '');
+                  ?>
                   <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
                     data-switch-tab="telemedicine"
+                    data-open-tele-row="<?php echo esc_attr($next_uid); ?>"
                     onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('telemedicine');">
                     <i class="fas fa-video me-2"></i>View Consultation Details
                   </button>

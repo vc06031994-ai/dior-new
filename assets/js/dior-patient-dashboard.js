@@ -1018,6 +1018,48 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
     }
 
 
+    // Guard: a Join control must never point at an empty or non-http href.
+    // Appointments created before the Zoom credentials were configured carry
+    // an empty join_url; clicking such a link did nothing at all, which is what
+    // made "Join Video Consultation Room" look broken. In that case we open the
+    // Telemedicine details modal instead, so the patient still learns where and
+    // when the visit is and can reschedule.
+    document.addEventListener('click', function (event) {
+        var joinEl = event.target.closest('a[data-dior-meeting-join], button[data-dior-meeting-join]');
+        if (!joinEl) return;
+        var rawHref = (joinEl.getAttribute('href') || '').trim();
+        var looksUsable = joinEl.tagName === 'BUTTON' ? true : /^https?:\/\//i.test(rawHref);
+        if (looksUsable) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var uid = joinEl.getAttribute('data-appt-uid') || '';
+        var row = uid ? document.querySelector('#dior-tele-table tr[data-tele-id="' + uid.replace(/"/g, '') + '"]') : null;
+        var portal = document.getElementById('dior-patient-portal-app');
+
+        if (typeof window.diorSwitchTab === 'function') {
+            window.diorSwitchTab('telemedicine');
+        }
+
+        if (row && typeof window.diorViewTelemedicine === 'function') {
+            // Prefer the real row so the modal shows live appointment data.
+            var btn = row.querySelector('.tele-join-btn') || row.querySelector('.edit-btn');
+            window.setTimeout(function () {
+                window.diorViewTelemedicine(btn || row);
+            }, 120);
+        } else if (typeof window.Swal !== 'undefined') {
+            window.Swal.fire({
+                icon: 'info',
+                title: 'Meeting link not ready yet',
+                text: 'A video link has not been created for this appointment. Please open Telemedicine for the details, or reschedule if you need to.',
+                confirmButtonText: 'Open Telemedicine'
+            }).then(function () {
+                if (portal) portal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+    }, true);
+
     // Track patient clicks on Join Visit / Join Telehealth Room and notify the doctor.
     document.addEventListener('click', function (event) {
         var link = event.target.closest('a[data-dior-meeting-join], button[data-dior-meeting-join], .dior-tele-join-btn');
