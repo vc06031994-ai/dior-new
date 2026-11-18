@@ -73035,3 +73035,105 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
 #dior-docbooker-modal .dior-db-close-btn:hover {
     color: var(--dior-color-primary, #1A528E) !important;
 }
+
+/* =====================================================================
+   PATIENT SUB-MENU LABELS MUST NEVER BE CLIPPED
+   ---------------------------------------------------------------------
+   The Appointments sub-items use the doctor's 25px indent and 20px icon
+   box. On the doctor side that leaves enough room because the longest
+   label there is "Appointment Calendar" (153px). The patient's longest is
+   "Upcoming Appointments" (167px at 12.5px), which does not fit once the
+   sidebar narrows: the list is 190px wide at 1025-1366px, leaving 132px
+   for a 167px label, and 210px at 1440+, leaving 152px. The label was
+   simply cut off mid-word with no ellipsis.
+
+   Below 1025px the drawer is wide enough and nothing changes.
+   ===================================================================== */
+@media (min-width: 1025px) and (max-width: 1399px) {
+
+    /* The 240px sidebar in this band is the tightest case: the list is only
+       190px wide, so the indent and gutters have to give up more room than
+       they do on the wider sidebar. */
+    .dior-patient-portal-wrap .dior-submenu,
+    .dior-patient-portal-wrap .dior-nav-dropdown,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown {
+        padding: 2px 0 4px 10px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        padding: 9px 8px !important;
+        gap: 8px !important;
+    }
+
+    /* The label was inheriting the 13.5px step meant for the wider sidebar,
+       which needs 167px for "Upcoming Appointments". At the doctor's 12.5px
+       it needs 155px and fits inside 161px. */
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item .nav-label {
+        font-size: 12.5px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn i,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item i,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn i {
+        width: 18px !important;
+        min-width: 18px !important;
+        max-width: 18px !important;
+    }
+}
+
+@media (min-width: 1400px) {
+
+    /* sub-items: drop the doctor's 25px indent and tighten the gutters so
+       the label gets the width it needs */
+    .dior-patient-portal-wrap .dior-submenu,
+    .dior-patient-portal-wrap .dior-nav-dropdown,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown {
+        padding: 2px 0 4px 14px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        padding: 9px 10px !important;
+        gap: 9px !important;
+    }
+
+    /* the label may shrink no further than its own text, and if it ever
+       does run out of room it truncates with an ellipsis instead of being
+       cut mid-glyph */
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item .nav-label {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+}
+
+/* the drawer and the 1025-1099 band already fit; keep their current
+   padding and only add the safe truncation there */
+@media (max-width: 1024.98px) {
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item .nav-label {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+}
