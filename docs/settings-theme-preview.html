@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Settings &amp; Profile — Theme Match</title>
+    <style>
+        :root {
+            --ink: #0F172A;
+            --muted: #64748B;
+            --line: #E2E8F0;
+            --navy: #00346C;
+            --bg: #F8FAFC;
+            --ok: #0F7B47;
+            --bad: #B91C1C;
+            --warn: #B45309;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 20px 64px;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.6 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .wrap { max-width: 1080px; margin: 0 auto; }
+
+        h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; color: var(--navy); }
+        h2 { font-size: 18px; margin: 38px 0 12px; color: var(--navy); }
+        .sub { color: var(--muted); margin: 0 0 26px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 0 0 18px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        }
+
+        .shot { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+        .shot.narrow { max-width: 360px; }
+
+        ul { margin: 8px 0 0; padding-left: 20px; }
+        li { margin: 0 0 8px; }
+
+        code {
+            background: #F1F5F9;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 1px 5px;
+            font-size: 12.5px;
+            word-break: break-word;
+        }
+
+        .pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .pill.bad { background: #FEE2E2; color: var(--bad); }
+        .pill.ok { background: #DCFCE7; color: var(--ok); }
+        .pill.warn { background: #FEF3C7; color: var(--warn); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: start; }
+        .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 8px; }
+        .label.ok { color: var(--ok); }
+
+        .swatch {
+            display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+            margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(0, 0, 0, .08);
+        }
+
+        .note { background: #F8FAFC; border-left: 3px solid var(--navy); padding: 10px 14px; margin: 14px 0 0; border-radius: 0 8px 8px 0; }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>Doctor Settings &amp; Profile — Theme Match</h1>
+        <p class="sub">Last dashboard template ab site ke navy palette par hai. Screenshot me mark kiye teen jagah — Media
+            Library button, Doctor Alerts icon, aur telehealth video icon — sab theek ho gaye.</p>
+
+        <h2>1. Kya galat tha</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Screenshot mark</th>
+                    <th>Pehle</th>
+                    <th>Ab</th>
+                </tr>
+                <tr>
+                    <td><strong>Media Library</strong> button</td>
+                    <td><span class="pill bad">pink hover</span> Parent theme button hovers ko magenta
+                        <code>#CC3366</code> se repaint karta hai. Text bhi Bootstrap ka raw grey
+                        <code>#6c757d</code> tha, border halka blue.</td>
+                    <td><span class="pill ok">fixed</span> Soft slate fill <code>#F1F5F9</code>, border
+                        <code>#CBD5E1</code>, text <code>#475569</code>. Hover par slate <code>#E2E8F0</code> — pink
+                        kahin nahi.</td>
+                </tr>
+                <tr>
+                    <td><strong>Doctor Alerts</strong> bell icon</td>
+                    <td><span class="pill bad">amber</span> <code>.text-warning</code> se amber
+                        <code>#d97706</code>, jo baaki sidebar icons ke navy se match nahi karta tha.</td>
+                    <td><span class="pill ok">fixed</span> Brand navy <code>#1A528E</code>, hover par
+                        <code>#00346C</code>. Chaaron nav tiles ke icons ab identical.</td>
+                </tr>
+                <tr>
+                    <td><strong>Telehealth video</strong> icon</td>
+                    <td><span class="pill warn">layout + colour</span> Icon input ke <em>upar</em> alag line par gir
+                        raha tha, aur input-group ka border plain grey tha.</td>
+                    <td><span class="pill ok">fixed</span> Icon input ke saath inline, navy <code>#1A528E</code>,
+                        group border <code>#E2E8F0</code>, focus par navy ring.</td>
+                </tr>
+            </table>
+            <p class="note"><strong>Note:</strong> yeh same magenta <code>#CC3366</code> defect pehle telehealth tabs
+                par fix hua tha — Settings tab us waqt chhoot gaya tha. Ab wahi treatment yahan bhi lagayi gayi hai,
+                so pattern consistent rehta hai.</p>
+        </div>
+
+        <h2>2. Desktop</h2>
+        <div class="card">
+            <img class="shot" src="screenshots/settings-desktop.png" alt="Doctor Settings desktop">
+        </div>
+        <div class="card">
+            <ul>
+                <li><strong>Upload Photo</strong> — navy <code>#1A528E</code>, hover <code>#00346C</code>.</li>
+                <li><strong>Media Library</strong> — soft slate, pink hover khatam.</li>
+                <li><strong>Remove</strong> — red outline <code>#B91C1C</code>, hover par solid red.</li>
+                <li><strong>Sidebar tiles</strong> — active tile solid navy; idle tiles white + navy icons; hover par
+                    halka blue tint aur navy border.</li>
+                <li><strong>Form controls</strong> — border <code>#E2E8F0</code>, focus par navy border + soft navy
+                    ring (Bootstrap ka default blue ring nahi).</li>
+                <li><strong>Checkboxes</strong> (notification preferences) — navy fill, navy focus ring.</li>
+                <li>Success ticks/pills semantic green hi rahe — wo status hai, brand colour nahi.</li>
+            </ul>
+        </div>
+
+        <h2>3. Mobile</h2>
+        <div class="grid">
+            <div>
+                <p class="label ok">390px — primary apni row par, baaki do barabar</p>
+                <img class="shot narrow" src="screenshots/settings-mobile.png" alt="Doctor Settings mobile">
+            </div>
+            <div class="card">
+                <p><strong>Kya fix hua:</strong> pehle teen buttons ek hi row me squeeze hote the, isliye labels kat
+                    rahe the — "Upload Phot", "Media Librar".</p>
+                <ul>
+                    <li>Primary (Upload Photo) poori width leta hai.</li>
+                    <li>Media Library + Remove agla row aadha-aadha share karte hain.</li>
+                    <li>320px par teeno apni-apni full-width row lete hain.</li>
+                    <li>Koi label clip nahi, koi horizontal scroll nahi.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>4. Breakpoint verification</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Width</th>
+                    <th>Overflow</th>
+                    <th>Clipped labels</th>
+                    <th>Video icon inline</th>
+                    <th>Input font</th>
+                </tr>
+                <tr><td>1440px</td><td>no</td><td>none</td><td>yes</td><td>14px</td></tr>
+                <tr><td>1024px</td><td>no</td><td>none</td><td>yes</td><td>14px</td></tr>
+                <tr><td>820px</td><td>no</td><td>none</td><td>yes</td><td>14px</td></tr>
+                <tr><td>390px</td><td>no</td><td>none</td><td>yes</td><td>16px (iOS zoom guard)</td></tr>
+                <tr><td>320px</td><td>no</td><td>none</td><td>yes</td><td>16px (iOS zoom guard)</td></tr>
+            </table>
+        </div>
+
+        <h2>5. Colours used</h2>
+        <div class="card">
+            <table>
+                <tr><th>Element</th><th>Value</th></tr>
+                <tr><td>Primary button</td><td><span class="swatch" style="background:#1A528E"></span><code>#1A528E</code> (hover <code>#00346C</code>)</td></tr>
+                <tr><td>Secondary button</td><td><span class="swatch" style="background:#F1F5F9"></span><code>#F1F5F9</code> (hover <code>#E2E8F0</code>)</td></tr>
+                <tr><td>Sidebar icons</td><td><span class="swatch" style="background:#1A528E"></span><code>#1A528E</code></td></tr>
+                <tr><td>Borders</td><td><code>#E2E8F0</code> / <code>#CBD5E1</code></td></tr>
+                <tr><td>Danger (Remove)</td><td><span class="swatch" style="background:#B91C1C"></span><code>#B91C1C</code> (hover <code>#DC2626</code>)</td></tr>
+                <tr><td>Removed</td><td><span class="swatch" style="background:#CC3366"></span><code>#CC3366</code> magenta — ab kahin nahi</td></tr>
+            </table>
+        </div>
+
+        <h2>6. Files</h2>
+        <div class="card">
+            <p><code>assets/css/dior-custom.css</code> — end me naya block
+                <strong>DOCTOR SETTINGS &amp; PROFILE — theme lock</strong>, <code>#tab-doc-settings</code> par scoped.
+                Sirf CSS; koi PHP/JS change nahi, isliye AJAX behaviour jaise tha waisa hi hai.</p>
+        </div>
+    </div>
+</body>
+
+</html>

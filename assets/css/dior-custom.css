@@ -70877,3 +70877,266 @@ a.va-btn-primary:hover {
     border-color: #B91C1C !important;
     box-shadow: 0 6px 16px rgba(185, 28, 28, 0.32) !important;
 }
+
+/* ==========================================================================
+   DOCTOR SETTINGS & PROFILE — theme lock (buttons, icons, accents)
+
+   The parent theme repaints button hover/focus states with magenta
+   (#CC3366) and keeps Bootstrap's raw greys on outline buttons. On this
+   page that showed up as:
+     • "Media Library"  — grey outline that turned pink on hover
+     • "Doctor Alerts"  — amber bell icon
+     • telehealth video input-group icon
+   Everything below pins the page to the navy / slate palette. Scoped to
+   #tab-doc-settings so no other tab is affected. Structure follows the
+   telehealth tabs (same defect, same treatment).
+   ========================================================================== */
+
+/* ---------- 1. Primary actions (Upload Photo, Save) ---------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary:focus,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary:focus-visible {
+    background-color: #1A528E !important;
+    background-image: none !important;
+    border: 1px solid #1A528E !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary:active,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary.active {
+    background-color: #00346C !important;
+    background-image: none !important;
+    border-color: #00346C !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary i,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-primary:hover i {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* ---------- 2. Secondary / outline actions (Media Library) --------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary:focus,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary:focus-visible {
+    background: #F1F5F9 !important;
+    background-color: #F1F5F9 !important;
+    background-image: none !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary:active,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary.active {
+    background: #E2E8F0 !important;
+    background-color: #E2E8F0 !important;
+    background-image: none !important;
+    border-color: #CBD5E1 !important;
+    color: #0F172A !important;
+    -webkit-text-fill-color: #0F172A !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary i,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-secondary:hover i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+/* ---------- 3. Destructive action (Remove avatar) ------------------------ */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-danger {
+    background: #FEF2F2 !important;
+    background-color: #FEF2F2 !important;
+    background-image: none !important;
+    border: 1px solid #FECACA !important;
+    color: #B91C1C !important;
+    -webkit-text-fill-color: #B91C1C !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-danger:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-danger:active {
+    background: #DC2626 !important;
+    background-color: #DC2626 !important;
+    background-image: none !important;
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .btn-outline-danger i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+/* ---------- 4. Sidebar nav tiles ---------------------------------------- */
+/* Active tile: solid navy. Idle tiles: white with navy icons — the amber
+   bell and stray theme accents come from .text-warning / .text-primary on
+   the <i>, so icons are pinned to the brand navy here. */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn {
+    box-shadow: none !important;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn.active {
+    background-color: #1A528E !important;
+    background-image: none !important;
+    border-color: #1A528E !important;
+    color: #FFFFFF !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn.active i,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn.active div,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn.active small {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    opacity: 0.9 !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active) {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #0F172A !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active):hover {
+    background-color: #F5F9FE !important;
+    border-color: #C7D8EA !important;
+    color: #00346C !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active) i,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active) .text-warning,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active) .text-primary {
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-nav-btn:not(.active):hover i {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* ---------- 5. Pane headers and inline icons ---------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-pane .fa-user-md,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-pane .fa-bell,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-pane .fa-shield-halved,
+#dior-doctor-app #dior-doc-content #tab-doc-settings .dior-settings-pane .fa-calendar-check {
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+/* Telehealth URL field: the video icon sits inside a white input-group.
+   The bundled Bootstrap build gives .form-control width:100%, so the flex
+   row wrapped and the icon dropped onto its own line above the field.
+   The standard input-group recipe (nowrap + width:1% + shrink) keeps the
+   icon inline with the input, then the group is themed. */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group {
+    flex-wrap: nowrap !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group > .form-control {
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0 !important;
+}
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group-text {
+    background-color: #F8FAFC !important;
+    border-color: #E2E8F0 !important;
+    color: #1A528E !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group-text i {
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group:focus-within .input-group-text {
+    background-color: #F5F9FE !important;
+    border-color: #1A528E !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .input-group:focus-within .input-group-text i {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* ---------- 6. Form controls ------------------------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .form-control {
+    border-color: #E2E8F0 !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .form-control:focus {
+    border-color: #1A528E !important;
+    box-shadow: 0 0 0 3px rgba(26, 82, 142, 0.14) !important;
+}
+
+/* ---------- 7. Alert preference rows ----------------------------------- */
+/* The "Doctor Alerts" pane renders each channel as a bordered row; the
+   theme tints its active state magenta. Pin to navy. */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .form-check-input:checked {
+    background-color: #1A528E !important;
+    border-color: #1A528E !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-settings .form-check-input:focus {
+    border-color: #1A528E !important;
+    box-shadow: 0 0 0 3px rgba(26, 82, 142, 0.14) !important;
+}
+
+/* Success ticks and status pills stay semantic green. */
+#dior-doctor-app #dior-doc-content #tab-doc-settings .badge.bg-success-subtle {
+    background-color: #ECFDF5 !important;
+    border-color: #A7F3D0 !important;
+    color: #047857 !important;
+}
+
+/* ---------- 8. Mobile: keep both banner actions on one line ----------- */
+@media (max-width: 575.98px) {
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions {
+        width: 100% !important;
+        gap: 8px !important;
+    }
+
+    /* Three buttons on one 330px row clipped their labels ("Upload Phot",
+       "Media Librar"). Instead the primary action takes its own full-width
+       row and the two secondary actions split the next one - labels always
+       fit, and the banner still stays short. */
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions {
+        flex-wrap: wrap !important;
+    }
+
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions .btn {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        font-size: 12.5px !important;
+        padding: 9px 10px !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions .btn-primary {
+        flex: 1 1 100% !important;
+    }
+
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions .btn i {
+        font-size: 12px !important;
+        margin-right: 4px !important;
+    }
+}
+
+/* ≤ 360px: "Media Library" still clipped next to "Remove" at 320px, so every
+   banner action gets its own full-width row. */
+@media (max-width: 359.98px) {
+    #dior-doctor-app #dior-doc-content #tab-doc-settings .dior-profile-actions .btn {
+        flex: 1 1 100% !important;
+    }
+}
