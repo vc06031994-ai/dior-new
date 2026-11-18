@@ -117,8 +117,9 @@
                         title="Delete Selected" onclick="diorBulkDeleteStaticRows(this)">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button type="button" aria-label="Add new record"
-                        class="docs-icon-btn docs-btn-primary btn" title="Add New Consultation">
+                    <button type="button" aria-label="Add new record" id="dior-tele-book-btn"
+                        class="docs-icon-btn docs-btn-primary btn" title="Add New Consultation"
+                        onclick="if(typeof window.diorOpenDocBookerModal==='function'){window.diorOpenDocBookerModal();}else if(typeof window.diorSwitchTab==='function'){window.diorSwitchTab('appointments');if(typeof window.diorSwitchApptSubTab==='function'){window.diorSwitchApptSubTab('book');}}">
                         <i class="fas fa-plus"></i>
                     </button>
                     <button type="button" aria-label="Export to CSV" class="docs-icon-btn docs-btn-success btn"
