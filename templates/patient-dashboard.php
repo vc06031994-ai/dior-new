@@ -219,11 +219,6 @@
                 </div>
 
                 <div class="dior-topbar-right">
-                    <!-- Messages Icon -->
-                    <button type="button" class="dior-msg-btn dior-ic-f2136e6b50 btn" aria-label="Messages">
-                        <i class="far fa-envelope"></i>
-                    </button>
-
                     <!-- Notification Bell Dropdown -->
                     <div class="dior-notif-wrap" id="dior-notif-dropdown-wrap">
                         <button type="button" class="dior-notif-btn btn" onclick="diorToggleNotifDropdown(event)"

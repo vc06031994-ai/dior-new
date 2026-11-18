@@ -296,9 +296,6 @@
                     </div>
                 </div>
                 <div class="dior-topbar-right">
-                    <button type="button" class="dior-msg-btn dior-ic-fa44d4cb47 btn">
-                        <i class="far fa-envelope"></i>
-                    </button>
                     <div class="dior-notif-wrap">
                         <button type="button" class="dior-notif-btn btn" onclick="diorDocToggleNotif(event)">
                             <i class="far fa-bell"></i>

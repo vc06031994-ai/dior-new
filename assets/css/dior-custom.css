@@ -25343,35 +25343,6 @@ textarea.dior-form-control {
     gap: 12px !important;
     align-items: center !important;
 }
-
-/* Message button - circular blue style like doctor dashboard */
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    padding: 0 !important;
-    border: none !important;
-    border-radius: 50% !important;
-    background: #2C6CB1 !important;
-    color: #ffffff !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: none !important;
-    cursor: pointer !important;
-    font-size: 15px !important;
-    transition: background 0.2s !important;
-}
-
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn:hover {
-    background: #1a4f85 !important;
-}
-
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn i {
-    color: #ffffff !important;
-    font-size: 15px !important;
-}
-
 /* Notification button - circular blue style like doctor dashboard */
 .dior-patient-portal-wrap .dior-notif-btn {
     width: 38px !important;
@@ -26197,12 +26168,10 @@ body .media-modal .media-modal-close .media-modal-icon::before {
  * Patient portal visual parity with Doctor Dashboard.
  * IMPORTANT: scoped away from #tab-overview.
  * ================================================================ */
-.dior-patient-portal-wrap .dior-tab-panel:not(#tab-overview) .dior-msg-btn,
 .dior-patient-portal-wrap .dior-tab-panel:not(#tab-overview) .dior-notif-btn {
     box-sizing: border-box;
 }
 
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn,
 .dior-patient-portal-wrap .dior-topbar .dior-notif-btn {
     width: 40px !important;
     height: 40px !important;
@@ -26217,7 +26186,6 @@ body .media-modal .media-modal-close .media-modal-icon::before {
     box-shadow: 0 2px 8px rgba(15, 23, 42, .04) !important;
 }
 
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn i,
 .dior-patient-portal-wrap .dior-topbar .dior-notif-btn i {
     color: #475569 !important;
     font-family: "Font Awesome 6 Free" !important;
@@ -26225,16 +26193,10 @@ body .media-modal .media-modal-close .media-modal-icon::before {
     font-size: 16px !important;
 }
 
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn i.fa-regular,
 .dior-patient-portal-wrap .dior-topbar .dior-notif-btn i.fa-solid {
     font-weight: 900 !important;
 }
 
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn i.fa-regular {
-    font-weight: 400 !important;
-}
-
-.dior-patient-portal-wrap .dior-topbar .dior-msg-btn:hover,
 .dior-patient-portal-wrap .dior-topbar .dior-notif-btn:hover {
     color: #1A528E !important;
     border-color: #C7D2FE !important;
@@ -54319,7 +54281,6 @@ a.va-btn-primary:hover {
         box-shadow: none !important;
     }
 
-    .dior-patient-portal-wrap .dior-topbar-right>.dior-msg-btn,
     .dior-patient-portal-wrap .dior-notif-btn {
         display: inline-flex !important;
         align-items: center !important;
@@ -54505,10 +54466,6 @@ a.va-btn-primary:hover {
 
     .dior-patient-portal-wrap .dior-top-search input {
         font-size: 11px !important;
-    }
-
-    .dior-patient-portal-wrap .dior-topbar-right>.dior-msg-btn {
-        display: none !important;
     }
 
     .dior-patient-portal-wrap .dior-mobile-menu-toggle {
@@ -73102,4 +73059,42 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
     }
+}
+
+/* ================================================================
+ * Sticky dashboard header
+ * ----------------------------------------------------------------
+ * .dior-topbar already declares `position: sticky; top: 0`, but it
+ * never stuck: every wrapper up the tree set `overflow-x: hidden`,
+ * and per CSS a non-visible overflow-x forces overflow-y to compute
+ * to `auto`. That turned .dior-main-content into a scroll container
+ * that never actually scrolls, so the sticky header pinned itself to
+ * that dead container instead of the page and scrolled away with it.
+ *
+ * `overflow-x: clip` still clips horizontal overflow but leaves
+ * overflow-y `visible`, so sticky resolves against the document and
+ * the header stays put. `visible` cannot be used instead: it fixes
+ * sticky too but lets the page scroll sideways.
+ *
+ * Specificity: the wrappers are ids, so these out-rank the
+ * `!important` class rules above without touching them. overflow-y
+ * is deliberately left alone so the body scroll-lock
+ * (`body.style.overflow = 'hidden'`) used by the modals keeps working.
+ *
+ * <html>/<body> need it too: an earlier rule sets `overflow-x: hidden`
+ * on them, which makes the document itself the scroll container and
+ * breaks sticky just the same. `:has()` keeps that change off every
+ * other page of the site.
+ * ================================================================ */
+html:has(.dior-patient-portal-wrap),
+body:has(.dior-patient-portal-wrap),
+html:has(.dior-doctor-wrap),
+body:has(.dior-doctor-wrap),
+#dior-patient-portal-app,
+#dior-patient-portal-app .dior-app,
+#dior-patient-portal-app .dior-main-content,
+#dior-doctor-app,
+#dior-doctor-app .dior-app,
+#dior-doctor-app .dior-main-content {
+    overflow-x: clip !important;
 }
