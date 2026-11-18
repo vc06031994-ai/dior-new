@@ -434,6 +434,10 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
             $ha_date = '—';
             $ha_time = '—';
             $ha_avatar = '';
+            // Real meeting link for the nearest appointment. When absent we
+            // fall back to the Telehealth tab instead of a dead button.
+            $ha_join_url = '';
+            $ha_status = '';
 
             if (!empty($next_appointment)) {
               $ha_name = !empty($next_appointment['doctor_name']) ? $next_appointment['doctor_name'] : (!empty($next_appointment['provider']) ? $next_appointment['provider'] : $ha_name);
@@ -441,6 +445,8 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
               $ha_date = !empty($next_appointment['date']) ? $next_appointment['date'] : $ha_date;
               $ha_time = !empty($next_appointment['time']) ? $next_appointment['time'] : $ha_time;
               $ha_avatar = !empty($next_appointment['avatar']) ? $next_appointment['avatar'] : '';
+              $ha_join_url = !empty($next_appointment['join_url']) ? $next_appointment['join_url'] : '';
+              $ha_status = !empty($next_appointment['status']) ? $next_appointment['status'] : '';
 
               $doc_id = !empty($next_appointment['doctor_id']) ? $next_appointment['doctor_id'] : (!empty($next_appointment['provider_id']) ? $next_appointment['provider_id'] : 0);
               if (empty($ha_avatar)) {
@@ -472,13 +478,41 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
               </div>
             </div>
             <div class="d-flex flex-column gap-2 mt-3">
-              <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
-                data-switch-tab="consultation"
-                onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('consultation');">Join Video Consultation
-                Room</button>
-              <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100"
-                data-switch-tab="appointments"
-                onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('appointments');">Reschedule</button>
+              <?php if (!empty($next_appointment)): ?>
+                <?php
+                // Only offer "Join" when there is a real meeting link to go to.
+                // Without one the button used to land the patient on an empty
+                // Telehealth tab even though the card said "No upcoming
+                // consultation".
+                $join_is_safe = $ha_join_url !== '' && preg_match('#^https://#i', $ha_join_url);
+                ?>
+                <?php if ($join_is_safe): ?>
+                  <a class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+                    href="<?php echo esc_url($ha_join_url); ?>" target="_blank" rel="noopener noreferrer"
+                    data-dior-meeting-join>
+                    <i class="fas fa-video me-2"></i>Join Video Consultation Room
+                  </a>
+                <?php else: ?>
+                  <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+                    data-switch-tab="telemedicine"
+                    onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('telemedicine');">
+                    <i class="fas fa-video me-2"></i>View Consultation Details
+                  </button>
+                <?php endif; ?>
+                <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100"
+                  data-switch-tab="appointments"
+                  onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('appointments');">
+                  <i class="far fa-calendar me-2"></i>Reschedule
+                </button>
+              <?php else: ?>
+                <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+                  data-switch-tab="appointments"
+                  onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('appointments');"
+                  data-appt-subtab="book">
+                  <i class="fas fa-calendar-plus me-2"></i>Book An Appointment
+                </button>
+                <p class="text-secondary small text-center mb-0">No consultation scheduled yet.</p>
+              <?php endif; ?>
             </div>
           </div>
         </div>

@@ -71591,3 +71591,78 @@ a.va-btn-primary:hover {
         padding: 10px 16px !important;
     }
 }
+
+/* ==========================================================================
+   PATIENT PROFILE-INCOMPLETE BANNER — theme colour
+
+   The banner was amber (#FFFBEB / #FDE68A / #F59E0B) which read as a
+   third-party accent next to the navy chrome. It is an *informational*
+   prompt, not an error, so it now uses the theme's soft navy tint with a
+   navy left rail and a navy icon chip. The amber "attention" cue is kept
+   only where it still earns its place: nothing here is destructive.
+   ========================================================================== */
+.dior-patient-portal-wrap .dior-ic-c03948b3c3 {
+    background: #F5F9FE !important;
+    border: 1px solid #D7E5F3 !important;
+    border-left: 4px solid #1A528E !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(26, 82, 142, 0.08) !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-3fb01cc77f {
+    background: #1A528E !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 6px rgba(26, 82, 142, 0.22) !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-11190ca3a8 {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-acb9b5ec47 {
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+}
+
+/* The <strong> inside the sentence names the missing fields — give it the
+   brand ink so it stays the visual anchor. */
+.dior-patient-portal-wrap .dior-ic-acb9b5ec47 strong {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a {
+    background: #1A528E !important;
+    background-image: none !important;
+    border: 1px solid #1A528E !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(26, 82, 142, 0.22) !important;
+    border-radius: 9px !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a:hover,
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a:focus-visible {
+    background: #00346C !important;
+    border-color: #00346C !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a i {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* Doctor-consultation card heading sits next to navy section titles; it was
+   still .text-dark, so the console read as a black heading among navy ones. */
+.dior-patient-portal-wrap #tab-overview #dior-overview-doctor-card h4 {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* The empty-state line under the CTA. */
+.dior-patient-portal-wrap #tab-overview #dior-overview-doctor-card .text-secondary.small {
+    color: #64748B !important;
+}

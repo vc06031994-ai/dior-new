@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patient Consultation Card — Logic Fix &amp; Banner Theme</title>
+<style>
+:root{--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--navy:#00346C;--bg:#F8FAFC;--ok:#0F7B47;--bad:#B91C1C}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:26px;line-height:1.25;margin:0 0 6px;color:var(--navy)}
+h2{font-size:18px;margin:38px 0 12px;color:var(--navy)}
+.sub{color:var(--muted);margin:0 0 26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 18px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.shot{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line)}
+ul{margin:8px 0 0;padding-left:20px}li{margin:0 0 8px}
+code{background:#F1F5F9;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12.5px;word-break:break-word}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.bad{background:#FEE2E2;color:var(--bad)}.pill.ok{background:#DCFCE7;color:var(--ok)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+.label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 8px}
+.label.ok{color:var(--ok)}
+.note{background:#F8FAFC;border-left:3px solid var(--navy);padding:10px 14px;margin:14px 0 0;border-radius:0 8px 8px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Consultation Card Logic + Profile Banner Theme</h1>
+<p class="sub">Do cheezein: card ke buttons ab appointment data ke hisaab se decide hote hain, aur amber
+profile banner navy theme par aa gaya.</p>
+
+<h2>1. Bug: button hamesha dikh raha tha</h2>
+<div class="card">
+<p>Card "No upcoming consultation" keh raha tha, phir bhi <strong>Join Video Consultation Room</strong> button
+maujood tha. Wajah markup me thi — buttons condition ke <em>bahar</em> likhe the:</p>
+<pre style="background:#0F172A;color:#E2E8F0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:12.5px;margin:12px 0 0"><span style="color:#FCA5A5">PEHLE</span>  &lt;?php if (!empty($next_appointment)): ?&gt;
+         … name / date / time set karo …
+       &lt;?php endif; ?&gt;
+
+       &lt;div class="…"&gt;                    &lt;-- condition ke BAAHAR
+         &lt;button&gt;Join Video Consultation Room&lt;/button&gt;
+         &lt;button&gt;Reschedule&lt;/button&gt;
+       &lt;/div&gt;</pre>
+<p class="note">Modals/markup PHP ke bahar hone se button <strong>har state</strong> me render hota tha. Data hi
+nahi tha, to click karne par patient khali Telehealth tab par land karta tha — jo user ko "redirection toota
+hua" lagta hai.</p>
+</div>
+
+<h2>2. Ab teen saaf states</h2>
+<div class="grid">
+<div>
+<p class="label ok">A. Koi appointment nahi</p>
+<img class="shot" src="screenshots/card-none.png" alt="No appointment state">
+</div>
+<div>
+<p class="label ok">B. Appointment + meeting link</p>
+<img class="shot" src="screenshots/card-withlink.png" alt="With link state">
+</div>
+<div>
+<p class="label ok">C. Appointment, link nahi</p>
+<img class="shot" src="screenshots/card-nolink.png" alt="No link state">
+</div>
+</div>
+<div class="card">
+<table>
+<tr><th>State</th><th>Condition</th><th>Buttons</th><th>Click kahan jata hai</th></tr>
+<tr>
+<td><strong>A</strong> — koi appointment nahi</td>
+<td><code>empty($next_appointment)</code></td>
+<td>Book An Appointment + "No consultation scheduled yet."</td>
+<td>Appointments → booking form (<code>data-appt-subtab="book"</code>)</td>
+</tr>
+<tr>
+<td><strong>B</strong> — appointment + valid link</td>
+<td><code>$ha_join_url</code> non-empty aur <code>https://</code> se shuru</td>
+<td>Join Video Consultation Room + Reschedule</td>
+<td>Meeting URL <strong>naye tab</strong> me (<code>rel="noopener noreferrer"</code>) — real Zoom/Jitsi link</td>
+</tr>
+<tr>
+<td><strong>C</strong> — appointment, link nahi</td>
+<td><code>$ha_join_url</code> khali</td>
+<td>View Consultation Details + Reschedule</td>
+<td>Telemedicine tab (jahan details render hoti hain)</td>
+</tr>
+</table>
+<p class="note"><strong>Why state C matters:</strong> meeting link kai baar appointment create hone ke baad
+generate hota hai. Us window me "Join" dikhana galat tha — patient khali room par chala jata. Ab wahan
+"View Consultation Details" milta hai, jo sach me kuch dikhata hai.</p>
+<p class="note"><strong>Safety:</strong> link sirf tab use hota hai jab <code>https://</code> se start hota ho —
+kisi bhi <code>javascript:</code> ya relative URL se button nahi banega.</p>
+</div>
+
+<h2>3. Profile banner: amber → navy</h2>
+<div class="grid">
+<div>
+<p class="label ok">Ab</p>
+<img class="shot" src="screenshots/patient-banner-desktop.png" alt="Banner desktop">
+</div>
+<div>
+<p class="label ok">Mobile</p>
+<img class="shot" src="screenshots/patient-banner-mobile.png" alt="Banner mobile">
+</div>
+</div>
+<div class="card">
+<table>
+<tr><th>Part</th><th>Pehle</th><th>Ab</th></tr>
+<tr><td>Background</td><td><span class="pill bad">amber</span> <code>#FFFBEB</code></td><td>soft navy tint <code>#F5F9FE</code></td></tr>
+<tr><td>Border</td><td><code>#FDE68A</code> + amber left rail</td><td><code>#D7E5F3</code> + navy left rail <code>#1A528E</code></td></tr>
+<tr><td>Icon chip</td><td>amber circle <code>#F59E0B</code></td><td>navy circle <code>#1A528E</code></td></tr>
+<tr><td>Title</td><td><code>#92400E</code></td><td><code>#00346C</code></td></tr>
+<tr><td>Body text</td><td><code>#B45309</code></td><td><code>#475569</code>, missing-field names navy</td></tr>
+<tr><td>Button</td><td><code>#2C6CB1</code></td><td><code>#1A528E</code>, hover <code>#00346C</code></td></tr>
+</table>
+<p class="note">Banner ek <em>informational</em> prompt hai — error nahi. Isliye amber ka "attention" cue
+hata kar theme ka navy use kiya. Destructive/error states par red abhi bhi rahega.</p>
+</div>
+
+<h2>4. Verification</h2>
+<div class="card">
+<p>Teeno states ko real markup se render karke buttons, unke href aur target tab inspect kiye:</p>
+<table>
+<tr><th>State</th><th>Join?</th><th>Reschedule?</th><th>Book?</th></tr>
+<tr><td>A — koi appointment nahi</td><td>nahi</td><td>nahi</td><td>haan</td></tr>
+<tr><td>B — link ke saath</td><td>haan (href = meeting URL)</td><td>haan</td><td>nahi</td></tr>
+<tr><td>C — link ke bina</td><td>nahi</td><td>haan</td><td>nahi</td></tr>
+</table>
+<p class="note"><strong>Banner:</strong> computed background <code>rgb(245,249,254)</code>, icon
+<code>rgb(26,82,142)</code>, title <code>rgb(0,52,108)</code>, button <code>rgb(26,82,142)</code> — desktop aur
+390px dono par same.</p>
+<p class="note"><strong>Regression:</strong> overview 1440/1024/820/390/320 (no overflow, no clipped labels),
+patient dropdowns aur doctor settings — sab pass, zero console errors.</p>
+</div>
+
+<h2>5. Files</h2>
+<div class="card">
+<table>
+<tr><th>File</th><th>Change</th></tr>
+<tr><td><code>templates/patient-tabs/overview.php</code></td><td>Action row ab <code>$next_appointment</code> ke andar; <code>$ha_join_url</code> /
+<code>$ha_status</code> add kiye; teen conditional branches.</td></tr>
+<tr><td><code>assets/css/dior-custom.css</code></td><td>Banner navy theme + doctor-card heading colour.</td></tr>
+</table>
+<p class="note">PHP me sirf presentation logic badla — koi naya query, AJAX ya DB write nahi. Booking,
+reschedule aur tab switching pehle jaise hi chalte hain.</p>
+</div>
+</div>
+</body>
+</html>
