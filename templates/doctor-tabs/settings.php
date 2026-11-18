@@ -13,20 +13,12 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
 
 <section class="dior-tab-panel" id="tab-doc-settings" style="display: none;">
 
-    <!-- Breadcrumb & Page Header (100% Native Bootstrap 5) -->
+    <!-- Page Header (100% Native Bootstrap 5) -->
     <div class="row g-3 align-items-center justify-content-between mb-4">
         <div class="col-12 col-lg-auto">
             <div class="h6 mb-1 fw-bold text-dark">
                 <i class="fas fa-user-gear text-primary me-2"></i>Doctor Settings &amp; Profile
             </div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small text-muted">
-                    <li class="breadcrumb-item"><i class="fas fa-house me-1"></i> Dashboard</li>
-                    <li class="breadcrumb-item">Settings</li>
-                    <li class="breadcrumb-item active fw-semibold text-primary" aria-current="page">General Settings
-                    </li>
-                </ol>
-            </nav>
         </div>
 
     </div>
@@ -38,8 +30,8 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
     <!-- Top Profile Banner Card (100% Native Bootstrap 5) -->
     <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-white">
         <div
-            class="p-3 p-md-4 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3">
+            class="p-3 p-md-4 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3 dior-profile-banner">
+            <div class="d-flex align-items-center gap-3 dior-profile-identity">
                 <div class="position-relative flex-shrink-0">
                     <img id="dior-doctor-avatar-display-img" src="<?php echo esc_url($doc_avatar); ?>" width="76"
                         height="76"
@@ -54,7 +46,7 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
                     </button>
                 </div>
                 <div>
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1 dior-profile-badges">
                         <div class="fs-6 fw-bold text-dark mb-0 dior-doc-profile-display-name">
                             <?php echo esc_html($doctor['full_name'] ?? 'Dr. Provider'); ?>
                         </div>
@@ -62,18 +54,8 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
                             class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 small dior-doc-profile-display-specialty">
                             <?php echo esc_html($doctor['specialty'] ?? 'General Medicine'); ?>
                         </span>
-                        <span
-                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small">
-                            <i class="fas fa-certificate me-1"></i> Verified Practitioner
-                        </span>
                     </div>
-                    <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
-                        <span><i class="fas fa-id-card text-primary me-1"></i> NPI:
-                            <?php echo esc_html($doctor['npi'] ?: 'Not Assigned'); ?></span>
-                        <span>&bull;</span>
-                        <span><i class="fas fa-stamp text-primary me-1"></i> License:
-                            <?php echo esc_html($doctor['license_no'] ?: '—'); ?></span>
-                        <span>&bull;</span>
+                    <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small dior-profile-meta">
                         <span><i class="fas fa-envelope text-primary me-1"></i>
                             <?php echo esc_html($doctor['user_email'] ?? ''); ?></span>
                     </div>
@@ -81,7 +63,7 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
             </div>
 
             <!-- Avatar Actions -->
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-wrap gap-2 dior-profile-actions">
                 <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm"
                     onclick="diorTriggerDoctorAvatarUpload()">
                     <i class="fas fa-cloud-arrow-up me-1"></i> Upload Photo
@@ -134,16 +116,6 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
                         <div class="flex-grow-1">
                             <div>Practice &amp; Schedule</div>
                             <small class="text-secondary fw-normal d-block">Duty hours &amp; meeting links</small>
-                        </div>
-                    </button>
-
-                    <button type="button"
-                        class="btn text-start rounded-3 py-2 px-3 d-flex align-items-center gap-3 fw-semibold shadow-none border bg-light text-dark dior-settings-nav-btn"
-                        data-pane="doc-tab-google-meet" onclick="diorSelectSettingsTab(this, 'doc-tab-google-meet')">
-                        <i class="fab fa-google text-primary fs-5"></i>
-                        <div class="flex-grow-1">
-                            <div>OAuth / Google Meet</div>
-                            <small class="text-secondary fw-normal d-block">API credentials &amp; connection</small>
                         </div>
                     </button>
 
@@ -583,22 +555,6 @@ $doc_avatar = !empty($doctor['avatar_url']) ? $doctor['avatar_url'] : ('https://
                 </form>
             </div>
 
-        </div>
-    </div>
-
-    <!-- Google Meet configuration status. OAuth secrets are managed securely by a site administrator. -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 bg-white dior-settings-pane" id="doc-tab-google-meet" hidden>
-        <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3 gap-3">
-            <div>
-                <div class="fs-6 fw-bold text-dark mb-1"><i class="fab fa-google text-primary me-2"></i>Google Meet API &amp; OAuth</div>
-                <div class="small text-secondary">Connect a Google account to generate consultation meeting links.</div>
-            </div>
-            <span class="badge rounded-pill <?php echo (class_exists('Dior_Google_Meet') && Dior_Google_Meet::is_connected()) ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'; ?>">
-                <?php echo (class_exists('Dior_Google_Meet') && Dior_Google_Meet::is_connected()) ? 'Connected' : 'Not Connected'; ?>
-            </span>
-        </div>
-        <div class="alert alert-info mb-0" role="status">
-            Google Meet OAuth credentials are managed by a site administrator. Open <strong>WordPress Admin &rarr; Settings &rarr; Google Meet OAuth</strong> to enter the Client ID and Client Secret and connect the Google account.
         </div>
     </div>
 

@@ -74,12 +74,12 @@
         }
 
         #tab-telemedicine #dior-tele-table .action-icon-btn.delete-btn {
-            color: #ef4444 !important;
+            color: #DC2626 !important;
         }
 
         #tab-telemedicine #dior-tele-table .action-icon-btn.delete-btn:hover {
             color: #dc2626 !important;
-            border-color: #ef4444 !important;
+            border-color: #DC2626 !important;
             background: #fef2f2 !important;
         }
 

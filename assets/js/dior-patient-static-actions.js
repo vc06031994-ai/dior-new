@@ -69,7 +69,7 @@
         ratingText.className = 'cell-text';
         var star = document.createElement('i');
         star.className = 'fa-solid fa-star';
-        star.style.color = '#F59E0B';
+        star.style.color = '#D97706';
         ratingText.appendChild(star);
         ratingText.appendChild(document.createTextNode(' ' + review.rating + '/5'));
         ratingCell.appendChild(ratingText);
@@ -307,7 +307,7 @@
                         if (subjCell) subjCell.textContent = result.data.review.subject || 'Patient Feedback';
                         
                         var ratingCell = row.querySelector('.feedback-rating-cell .cell-text') || (cells.length > 7 ? cells[3].querySelector('.cell-text') : (cells[2] ? cells[2].querySelector('.cell-text') : null));
-                        if (ratingCell) ratingCell.innerHTML = '<i class="fa-solid fa-star" style="color:#F59E0B;"></i> ' + (result.data.review.rating || 5) + '/5';
+                        if (ratingCell) ratingCell.innerHTML = '<i class="fa-solid fa-star" style="color:#D97706;"></i> ' + (result.data.review.rating || 5) + '/5';
                         
                         var msgCell = row.querySelector('.feedback-message-cell .cell-text') || (cells.length > 7 ? cells[4].querySelector('.cell-text') : (cells[3] ? cells[3].querySelector('.cell-text') : null));
                         if (msgCell) msgCell.textContent = result.data.review.message || '';

@@ -36,26 +36,11 @@ if (!is_array($all_patients)) {
 ?>
 
 <section class="dior-tab-panel documents-tab-panel" id="tab-doc-telemed-records" style="display: none;">
-    <!-- Breadcrumb Header -->
+    <!-- Page Header -->
     <div class="mb-4"
         style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
             <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700;">Virtual Visit Records</h4>
-        </div>
-        <div>
-            <ul class="va-breadcrumb-list"
-                style="display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; align-items: center;">
-                <li><a href="javascript:void(0)"
-                        onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-overview')"><i
-                            class="fas fa-house" style="font-size: 14px; color: #1A528E;"></i></a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li><a href="javascript:void(0)"
-                        onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-telemed-video')"
-                        style="color: #64748B; text-decoration: none; font-size: 14px;">Telemedicine</a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li class="active"><span style="color: #1E293B; font-weight: 700; font-size: 14px;">Virtual Visit
-                        Records</span></li>
-            </ul>
         </div>
     </div>
 
@@ -115,7 +100,8 @@ if (!is_array($all_patients)) {
                         <th>VISIT DATE</th>
                         <th>DURATION (MIN)</th>
                         <th>DIAGNOSIS</th>
-                        <th>ACTIONS</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody id="dior-tele-records-tbody">
@@ -131,44 +117,46 @@ if (!is_array($all_patients)) {
                                 <td class="text-center">
                                     <input type="checkbox" class="docs-checkbox form-check-input row-tele-chk">
                                 </td>
-                                <td>
+                                <td data-label="Visit ID">
                                     <span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small fw-semibold">
                                         <?php echo esc_html($vr['tele_uid']); ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Patient">
                                     <span class="docs-user-name fw-bold text-dark">
                                         <?php echo esc_html(trim(($vr['first_name'] ?? '') . ' ' . ($vr['last_name'] ?? '')) ?: (get_userdata((int) $vr['patient_id'])->display_name ?? 'Patient #' . $vr['patient_id'])); ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Doctor">
                                     <span class="text-secondary small fw-semibold">
                                         <?php echo esc_html($vr['doctor_name'] ?: 'Doctor'); ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Visit Date">
                                     <span class="text-dark small">
                                         <i class="far fa-calendar me-1 text-primary"></i>
                                         <?php echo esc_html(!empty($vr['appt_date']) ? date_i18n('M j, Y', strtotime($vr['appt_date'])) : date_i18n('M j, Y', strtotime($vr['created_at']))); ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Duration">
                                     <span class="badge bg-light text-dark border px-2 py-1 small">
                                         <?php echo !empty($vr['duration']) ? esc_html($vr['duration']) . ' min' : '30 min'; ?>
                                     </span>
                                 </td>
-                                <td style="max-width: 250px;">
+                                <td data-label="Diagnosis" style="max-width: 250px;">
                                     <span class="text-secondary small text-truncate d-inline-block" style="max-width: 240px;"
                                         title="<?php echo esc_attr($vr['notes'] ?: $vr['status']); ?>">
                                         <?php echo esc_html($vr['notes'] ?: $vr['status']); ?>
                                     </span>
                                 </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge <?php echo esc_attr($status_class); ?> rounded-pill px-2 py-1 small">
-                                            <?php echo esc_html($vr['status']); ?>
-                                        </span>
-                                        <button type="button" class="btn btn-sm btn-outline-danger border-0 p-1"
+                                <td data-label="Status">
+                                    <span class="badge <?php echo esc_attr($status_class); ?> rounded-pill px-2 py-1 small">
+                                        <?php echo esc_html($vr['status']); ?>
+                                    </span>
+                                </td>
+                                <td data-label="Action">
+                                    <div class="docs-row-actions">
+                                        <button type="button" class="docs-action-btn-sm btn"
                                             title="Delete Record"
                                             onclick="diorDeleteTelemedRecord('<?php echo esc_js($vr['tele_uid']); ?>', this)">
                                             <i class="fas fa-trash"></i>
@@ -178,7 +166,7 @@ if (!is_array($all_patients)) {
                             </tr>
                         <?php endforeach; else: ?>
                         <tr id="dior-empty-tele-row">
-                            <td colspan="8" class="text-center py-5 text-muted">
+                            <td colspan="9" class="text-center py-5 text-muted">
                                 <i class="fas fa-video-slash d-block fs-2 mb-2 opacity-50"></i>
                                 <div class="fw-bold text-dark fs-6 mb-1">No virtual visit records available yet</div>
                                 <p class="small text-muted mb-0">Click the plus (+) button above to manually record a
@@ -371,43 +359,45 @@ if (!is_array($all_patients)) {
                     <td class="text-center">
                         <input type="checkbox" class="docs-checkbox form-check-input row-tele-chk">
                     </td>
-                    <td>
+                    <td data-label="Visit ID">
                         <span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small fw-semibold">
                             ${rec.tele_uid}
                         </span>
                     </td>
-                    <td>
+                    <td data-label="Patient">
                         <span class="docs-user-name fw-bold text-dark">
                             ${rec.patient_name}
                         </span>
                     </td>
-                    <td>
+                    <td data-label="Doctor">
                         <span class="text-secondary small fw-semibold">
                             ${rec.doctor_name}
                         </span>
                     </td>
-                    <td>
+                    <td data-label="Visit Date">
                         <span class="text-dark small">
                             <i class="far fa-calendar me-1 text-primary"></i>
                             ${rec.visit_date}
                         </span>
                     </td>
-                    <td>
+                    <td data-label="Duration">
                         <span class="badge bg-light text-dark border px-2 py-1 small">
                             ${rec.duration}
                         </span>
                     </td>
-                    <td style="max-width: 250px;">
+                    <td data-label="Diagnosis" style="max-width: 250px;">
                         <span class="text-secondary small text-truncate d-inline-block" style="max-width: 240px;" title="${rec.diagnosis}">
                             ${rec.diagnosis}
                         </span>
                     </td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="badge ${statusClass} rounded-pill px-2 py-1 small">
-                                ${rec.status}
-                            </span>
-                            <button type="button" class="btn btn-sm btn-outline-danger border-0 p-1" title="Delete Record" onclick="diorDeleteTelemedRecord('${rec.tele_uid}', this)">
+                    <td data-label="Status">
+                        <span class="badge ${statusClass} rounded-pill px-2 py-1 small">
+                            ${rec.status}
+                        </span>
+                    </td>
+                    <td data-label="Action">
+                        <div class="docs-row-actions">
+                            <button type="button" class="docs-action-btn-sm btn" title="Delete Record" onclick="diorDeleteTelemedRecord('${rec.tele_uid}', this)">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

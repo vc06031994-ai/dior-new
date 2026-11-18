@@ -134,7 +134,7 @@
                                             class="cell-text"><?php echo esc_html($feedback['subject'] ?? 'Patient Feedback'); ?></span>
                                     </td>
                                     <td><span class="cell-text"><?php echo esc_html($feedback_doctor_name); ?></span></td>
-                                    <td><span class="cell-text"><i class="fas fa-star" style="color:#F59E0B;"></i>
+                                    <td><span class="cell-text"><i class="fas fa-star" style="color:#D97706;"></i>
                                             <?php echo $feedback_rating; ?>/5</span></td>
                                     <td><span class="cell-text"><?php echo esc_html($feedback['message'] ?? ''); ?></span>
                                     </td>

@@ -5,11 +5,48 @@
 (function () {
     'use strict';
 
+    // Hash captured before any other controller runs, so the tab the user
+    // refreshed on is still the one that gets restored.
+    var diorInitialHash = window.location.hash || '';
+
     function boot() {
         var app = document.getElementById('dior-patient-portal-app');
         if (!app || app.__diorSafeNavigationReady) return;
 
         app.__diorSafeNavigationReady = true;
+
+        // Explicit close control inside the mobile drawer — same control the
+        // Doctor Dashboard injects (icon, size, position and behaviour).
+        function ensureMobileCloseButton() {
+            var sidebar = document.getElementById('dior-sidebar');
+            if (!sidebar || sidebar.querySelector('.dior-mobile-drawer-close')) return;
+
+            var header = sidebar.querySelector('.dior-side-header') || sidebar;
+            var closeButton = document.createElement('button');
+            closeButton.type = 'button';
+            closeButton.className = 'dior-mobile-drawer-close';
+            closeButton.setAttribute('aria-label', 'Close navigation menu');
+            closeButton.setAttribute('title', 'Close menu');
+            closeButton.innerHTML = '&times;';
+            closeButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (typeof window.diorCloseMobileDrawer === 'function') {
+                    window.diorCloseMobileDrawer();
+                }
+            });
+            header.appendChild(closeButton);
+        }
+        ensureMobileCloseButton();
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            var sidebar = document.getElementById('dior-sidebar');
+            if (sidebar && sidebar.classList.contains('mobile-open') &&
+                typeof window.diorCloseMobileDrawer === 'function') {
+                window.diorCloseMobileDrawer();
+            }
+        });
 
         var titles = {
             overview: 'Patient Overview',
@@ -107,7 +144,7 @@
         }, true);
 
         // Restore a valid tab and subtab from the URL, otherwise keep Overview active.
-        var hash = window.location.hash || '';
+        var hash = diorInitialHash || window.location.hash || '';
         var requestedTab = 'overview';
         var requestedSubTab = null;
 

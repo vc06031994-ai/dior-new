@@ -74,29 +74,13 @@ foreach ($doctor_notif_rows as $row) {
         }
     </style>
 
-    <!-- Header & Breadcrumb -->
+    <!-- Page Header -->
     <div class="mb-4"
         style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; position: relative; z-index: 3;">
         <div>
             <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700; color: #1e293b;">
                 <i class="fas fa-bell text-primary me-2"></i>Doctor Notifications
             </h4>
-        </div>
-        <div>
-            <ul class="va-breadcrumb-list"
-                style="display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; align-items: center;">
-                <li>
-                    <a href="javascript:void(0)"
-                        onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-overview')">
-                        <i class="fas fa-house" style="font-size: 14px; color: #2563eb;"></i>
-                    </a>
-                </li>
-                <li><span style="color: #cbd5e1;">/</span></li>
-                <li><span style="color: #64748b; font-size: 13px;">Provider Portal</span></li>
-                <li><span style="color: #cbd5e1;">/</span></li>
-                <li class="active"><span style="color: #1e293b; font-weight: 700; font-size: 13px;">Notifications</span>
-                </li>
-            </ul>
         </div>
     </div>
 
@@ -194,7 +178,7 @@ foreach ($doctor_notif_rows as $row) {
                                 <span class="stat-label">System Health</span>
                                 <h3 class="stat-value text-emerald mt-1 mb-0">100%</h3>
                             </div>
-                            <div class="stat-icon-wrapper"><i class="fas fa-shield-check"></i></div>
+                            <div class="stat-icon-wrapper"><i class="fas fa-shield-halved"></i></div>
                         </div>
                         <div class="stat-footer d-flex align-items-center"
                             style="display: flex; align-items: center; margin-top: auto; padding-top: 12px;">
@@ -223,7 +207,7 @@ foreach ($doctor_notif_rows as $row) {
                             <h4 class="card-title-text mb-0"
                                 style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0;">
                                 <i class="fas fa-bell me-2 text-primary"
-                                    style="color: #2563eb !important; margin-right: 6px;"></i>Notification Activity Feed
+                                    style="color: var(--dior-color-primary) !important; margin-right: 6px;"></i>Notification Activity Feed
                             </h4>
                             <span class="unread-count-chip" id="dior-sys-unread-chip"><?php echo $unread_count; ?>
                                 Unread</span>
@@ -432,7 +416,7 @@ foreach ($doctor_notif_rows as $row) {
                                                 <button type="button" title="Mark as Read"
                                                     onclick="diorMarkRowAsRead(this, '<?php echo esc_js($n_id); ?>')"
                                                     class="btn btn-sm btn-icon-action">
-                                                    <i class="fas fa-check text-success" style="color: #10b981;"></i>
+                                                    <i class="fas fa-check text-success" style="color: var(--dior-color-success);"></i>
                                                 </button>
                                             <?php endif; ?>
                                             <button type="button" title="Delete Notification"
@@ -455,6 +439,9 @@ foreach ($doctor_notif_rows as $row) {
 
                         </div>
                     </div>
+
+                    <!-- Pagination (10 notifications per page) -->
+                    <div class="dior-table-pagination" id="dior-sys-notif-pagination" style="display:none;"></div>
 
                 </div>
             </div>
@@ -751,4 +738,127 @@ foreach ($doctor_notif_rows as $row) {
         if (icon) icon.classList.add('fa-spin');
         window.location.reload();
     }
+</script>
+
+<!-- Notification pagination: 10 per page, composed with the existing filters -->
+<script>
+(function () {
+    'use strict';
+
+    var LIST_SELECTOR = '#dior-system-notif-list .notification-item-row';
+    var BAR_ID = 'dior-sys-notif-pagination';
+    var PAGE_SIZE = 10;
+    var HIDDEN = 'dior-notif-page-hidden';
+    var currentPage = 1;
+
+    function allRows() {
+        return Array.prototype.slice.call(document.querySelectorAll(LIST_SELECTOR));
+    }
+
+    // A row counts as "filtered out" when a segmented filter or the search set
+    // its inline display to none. Pagination never touches inline display, so
+    // the two mechanisms never fight over the same property.
+    function activeRows() {
+        return allRows().filter(function (row) {
+            return row.style.display !== 'none';
+        });
+    }
+
+    function render(page) {
+        var bar = document.getElementById(BAR_ID);
+        var rows = allRows();
+        if (!bar || rows.length === 0) {
+            if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
+            return;
+        }
+
+        var active = activeRows();
+        var total = active.length;
+        var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+        if (page > totalPages) page = totalPages;
+        if (page < 1) page = 1;
+        currentPage = page;
+
+        rows.forEach(function (row) { row.classList.add(HIDDEN); });
+
+        // Nothing to page through (or nothing matches the current filter).
+        if (total <= PAGE_SIZE) {
+            active.forEach(function (row) { row.classList.remove(HIDDEN); });
+            bar.style.display = 'none';
+            bar.innerHTML = '';
+            return;
+        }
+
+        var start = (currentPage - 1) * PAGE_SIZE;
+        var end = Math.min(start + PAGE_SIZE, total);
+        active.slice(start, end).forEach(function (row) { row.classList.remove(HIDDEN); });
+
+        var nav = '';
+        nav += '<button type="button" class="dior-page-btn" data-page="' + (currentPage - 1) + '"' +
+            (currentPage === 1 ? ' disabled' : '') + ' title="Previous Page">' +
+            '<i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></button>';
+
+        if (totalPages <= 7) {
+            for (var i = 1; i <= totalPages; i++) {
+                nav += '<button type="button" class="dior-page-btn' + (i === currentPage ? ' active' : '') +
+                    '" data-page="' + i + '">' + i + '</button>';
+            }
+        } else {
+            for (var j = 1; j <= totalPages; j++) {
+                if (j === 1 || j === totalPages || (j >= currentPage - 1 && j <= currentPage + 1)) {
+                    nav += '<button type="button" class="dior-page-btn' + (j === currentPage ? ' active' : '') +
+                        '" data-page="' + j + '">' + j + '</button>';
+                } else if (j === currentPage - 2 || j === currentPage + 2) {
+                    nav += '<span style="padding:0 4px;color:#94A3B8;font-size:12px;">...</span>';
+                }
+            }
+        }
+
+        nav += '<button type="button" class="dior-page-btn" data-page="' + (currentPage + 1) + '"' +
+            (currentPage === totalPages ? ' disabled' : '') + ' title="Next Page">' +
+            '<i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></button>';
+
+        bar.style.display = 'flex';
+        bar.innerHTML =
+            '<div class="dior-pagination-info">Showing <strong>' + (start + 1) + '</strong> to <strong>' +
+            end + '</strong> of <strong>' + total + '</strong> entries</div>' +
+            '<div class="dior-pagination-nav">' + nav + '</div>';
+
+        bar.querySelectorAll('.dior-page-btn[data-page]').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = parseInt(btn.getAttribute('data-page'), 10);
+                if (!isNaN(target) && !btn.disabled) render(target);
+            });
+        });
+    }
+
+    // Public hooks (also used by the wrappers below).
+    window.diorRenderNotifPage = render;
+    window.diorResetNotifPager = function () { render(1); };
+
+    document.addEventListener('DOMContentLoaded', function () { render(1); });
+    render(1);
+
+    // Keep pagination in step with the existing filter / search / bulk actions
+    // without touching their implementations.
+    function wrapAfter(name, reset) {
+        var original = window[name];
+        if (typeof original !== 'function') return;
+        window[name] = function () {
+            var result = original.apply(this, arguments);
+            if (reset) {
+                render(1);
+            } else {
+                setTimeout(function () { render(currentPage); }, 0);
+            }
+            return result;
+        };
+    }
+
+    wrapAfter('diorFilterSystemNotif', true);
+    wrapAfter('diorSearchDoctorNotifications', true);
+    wrapAfter('diorUpdateNotifBadgesAndStats', false);
+})();
 </script>

@@ -210,13 +210,13 @@
                                         $doc_avatar = dior_get_clinical_doctor_avatar($event['doctor'] ?? '');
 
                                         $node_class = 'node-appointment';
-                                        $badge_style = 'background: #e0f2fe !important; color: #0284c7 !important;';
+                                        $badge_style = 'background: #F0F9FF !important; color: #0284c7 !important;';
                                         if ($event_type === 'CONSULTATION') {
                                             $node_class = 'node-consultation';
-                                            $badge_style = 'background: #dbeafe !important; color: #1d4ed8 !important;';
+                                            $badge_style = 'background: #F0F6FC !important; color: #1A528E !important;';
                                         } elseif ($event_type === 'PRESCRIPTION') {
                                             $node_class = 'node-prescription';
-                                            $badge_style = 'background: #d1fae5 !important; color: #047857 !important;';
+                                            $badge_style = 'background: #ECFDF5 !important; color: #059669 !important;';
                                         } elseif ($event_type === 'DOCUMENT') {
                                             $node_class = 'node-document';
                                             $badge_style = 'background: #fef3c7 !important; color: #b45309 !important;';

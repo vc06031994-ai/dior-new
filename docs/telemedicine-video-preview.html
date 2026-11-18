@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor → Telemedicine → Virtual Visit &amp; Telehealth Consultation — design preview</title>
+    <style>
+        :root {
+            --ink: #0F172A;
+            --muted: #64748B;
+            --line: #23324A;
+            --navy: #1A528E;
+            --bg: #0F172A;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 20px 40px;
+            background: var(--bg);
+            color: #E2E8F0;
+            font: 14px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 17px;
+            margin: 0;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .note {
+            margin: 0;
+            color: #94A3B8;
+            font-size: 12.5px;
+            max-width: 720px;
+        }
+
+        .picker {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .picker button {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: #17233A;
+            color: #CBD5E1;
+            padding: 7px 13px;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+
+        .picker button:hover {
+            background: #1E2C46;
+            color: #fff;
+        }
+
+        .picker button[aria-pressed="true"] {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: #fff;
+        }
+
+        .stage {
+            display: flex;
+            justify-content: center;
+            background: #0B1220;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            overflow: auto;
+        }
+
+        iframe {
+            width: 1440px;
+            height: 1900px;
+            max-width: 100%;
+            border: 0;
+            border-radius: 8px;
+            background: #F4F7FB;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .45);
+            transition: width .18s ease;
+        }
+
+        .w-1440 { width: 1440px; }
+        .w-900 { width: 900px; }
+        .w-390 { width: 390px; height: 1500px; }
+        .w-fluid { width: 100%; }
+
+        @media (max-width: 640px) {
+            body { padding: 14px 10px 28px; }
+            .picker { margin-left: 0; width: 100%; }
+            .picker button { flex: 1; }
+            iframe { height: 1500px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bar">
+        <div>
+            <h1>Virtual Visit &amp; Telehealth Consultation</h1>
+            <p class="note">
+                Renders the real <code>dior-custom.css</code> against the updated
+                <code>templates/doctor-tabs/telemedicine-video.php</code> markup.
+                Switch widths to check desktop, tablet and mobile. The sidebar is omitted here; it is
+                neutralised with a preview-only override so the content column can be measured at
+                390&nbsp;px.
+            </p>
+        </div>
+        <div class="picker" role="group" aria-label="Preview width">
+            <button type="button" data-w="w-1440" aria-pressed="true">Desktop 1440</button>
+            <button type="button" data-w="w-900" aria-pressed="false">Tablet 900</button>
+            <button type="button" data-w="w-390" aria-pressed="false">Mobile 390</button>
+            <button type="button" data-w="w-fluid" aria-pressed="false">Fluid</button>
+        </div>
+    </div>
+
+    <div class="stage">
+        <iframe id="frame" class="w-1440" title="Virtual Visit page preview"></iframe>
+    </div>
+
+    <!-- ================================================================
+         Frame content — mirrors templates/doctor-tabs/telemedicine-video.php
+         ================================================================ -->
+    <template id="page">
+        <div class="dior-wrap dior-doctor-wrap" id="dior-doctor-app">
+            <div class="dior-app">
+                <div class="dior-main-content">
+                    <div class="dior-tab-content" id="dior-doc-content">
+                        <section class="dior-tab-panel documents-tab-panel active" id="tab-doc-telemed-video">
+
+                            <!-- Breadcrumb Header -->
+                            <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div>
+                                    <h4 class="mb-0 text-dark fw-bold fs-4">Virtual Visit &amp; Telehealth Consultation</h4>
+                                    <div class="text-secondary small">Conduct secure video visits, review patient medical
+                                        records in real-time, and issue prescriptions.</div>
+                                </div>
+                                <div>
+                                    <ul class="breadcrumb-list d-flex gap-2 list-unstyled p-0 m-0 align-items-center small">
+                                        <li><a href="#" class="text-primary text-decoration-none"><i class="fas fa-house"></i></a></li>
+                                        <li><span class="text-muted">/</span></li>
+                                        <li><a href="javascript:void(0)" class="text-secondary text-decoration-none">Telemedicine</a></li>
+                                        <li><span class="text-muted">/</span></li>
+                                        <li class="active fw-bold text-dark">Virtual Visit</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Subtab Navigation Bar -->
+                            <div class="dior-subtab-nav-bar px-1 mb-4">
+                                <button type="button" class="dior-subtab-pill btn active">
+                                    <i class="fas fa-video"></i> Video Consultation
+                                </button>
+                                <button type="button" class="dior-subtab-pill btn">
+                                    <i class="fas fa-clock-rotate-left"></i> Virtual Visit Records
+                                </button>
+                            </div>
+
+                            <!-- 1. Patient Selector & Quick Actions Card -->
+                            <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4 bg-light">
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-lg-6 col-md-12">
+                                        <label class="form-label small text-uppercase text-secondary fw-bold mb-1">
+                                            <i class="fas fa-user-check text-primary me-1"></i> Select Patient for Virtual
+                                            Visit <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="d-flex align-items-center gap-2 dior-tele-selector-row">
+                                            <select class="form-select rounded-3 py-2 fw-semibold">
+                                                <option>Sarah Whitmore · DM-10042</option>
+                                                <option>Marcus Bell · DM-10058</option>
+                                            </select>
+                                            <button type="button" class="btn btn-primary rounded-3 px-3 py-2 fw-semibold text-nowrap shadow-sm">
+                                                <i class="fas fa-user-plus me-1"></i> Add Patient
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 d-flex flex-wrap align-items-center justify-content-lg-end gap-2 pt-lg-3 dior-tele-action-row">
+                                        <button type="button" class="btn btn-success rounded-3 fw-semibold py-2 px-3 shadow-sm">
+                                            <i class="fas fa-video me-1"></i> Start Virtual Visit
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3">
+                                            <i class="fas fa-id-card me-1"></i> Open Full Chart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Dynamic Patient Clinical Summary Panel -->
+                            <div id="dior-tele-patient-panel" class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4 bg-white">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom pb-3 mb-3 gap-3 dior-tele-panel-head">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img class="rounded-circle shadow-sm border" style="width: 58px; height: 58px; object-fit: cover;"
+                                            src="https://ui-avatars.com/api/?name=Sarah+Whitmore&background=1A528E&color=fff" alt="Patient">
+                                        <div>
+                                            <h5 class="fw-bold text-dark mb-0 fs-5">Sarah Whitmore</h5>
+                                            <div class="d-flex flex-wrap gap-2 align-items-center mt-1">
+                                                <span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">DM-10042</span>
+                                                <span class="small text-muted"><i class="fas fa-cake-candles me-1"></i> DOB: 1989-04-12 • Gender: Female</span>
+                                                <span class="small text-muted"><i class="fas fa-phone me-1"></i> +1 (555) 014-2081</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 dior-tele-panel-actions">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-3 fw-semibold">
+                                            <i class="fas fa-prescription me-1"></i> Write Rx
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-3 fw-semibold">
+                                            <i class="fas fa-rotate-right me-1"></i> Refresh Data
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Clinical Tabs / Overview Grid -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="p-3 bg-light rounded-4 h-100">
+                                            <h6 class="fw-bold text-dark mb-2 d-flex align-items-center">
+                                                <i class="fas fa-notes-medical text-primary me-2"></i> Diagnosed Conditions &amp;
+                                                Medical History
+                                            </h6>
+                                            <div class="small text-secondary mb-2">Essential hypertension, seasonal allergic
+                                                rhinitis.</div>
+                                            <div class="small text-muted">History: Appendectomy 2014.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="p-3 bg-light rounded-4 h-100">
+                                            <h6 class="fw-bold text-dark mb-2 d-flex align-items-center">
+                                                <i class="fas fa-triangle-exclamation text-danger me-2"></i> Allergies &amp;
+                                                Active Medications
+                                            </h6>
+                                            <div class="mb-2">
+                                                <span class="small fw-semibold text-danger d-block mb-1">Drug Allergies:</span>
+                                                <div class="small text-secondary">Penicillin (rash)</div>
+                                            </div>
+                                            <div>
+                                                <span class="small fw-semibold text-dark d-block mb-1">Current Medications:</span>
+                                                <div class="small text-secondary">Lisinopril 10 mg once daily</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Previous Prescriptions Table -->
+                                <div class="docs-card dior-tele-subcard mb-4">
+                                    <div class="docs-header-container">
+                                        <div class="docs-title-box">
+                                            <h2><i class="fas fa-pills text-success me-2"></i>Previous Prescriptions &amp;
+                                                Therapy</h2>
+                                            <div class="docs-title-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="docs-table-wrapper">
+                                        <table class="docs-table dior-tele-table table table-hover align-middle mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>MEDICATION</th>
+                                                    <th>DOSAGE &amp; INSTRUCTIONS</th>
+                                                    <th>STATUS</th>
+                                                    <th>DATE ISSUED</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tele-prescriptions-tbody">
+                                                <tr>
+                                                    <td data-label="Medication" class="fw-semibold text-dark">Lisinopril 10 mg</td>
+                                                    <td data-label="Dosage &amp; Instructions">Take one tablet by mouth each morning</td>
+                                                    <td data-label="Status"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">Active</span></td>
+                                                    <td data-label="Date Issued" class="text-muted">2026-11-02</td>
+                                                </tr>
+                                                <tr>
+                                                    <td data-label="Medication" class="fw-semibold text-dark">Cetirizine 10 mg</td>
+                                                    <td data-label="Dosage &amp; Instructions">As needed for seasonal allergies</td>
+                                                    <td data-label="Status"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">Active</span></td>
+                                                    <td data-label="Date Issued" class="text-muted">2026-10-18</td>
+                                                </tr>
+                                                <tr>
+                                                    <td data-label="Medication" class="fw-semibold text-dark">Amoxicillin 500 mg</td>
+                                                    <td data-label="Dosage &amp; Instructions">Completed 7-day course</td>
+                                                    <td data-label="Status"><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small">Completed</span></td>
+                                                    <td data-label="Date Issued" class="text-muted">2026-08-30</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Uploaded Documents & Records Table -->
+                                <div class="docs-card dior-tele-subcard">
+                                    <div class="docs-header-container">
+                                        <div class="docs-title-box">
+                                            <h2><i class="fas fa-folder-open text-primary me-2"></i>Uploaded Documents &amp; Lab
+                                                Records</h2>
+                                            <div class="docs-title-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="docs-table-wrapper">
+                                        <table class="docs-table dior-tele-table table table-hover align-middle mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>DOCUMENT TITLE</th>
+                                                    <th>CATEGORY</th>
+                                                    <th>DATE</th>
+                                                    <th>ACTIONS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tele-documents-tbody">
+                                                <tr>
+                                                    <td data-label="Document Title" class="fw-semibold text-dark">Complete Blood Count — Lab Report</td>
+                                                    <td data-label="Category">Laboratory</td>
+                                                    <td data-label="Date" class="text-muted">2026-11-04</td>
+                                                    <td data-label="Actions"><a href="javascript:void(0)" class="btn btn-sm btn-outline-primary py-1 px-2 rounded-2"><i class="fas fa-file-arrow-down me-1"></i> Download</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td data-label="Document Title" class="fw-semibold text-dark">Consultation Summary</td>
+                                                    <td data-label="Category">Clinical Record</td>
+                                                    <td data-label="Date" class="text-muted">2026-10-19</td>
+                                                    <td data-label="Actions"><a href="javascript:void(0)" class="btn btn-sm btn-outline-primary py-1 px-2 rounded-2"><i class="fas fa-file-arrow-down me-1"></i> Download</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Scheduled Virtual Consultations Card & Log -->
+                            <div class="docs-card">
+                                <div class="docs-header-container">
+                                    <div class="docs-title-box">
+                                        <h2><i class="fas fa-video text-primary me-2"></i>Scheduled Consultations</h2>
+                                        <div class="docs-title-line"></div>
+                                    </div>
+
+                                    <div class="docs-actions-wrapper">
+                                        <div class="input-group input-group-sm dior-bs-search-group" style="width: 240px;">
+                                            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search consultations...">
+                                        </div>
+                                        <div class="docs-actions-group">
+                                            <button class="docs-icon-btn docs-btn-info btn" aria-label="Refresh data" title="Refresh Page">
+                                                <i class="fas fa-rotate-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="docs-table-wrapper">
+                                    <table class="docs-table table table-hover align-middle mb-0" id="tele-consultations-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px;" class="text-center"><input type="checkbox" class="docs-checkbox form-check-input"></th>
+                                                <th>CONSULTATION ID <i class="fas fa-sort"></i></th>
+                                                <th>PATIENT <i class="fas fa-sort"></i></th>
+                                                <th>DOCTOR <i class="fas fa-sort"></i></th>
+                                                <th>DATE <i class="fas fa-sort"></i></th>
+                                                <th>TIME <i class="fas fa-sort"></i></th>
+                                                <th>STATUS <i class="fas fa-sort"></i></th>
+                                                <th>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tele-consultations-tbody">
+
+                                            <tr>
+                                                <td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input"></td>
+                                                <td data-label="Consultation ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">VT-1042</span></td>
+                                                <td data-label="Patient">
+                                                    <div class="docs-user-profile d-flex align-items-center gap-2">
+                                                        <img src="https://ui-avatars.com/api/?name=Sarah+Whitmore&background=1A528E&color=fff"
+                                                            class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="Sarah Whitmore">
+                                                        <a href="javascript:void(0)" class="docs-user-name fw-semibold text-dark text-decoration-none">Sarah Whitmore</a>
+                                                    </div>
+                                                </td>
+                                                <td data-label="Doctor">Dr. Anita Rao</td>
+                                                <td data-label="Date"><i class="far fa-calendar docs-icon-blue me-1"></i> Nov 18, 2026</td>
+                                                <td data-label="Time">10:30 AM</td>
+                                                <td data-label="Status"><span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">Scheduled</span></td>
+                                                <td data-label="Actions">
+                                                    <div class="docs-row-actions d-flex gap-1">
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-primary btn" title="Review Patient Chart"><i class="fas fa-chart-user"></i></button>
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-success btn" title="Join Video Call"><i class="fas fa-video"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input"></td>
+                                                <td data-label="Consultation ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">VT-1041</span></td>
+                                                <td data-label="Patient">
+                                                    <div class="docs-user-profile d-flex align-items-center gap-2">
+                                                        <img src="https://ui-avatars.com/api/?name=Marcus+Bell&background=0F766E&color=fff"
+                                                            class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="Marcus Bell">
+                                                        <a href="javascript:void(0)" class="docs-user-name fw-semibold text-dark text-decoration-none">Marcus Bell</a>
+                                                    </div>
+                                                </td>
+                                                <td data-label="Doctor">Dr. Anita Rao</td>
+                                                <td data-label="Date"><i class="far fa-calendar docs-icon-blue me-1"></i> Nov 18, 2026</td>
+                                                <td data-label="Time">11:15 AM</td>
+                                                <td data-label="Status"><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 small">In Progress</span></td>
+                                                <td data-label="Actions">
+                                                    <div class="docs-row-actions d-flex gap-1">
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-primary btn" title="Review Patient Chart"><i class="fas fa-chart-user"></i></button>
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-success btn" title="Join Video Call"><i class="fas fa-video"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input"></td>
+                                                <td data-label="Consultation ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">VT-1039</span></td>
+                                                <td data-label="Patient">
+                                                    <div class="docs-user-profile d-flex align-items-center gap-2">
+                                                        <img src="https://ui-avatars.com/api/?name=Elena+Fischer&background=7C3AED&color=fff"
+                                                            class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="Elena Fischer">
+                                                        <a href="javascript:void(0)" class="docs-user-name fw-semibold text-dark text-decoration-none">Elena Fischer</a>
+                                                    </div>
+                                                </td>
+                                                <td data-label="Doctor">Dr. Anita Rao</td>
+                                                <td data-label="Date"><i class="far fa-calendar docs-icon-blue me-1"></i> Nov 17, 2026</td>
+                                                <td data-label="Time">09:00 AM</td>
+                                                <td data-label="Status"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">Completed</span></td>
+                                                <td data-label="Actions">
+                                                    <div class="docs-row-actions d-flex gap-1">
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-primary btn" title="Review Patient Chart"><i class="fas fa-chart-user"></i></button>
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-success btn" title="Join Video Call"><i class="fas fa-video"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input"></td>
+                                                <td data-label="Consultation ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">VT-1037</span></td>
+                                                <td data-label="Patient">
+                                                    <div class="docs-user-profile d-flex align-items-center gap-2">
+                                                        <img src="https://ui-avatars.com/api/?name=Rahul+Mehta&background=B45309&color=fff"
+                                                            class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="Rahul Mehta">
+                                                        <a href="javascript:void(0)" class="docs-user-name fw-semibold text-dark text-decoration-none">Rahul Mehta</a>
+                                                    </div>
+                                                </td>
+                                                <td data-label="Doctor">Dr. Anita Rao</td>
+                                                <td data-label="Date"><i class="far fa-calendar docs-icon-blue me-1"></i> Nov 16, 2026</td>
+                                                <td data-label="Time">04:45 PM</td>
+                                                <td data-label="Status"><span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">Cancelled</span></td>
+                                                <td data-label="Actions">
+                                                    <div class="docs-row-actions d-flex gap-1">
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-primary btn" title="Review Patient Chart"><i class="fas fa-chart-user"></i></button>
+                                                        <button type="button" class="docs-action-btn-sm docs-btn-success btn" title="Join Video Call"><i class="fas fa-video"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        (function () {
+            var tpl = document.getElementById('page');
+            var frame = document.getElementById('frame');
+
+            // Preview-only: drop the 264px fixed-sidebar offset so the content
+            // column can be measured on its own at 390px.
+            var override = '<style>#dior-doctor-app .dior-main-content{margin-left:0 !important;width:100% !important;max-width:100% !important;}' +
+                'body{margin:0;background:#F4F7FB;}' +
+                '/* keep the sample avatars offline-safe */' +
+                'img{background:#E2E8F0;}</style>';
+
+            var doc = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+                '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+                '<link rel="stylesheet" href="../assets/css/bootstrap.min.css">' +
+                '<link rel="stylesheet" href="../assets/css/dior-custom.css">' +
+                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">' +
+                override +
+                '</head><body>' + tpl.innerHTML + '</body></html>';
+
+            frame.srcdoc = doc;
+
+            var buttons = document.querySelectorAll('.picker button');
+            buttons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+                    btn.setAttribute('aria-pressed', 'true');
+                    frame.className = btn.dataset.w;
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

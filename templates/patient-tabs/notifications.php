@@ -120,7 +120,7 @@ foreach ($patient_notif_rows as $row) {
     <div class="mb-4"
         style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; position: relative; z-index: 3;">
         <div>
-            <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700; color: #1e293b;">
+            <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700; color: #0F172A;">
                 <i class="fas fa-bell text-primary me-2"></i>Patient Notifications
             </h4>
         </div>
@@ -240,7 +240,7 @@ foreach ($patient_notif_rows as $row) {
         <div class="row">
             <div class="col-12" style="width: 100%;">
                 <div class="card main-feed-card"
-                    style="border-radius: 14px; background: #ffffff; border: 1px solid #e7edf4; box-shadow: 0 4px 18px rgba(15,23,42,.05); overflow: hidden;">
+                    style="border-radius: 14px; background: #ffffff; border: 1px solid #E2E8F0; box-shadow: 0 4px 18px rgba(15,23,42,.05); overflow: hidden;">
 
                     <!-- Card Header -->
                     <div class="card-header border-0 pb-0 pt-3 px-4"
@@ -248,9 +248,9 @@ foreach ($patient_notif_rows as $row) {
                         <div class="d-flex align-items-center gap-2"
                             style="display: flex; align-items: center; gap: 10px;">
                             <h4 class="card-title-text mb-0"
-                                style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0;">
+                                style="font-size: 16px; font-weight: 700; color: #0F172A; margin: 0;">
                                 <i class="fas fa-bell me-2 text-primary"
-                                    style="color: #2563eb !important; margin-right: 6px;"></i>Notification Activity Feed
+                                    style="color: #1A528E !important; margin-right: 6px;"></i>Notification Activity Feed
                             </h4>
                             <span class="unread-count-chip" id="dior-sys-unread-chip"><?php echo $unread_count; ?>
                                 Unread</span>
@@ -277,7 +277,7 @@ foreach ($patient_notif_rows as $row) {
 
                     <!-- Filters Bar -->
                     <div class="filters-bar px-4 py-3 border-top"
-                        style="padding: 14px 24px; background: #f8fafc; border-bottom: 1px solid #edf1f5;">
+                        style="padding: 14px 24px; background: #f8fafc; border-bottom: 1px solid #E2E8F0;">
                         <div class="row align-items-center g-3">
                             <div style="flex: 0 0 auto; display: flex; justify-content: space-between;">
                                 <div class="segmented-nav">
@@ -429,7 +429,7 @@ foreach ($patient_notif_rows as $row) {
                                                 <button type="button" title="Mark as Read"
                                                     onclick="diorMarkRowAsRead(this, '<?php echo esc_js($n_id); ?>')"
                                                     class="btn btn-sm btn-icon-action">
-                                                    <i class="fas fa-check text-success" style="color: #10b981;"></i>
+                                                    <i class="fas fa-check text-success" style="color: #059669;"></i>
                                                 </button>
                                             <?php endif; ?>
                                             <button type="button" title="Delete Notification"
@@ -639,7 +639,7 @@ foreach ($patient_notif_rows as $row) {
                 text: 'This notification will be permanently removed.',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#ef4444',
+                confirmButtonColor: '#DC2626',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Yes, delete!'
             }).then(result => {
@@ -707,7 +707,7 @@ foreach ($patient_notif_rows as $row) {
                 text: `You are about to remove ${readRows.length} read notification(s).`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#ef4444',
+                confirmButtonColor: '#DC2626',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Yes, clear read!'
             }).then(result => {

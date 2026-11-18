@@ -5,6 +5,10 @@
 (function () {
     'use strict';
 
+    // Hash captured before any other controller runs, so the tab the user
+    // refreshed on is still the one that gets restored.
+    var diorInitialHash = window.location.hash || '';
+
     var titles = {
         overview: 'Patient Overview',
         appointments: 'Telehealth Appointments',
@@ -24,6 +28,17 @@
     function switchTab(tabId, updateHash) {
         var app = document.getElementById('dior-patient-portal-app');
         if (!app || !tabId) return false;
+
+        // Accept the full deep-link shape ("appointments&subtab=today").
+        var requestedSubTab = null;
+        tabId = String(tabId);
+        if (tabId.indexOf('&subtab=') !== -1) {
+            var subParts = tabId.split('&subtab=');
+            tabId = subParts[0];
+            requestedSubTab = subParts[1] || null;
+        }
+        if (tabId.indexOf('#tab=') === 0) tabId = tabId.substring(5);
+
         var panel = document.getElementById('tab-' + tabId);
         if (!panel || !app.contains(panel)) return false;
 
@@ -56,6 +71,12 @@
             if (window.history && window.history.replaceState) window.history.replaceState(null, '', hash);
             else window.location.hash = hash;
         }
+
+        if (tabId === 'appointments' && requestedSubTab &&
+            typeof window.diorSwitchApptSubTab === 'function') {
+            window.diorSwitchApptSubTab(requestedSubTab);
+        }
+
         return true;
     }
 
@@ -124,7 +145,7 @@
             }
         }, true);
 
-        var hash = window.location.hash || '';
+        var hash = diorInitialHash || window.location.hash || '';
         var requestedTab = 'overview';
         var requestedSub = null;
         if (hash.indexOf('#tab=') === 0) {

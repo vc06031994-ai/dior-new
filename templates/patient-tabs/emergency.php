@@ -32,8 +32,8 @@
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Request Ambulance</h4>
             <p class="dior-ic-b4344ed8fa">Immediate emergency assistance</p>
-            <button type="button" onmouseover="this.style.background='#EF4444'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#EF4444';"
+            <button type="button" onmouseover="this.style.background='#DC2626'; this.style.color='#fff';"
+                onmouseout="this.style.background='transparent'; this.style.color='#DC2626';"
                 class="dior-ic-7f1daa7fb4 btn">Call Now</button>
         </div>
 
@@ -44,8 +44,8 @@
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Emergency Doctor</h4>
             <p class="dior-ic-b4344ed8fa">Connect with available doctors</p>
-            <button type="button" onmouseover="this.style.background='#F59E0B'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#F59E0B';"
+            <button type="button" onmouseover="this.style.background='#D97706'; this.style.color='#fff';"
+                onmouseout="this.style.background='transparent'; this.style.color='#D97706';"
                 class="dior-ic-a0664572fd btn">Contact</button>
         </div>
 
@@ -56,8 +56,8 @@
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Digital Health Card</h4>
             <p class="dior-ic-b4344ed8fa">Access your medical records</p>
-            <button type="button" onmouseover="this.style.background='#14B8A6'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#14B8A6';"
+            <button type="button" onmouseover="this.style.background='#059669'; this.style.color='#fff';"
+                onmouseout="this.style.background='transparent'; this.style.color='#059669';"
                 class="dior-ic-6713853875 btn">View Card</button>
         </div>
     </div>

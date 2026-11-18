@@ -90,7 +90,7 @@
                                     </td>
                                     <td>
                                         <span class="cell-text"
-                                            style="font-family:monospace;font-size:12px;color:#6366f1;"><?php echo esc_html($rx_id); ?></span>
+                                            style="font-family:monospace;font-size:12px;color:#1A528E;"><?php echo esc_html($rx_id); ?></span>
                                     </td>
                                     <td>
                                         <div class="cell-content cell-image-name" style="align-items: flex-start;">
@@ -205,7 +205,7 @@
                     text: 'Are you sure you want to delete ' + checkboxes.length + ' selected record(s)?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#EF4444',
+                    confirmButtonColor: '#DC2626',
                     cancelButtonColor: '#64748B',
                     confirmButtonText: 'Yes, delete',
                     cancelButtonText: 'Cancel'

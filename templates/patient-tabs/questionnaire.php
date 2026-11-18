@@ -424,19 +424,19 @@
 
             <!-- DocBooker Consultation Trigger Card -->
             <div class="dior-booking-banner-card"
-                style="background: linear-gradient(135deg, #0b1120 0%, #00346C 100%); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
+                style="background: linear-gradient(135deg, #00346C 0%, #00346C 100%); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div
-                        style="width: 52px; height: 52px; border-radius: 12px; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #d4af37;">
+                        style="width: 52px; height: 52px; border-radius: 12px; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1A528E;">
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                     <div>
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                             <span
-                                style="display: inline-block; padding: 2px 8px; background: rgba(212, 175, 55, 0.2); color: #d4af37; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DocBooker
+                                style="display: inline-block; padding: 2px 8px; background: rgba(212, 175, 55, 0.2); color: #1A528E; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DocBooker
                                 Live</span>
                             <span
-                                style="display: inline-block; padding: 2px 8px; background: rgba(16, 185, 129, 0.2); color: #10b981; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Dr.
+                                style="display: inline-block; padding: 2px 8px; background: rgba(16, 185, 129, 0.2); color: #059669; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Dr.
                                 Marcus Sterling, DO</span>
                         </div>
                         <h4 style="margin: 0 0 4px 0; color: #ffffff; font-size: 17px; font-weight: 700;">Schedule
@@ -446,7 +446,7 @@
                     </div>
                 </div>
                 <button type="button" onclick="diorOpenDocBookerModal();" class="dior-btn-gold-primary btn"
-                    style="background: linear-gradient(135deg, #d4af37 0%, #b89628 100%); color: #0f172a; border: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35); transition: all 0.2s ease;">
+                    style="background: linear-gradient(135deg, #1A528E 0%, #1A528E 100%); color: #0f172a; border: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35); transition: all 0.2s ease;">
                     <i class="fa-solid fa-calendar-plus"></i> Open Appointment Booking
                 </button>
             </div>
@@ -669,7 +669,7 @@
                         <div class="dior-ic-78c1dc59f7">
                             <button type="button" class="dior-btn-gold-primary dior-ic-4a76c84446 btn"
                                 id="btn-in-confirm-booking" onclick="diorInSubmitBooking()">
-                                <i class="fas fa-video me-1" style="color:#22c55e;"></i> Confirm &amp; Schedule
+                                <i class="fas fa-video me-1" style="color:#059669;"></i> Confirm &amp; Schedule
                                 Telehealth
                                 Visit
                             </button>

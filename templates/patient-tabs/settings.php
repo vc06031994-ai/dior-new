@@ -49,12 +49,12 @@
             box-shadow: 0 4px 16px rgba(15, 43, 72, 0.16) !important;
             object-fit: cover !important;
             display: block !important;
-            background-color: #eaf3fb !important;
+            background-color: #F0F6FC !important;
         }
 
         #tab-settings .profile-cover-gradient {
             height: 110px !important;
-            background: linear-gradient(135deg, #0d2b52 0%, #173f6c 50%, #225a92 100%) !important;
+            background: linear-gradient(135deg, #00346C 0%, #00346C 50%, #1A528E 100%) !important;
             width: 100% !important;
             border-radius: 16px 16px 0 0 !important;
             position: relative !important;
@@ -75,15 +75,15 @@
         }
 
         #tab-settings .avatar-change-btn:hover {
-            background: #173f6c !important;
+            background: #00346C !important;
             transform: scale(1.08) !important;
         }
 
         #tab-settings .dior-change-photo-btn:hover {
-            background: #225a92 !important;
+            background: #1A528E !important;
             color: #ffffff !important;
-            border-color: #225a92 !important;
-            box-shadow: 0 4px 12px rgba(34, 90, 146, 0.22) !important;
+            border-color: #1A528E !important;
+            box-shadow: 0 4px 12px rgba(26, 82, 142, 0.22) !important;
         }
 
         #tab-settings .dior-change-photo-btn:hover i {
@@ -112,9 +112,9 @@
         }
 
         #tab-settings .custom-settings-pills .dior-patient-nav-item.active {
-            background: #2563eb !important;
+            background: #1A528E !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(26, 82, 142, 0.3);
         }
 
         #tab-settings .custom-settings-pills .dior-patient-nav-item.active .tab-title,
@@ -194,7 +194,7 @@
 
         #tab-settings .search-input-group .input-group-text {
             background: #ffffff;
-            border: 1px solid #dce4ec;
+            border: 1px solid #E2E8F0;
             border-right: none;
             color: #64748b;
             border-top-left-radius: 6px;
@@ -216,11 +216,11 @@
         #tab-settings .settings-form-card .form-control {
             width: 100%;
             min-height: 40px;
-            border: 1px solid #dce4ec;
+            border: 1px solid #E2E8F0;
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 13px;
-            color: #1e293b;
+            color: #0F172A;
             background-color: #ffffff;
         }
 
@@ -235,11 +235,11 @@
         #tab-settings .settings-form-card .form-select {
             width: 100%;
             min-height: 40px;
-            border: 1px solid #dce4ec;
+            border: 1px solid #E2E8F0;
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 13px;
-            color: #1e293b;
+            color: #0F172A;
             background-color: #ffffff;
         }
 
@@ -284,7 +284,7 @@
         }
 
         #tab-settings .dior-toggle-switch input:checked+.dior-toggle-slider {
-            background-color: #2563eb;
+            background-color: #1A528E;
         }
 
         #tab-settings .dior-toggle-switch input:checked+.dior-toggle-slider:before {
@@ -301,7 +301,7 @@
                 <div style="flex: 0 0 auto;">
                     <div class="breadcrumb-title">
                         <h4 class="page-title d-flex align-items-center flex-wrap gap-2 m-0"
-                            style="font-size: 20px; font-weight: 700; color: #1e293b;">
+                            style="font-size: 20px; font-weight: 700; color: #0F172A;">
                             <span>Patient Settings</span>
                         </h4>
                     </div>
@@ -320,7 +320,7 @@
             <div class="card profile-header-card mb-4 border-0 shadow-sm"
                 style="border-radius: 16px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);">
                 <div class="profile-cover-gradient"
-                    style="height: 100px; background: linear-gradient(135deg, #0d2b52 0%, #173f6c 50%, #225a92 100%); width: 100%; position: relative;">
+                    style="height: 100px; background: linear-gradient(135deg, #00346C 0%, #00346C 50%, #1A528E 100%); width: 100%; position: relative;">
                 </div>
                 <div class="card-body" style="padding: 0 28px 22px; position: relative; background: #ffffff;">
                     <div
@@ -343,7 +343,7 @@
                                 <button type="button" title="Upload new photo from your device"
                                     aria-label="Upload photo" class="avatar-change-btn btn"
                                     onclick="diorTriggerPatientAvatarUpload()"
-                                    style="position: absolute; bottom: 2px; right: 2px; background: #225a92; color: #ffffff; border: 2.5px solid #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.25); z-index: 8; transition: all 0.2s ease;">
+                                    style="position: absolute; bottom: 2px; right: 2px; background: #1A528E; color: #ffffff; border: 2.5px solid #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.25); z-index: 8; transition: all 0.2s ease;">
                                     <i class="fas fa-camera" style="font-size: 12px;"></i>
                                 </button>
                             </div>
@@ -352,11 +352,11 @@
                                 <div
                                     style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
                                     <h4 class="profile-user-name dior-settings-profile-name"
-                                        style="font-weight: 700; color: #0f2b48; font-size: 22px; margin: 0; line-height: 1.2; font-family: 'DM Sans', 'Montserrat', sans-serif;">
+                                        style="font-weight: 700; color: #00346C; font-size: 22px; margin: 0; line-height: 1.2; font-family: 'DM Sans', 'Montserrat', sans-serif;">
                                         <?php echo esc_html($settings_patient_profile['full_name'] ?? $settings_patient_user->display_name); ?>
                                     </h4>
                                     <span
-                                        style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px;margin-top:26px;">
+                                        style="background: #ecfdf5; color: #059669; border: 1px solid #ECFDF5; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px;margin-top:26px;">
                                         <i class="fas fa-circle-check" style="font-size: 9px;"></i> Active
                                     </span>
                                 </div>
@@ -364,14 +364,14 @@
                                     style="font-size: 13px; color: #64748b; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                     <?php if (!empty($settings_patient_profile['patient_id'])): ?>
                                         <span
-                                            style="background: #f0f7ff; color: #1e5a96; border: 1px solid #d3e5f8; padding: 4px 11px; border-radius: 8px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
-                                            <i class="fas fa-id-card" style="color: #225a92;"></i> Patient ID:
+                                            style="background: #F0F6FC; color: #1A528E; border: 1px solid #E2E8F0; padding: 4px 11px; border-radius: 8px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                                            <i class="fas fa-id-card" style="color: #1A528E;"></i> Patient ID:
                                             <?php echo esc_html($settings_patient_profile['patient_id']); ?>
                                         </span>
                                     <?php endif; ?>
                                     <span
                                         style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 4px 11px; border-radius: 8px; font-weight: 500; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
-                                        <i class="far fa-envelope" style="color: #225a92;"></i> <span
+                                        <i class="far fa-envelope" style="color: #1A528E;"></i> <span
                                             class="dior-settings-profile-email"><?php echo esc_html($settings_patient_profile['email'] ?? $settings_patient_user->user_email); ?></span>
                                     </span>
                                 </div>
@@ -383,8 +383,8 @@
                             style="padding-bottom: 4px; flex-shrink: 0; display: flex; align-items: center; gap: 10px;">
                             <button type="button" id="dior-change-photo-action-btn" class="dior-change-photo-btn btn"
                                 onclick="diorTriggerPatientAvatarUpload()"
-                                style="background: #f0f7ff; color: #1e5a96; border: 1px solid #cce1f7; padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 12.5px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(34,90,146,0.06);">
-                                <i class="fas fa-cloud-arrow-up" style="color: #225a92; font-size: 13px;"></i>
+                                style="background: #F0F6FC; color: #1A528E; border: 1px solid #CBD5E1; padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 12.5px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(26,82,142,0.06);">
+                                <i class="fas fa-cloud-arrow-up" style="color: #1A528E; font-size: 13px;"></i>
                                 <span id="dior-change-photo-text">Upload Photo</span>
                             </button>
                         </div>
@@ -396,13 +396,13 @@
                 <div class="dior-settings-col-main" style="width: 100%; max-width: 100%; flex: 1 1 100%;">
 
                     <div class="card settings-form-card border-0 shadow-sm" id="patient-profile-settings-card"
-                        style="border-radius: 12px; background: #ffffff; border: 1px solid #e7edf4; box-shadow: 0 4px 18px rgba(15,23,42,.05);">
+                        style="border-radius: 12px; background: #ffffff; border: 1px solid #E2E8F0; box-shadow: 0 4px 18px rgba(15,23,42,.05);">
                         <div class="card-header bg-transparent border-bottom py-3 px-4"
-                            style="border-bottom: 1px solid #edf1f5 !important; padding: 16px 20px;">
+                            style="border-bottom: 1px solid #E2E8F0 !important; padding: 16px 20px;">
                             <h5 class="card-title-text mb-0"
-                                style="font-size: 15px; font-weight: 700; color: #172033; display: inline-flex; align-items: center; margin-right: 8px;">
+                                style="font-size: 15px; font-weight: 700; color: #0F172A; display: inline-flex; align-items: center; margin-right: 8px;">
                                 <i class="fas fa-user text-primary"
-                                    style="color: #2563eb !important; margin-right: 8px;"></i>Personal Information
+                                    style="color: #1A528E !important; margin-right: 8px;"></i>Personal Information
                             </h5>
                             <p class="card-subtitle-text mb-0"
                                 style="color: #64748b; display: inline-block;font-size:14px !important;">Manage
@@ -561,9 +561,9 @@
                                 </div>
 
                                 <div
-                                    style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #edf1f5;">
+                                    style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #E2E8F0;">
                                     <button type="submit" class="btn btn-sm btn-primary-gradient px-4"
-                                        style="background: #2563eb; color: #ffffff; border: none; border-radius: 6px; padding: 8px 22px; font-weight: 600; font-size: 13px; cursor: pointer;">
+                                        style="background: #1A528E; color: #ffffff; border: none; border-radius: 6px; padding: 8px 22px; font-weight: 600; font-size: 13px; cursor: pointer;">
                                         <i class="fas fa-save" style="margin-right: 5px;"></i> Save Profile
                                     </button>
                                 </div>
@@ -572,13 +572,13 @@
                     </div>
 
                     <div class="card settings-form-card border-0 shadow-sm" id="patient-password-reset-card"
-                        style="margin-top: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e7edf4; box-shadow: 0 4px 18px rgba(15,23,42,.05);">
+                        style="margin-top: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #E2E8F0; box-shadow: 0 4px 18px rgba(15,23,42,.05);">
                         <div class="card-header bg-transparent border-bottom py-3 px-4"
-                            style="border-bottom: 1px solid #edf1f5 !important; padding: 16px 20px;">
+                            style="border-bottom: 1px solid #E2E8F0 !important; padding: 16px 20px;">
                             <h5 class="card-title-text mb-0"
-                                style="font-size: 15px; font-weight: 700; color: #172033; display: inline-flex; align-items: center; margin-right: 8px;">
+                                style="font-size: 15px; font-weight: 700; color: #0F172A; display: inline-flex; align-items: center; margin-right: 8px;">
                                 <i class="fas fa-lock"
-                                    style="color: #2563eb !important; margin-right: 8px;"></i>Password &amp; Security
+                                    style="color: #1A528E !important; margin-right: 8px;"></i>Password &amp; Security
                             </h5>
                         </div>
                         <div class="card-body p-4"
@@ -587,7 +587,7 @@
                                 password for your account.</p>
                             <a class="btn btn-sm btn-primary-gradient px-4"
                                 href="<?php echo esc_url(wp_lostpassword_url()); ?>"
-                                style="display: inline-flex; align-items: center; gap: 8px; background: #2563eb; color: #ffffff; border: none; border-radius: 6px; padding: 9px 18px; font-weight: 600; font-size: 13px; line-height: 15px; text-decoration: none;">
+                                style="display: inline-flex; align-items: center; gap: 8px; background: #1A528E; color: #ffffff; border: none; border-radius: 6px; padding: 9px 18px; font-weight: 600; font-size: 13px; line-height: 15px; text-decoration: none;">
                                 <i class="fas fa-key"></i> Reset Password
                             </a>
                         </div>

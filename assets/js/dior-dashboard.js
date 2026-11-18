@@ -753,13 +753,32 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
         }
         window.diorPromptCompleteProfile = promptCompleteProfile;
 
-        function switchTab(tabId) {
+        function switchTab(tabId, updateHash) {
             // Navigation must always work. Profile completeness is validated when the
             // patient actually submits an appointment/intake action, not when opening a tab.
             // This keeps every dashboard section accessible and preserves the existing UI.
 
-            if (!document.getElementById('tab-' + tabId)) {
-                tabId = 'overview';
+            // Accept the full deep-link shape ("appointments&subtab=today") so links
+            // and notification actions keep their subtab instead of failing.
+            let requestedSubTab = null;
+            if (typeof tabId === 'string' && tabId.indexOf('&subtab=') !== -1) {
+                const subParts = tabId.split('&subtab=');
+                tabId = subParts[0];
+                requestedSubTab = subParts[1] || null;
+            }
+            if (typeof tabId === 'string' && tabId.indexOf('#tab=') === 0) {
+                tabId = tabId.substring(5);
+            }
+
+            // "profile" is rendered inside the Settings panel.
+            if (tabId === 'profile') tabId = 'settings';
+
+            // Unknown targets must never hijack the page: previously any unparsed
+            // value (for example "appointments&subtab=book") fell back to Overview
+            // and rewrote the URL hash, which is what dropped the user on Overview
+            // after a refresh. Keep the current view and URL untouched instead.
+            if (!tabId || !document.getElementById('tab-' + tabId)) {
+                return false;
             }
 
             navButtons.forEach(btn => {
@@ -790,10 +809,14 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
                 pageTitleEl.textContent = tabTitles[tabId];
             }
 
-            if (history.pushState) {
-                history.pushState(null, null, '#tab=' + tabId);
-            } else {
-                location.hash = '#tab=' + tabId;
+            // Hash updates are skipped when a tab is being restored from the URL so
+            // that a refresh neither rewrites the address nor adds a history entry.
+            if (updateHash !== false) {
+                if (history.pushState) {
+                    history.pushState(null, null, '#tab=' + tabId);
+                } else {
+                    location.hash = '#tab=' + tabId;
+                }
             }
 
             if (tabId === 'notifications') {
@@ -817,6 +840,13 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
 
             closeMobileDrawer();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (tabId === 'appointments' && requestedSubTab &&
+                typeof window.diorSwitchApptSubTab === 'function') {
+                window.diorSwitchApptSubTab(requestedSubTab);
+            }
+
+            return true;
         }
 
         // Restore previously dismissed badges from session
@@ -924,15 +954,36 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
             }
         });
 
-        // Deep linking via URL hash & hashchange listener
+        // Deep linking via URL hash & hashchange listener.
+        // Full hash shape is "#tab=<tabId>" or "#tab=appointments&subtab=<subtab>";
+        // the subtab part must be split off before the tab id is resolved.
         function handleUrlHash() {
-            if (window.location.hash && window.location.hash.startsWith('#tab=')) {
-                const hashTab = window.location.hash.replace('#tab=', '');
-                if (typeof window.diorSwitchTab === 'function') {
-                    window.diorSwitchTab(hashTab);
-                } else {
-                    switchTab(hashTab);
-                }
+            const hash = window.location.hash || '';
+            if (!hash.startsWith('#tab=')) return;
+
+            let raw = hash.substring(5);
+            let subTab = null;
+            const subIndex = raw.indexOf('&subtab=');
+            if (subIndex !== -1) {
+                subTab = raw.substring(subIndex + 8);
+                raw = raw.substring(0, subIndex);
+            }
+
+            let requestedTab = raw;
+            try { requestedTab = decodeURIComponent(requestedTab); } catch (e) {}
+            if (subTab !== null) {
+                try { subTab = decodeURIComponent(subTab); } catch (e) {}
+            }
+            if (requestedTab === 'profile') requestedTab = 'settings';
+
+            // Restore only real panels; anything else leaves the page as it is.
+            if (!requestedTab || !document.getElementById('tab-' + requestedTab)) return;
+
+            switchTab(requestedTab, false);
+
+            if (requestedTab === 'appointments' && subTab &&
+                typeof window.diorSwitchApptSubTab === 'function') {
+                window.diorSwitchApptSubTab(subTab);
             }
         }
         handleUrlHash();

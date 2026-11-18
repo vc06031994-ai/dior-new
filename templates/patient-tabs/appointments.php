@@ -21,9 +21,6 @@
         <button type="button" class="dior-subtab-pill btn" data-appt-subtab="past">
             <i class="fas fa-history"></i> Past Appointments
         </button>
-        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="calendar">
-            <i class="fas fa-calendar-days"></i> Appointment Calendar
-        </button>
     </div>
 
     <?php
@@ -115,298 +112,23 @@
     <!-- Appointment Content Area -->
     <div class="medidash-appt-wrap">
 
-        <!-- 0. Appointment Calendar (Primary Dynamic Bootstrap 5 Calendar) -->
-        <div class="dior-subtab-panel" id="dior-subtab-calendar" style="display: none;">
-
-            <!-- Quick Stat KPI Bar (Bootstrap 5 Cards) -->
-            <div class="row g-3 mb-4">
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-muted small fw-semibold text-uppercase">Total Consultations</span>
-                                <h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($apt_total); ?></h3>
-                                <span class="badge bg-primary-subtle text-primary rounded-pill mt-2 px-2 py-1 small">
-                                    <i class="fas fa-calendar-check me-1"></i> Patient Records
-                                </span>
-                            </div>
-                            <div class="rounded-4 d-flex align-items-center justify-content-center"
-                                style="width: 52px; height: 52px; background: rgba(79, 70, 229, 0.1); color: #1A528E; font-size: 22px;">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-muted small fw-semibold text-uppercase">Upcoming Visits</span>
-                                <h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($apt_upcoming); ?></h3>
-                                <span class="badge bg-info-subtle text-info rounded-pill mt-2 px-2 py-1 small">
-                                    <i class="fas fa-clock me-1"></i> Scheduled
-                                </span>
-                            </div>
-                            <div class="rounded-4 d-flex align-items-center justify-content-center"
-                                style="width: 52px; height: 52px; background: rgba(14, 165, 233, 0.1); color: #0ea5e9; font-size: 22px;">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-muted small fw-semibold text-uppercase">Telehealth Video</span>
-                                <h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($apt_video); ?></h3>
-                                <span class="badge bg-success-subtle text-success rounded-pill mt-2 px-2 py-1 small">
-                                    <i class="fas fa-video me-1"></i> HD Live Room
-                                </span>
-                            </div>
-                            <div class="rounded-4 d-flex align-items-center justify-content-center"
-                                style="width: 52px; height: 52px; background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 22px;">
-                                <i class="fas fa-video"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-muted small fw-semibold text-uppercase">Completed Visits</span>
-                                <h3 class="fw-bold mb-0 text-dark mt-1"><?php echo esc_html($apt_completed); ?></h3>
-                                <span
-                                    class="badge bg-secondary-subtle text-secondary rounded-pill mt-2 px-2 py-1 small">
-                                    <i class="fas fa-circle-check me-1"></i> Finalized
-                                </span>
-                            </div>
-                            <div class="rounded-4 d-flex align-items-center justify-content-center"
-                                style="width: 52px; height: 52px; background: rgba(100, 116, 139, 0.1); color: #64748b; font-size: 22px;">
-                                <i class="fas fa-circle-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Container Card -->
-            <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden">
-                <!-- Toolbar Header -->
-                <div class="card-header bg-white border-bottom py-3 px-4">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-
-                        <!-- Navigation (Prev, Month Title, Next, Today) -->
-                        <div class="d-flex align-items-center gap-2">
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                                id="dior-bs-cal-prev" style="width:36px;height:36px;" title="Previous Month">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <h3 class="mb-0 fw-bold text-dark fs-5 px-2 text-center" id="dior-bs-cal-title"
-                                style="min-width: 170px;">
-                                October 2026
-                            </h3>
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                                id="dior-bs-cal-next" style="width:36px;height:36px;" title="Next Month">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                            <button type="button"
-                                class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold ms-1"
-                                id="dior-bs-cal-today">
-                                Today
-                            </button>
-                        </div>
-
-                        <!-- Filters & Controls -->
-                        <div class="d-flex flex-wrap align-items-center gap-2">
-                            <!-- Type Filter -->
-                            <div class="input-group input-group-sm" style="width: auto;">
-                                <span class="input-group-text bg-light border-end-0 text-muted"><i
-                                        class="fas fa-filter"></i></span>
-                                <select id="dior-bs-cal-type-filter"
-                                    class="form-select form-select-sm border-start-0 ps-1" style="min-width: 125px;">
-                                    <option value="all">All Visits</option>
-                                    <option value="video">Video (HD)</option>
-                                    <option value="phone">Phone Visit</option>
-                                    <option value="clinic">In-Clinic</option>
-                                </select>
-                            </div>
-
-                            <!-- Status Filter -->
-                            <div class="input-group input-group-sm" style="width: auto;">
-                                <span class="input-group-text bg-light border-end-0 text-muted"><i
-                                        class="fas fa-tag"></i></span>
-                                <select id="dior-bs-cal-status-filter"
-                                    class="form-select form-select-sm border-start-0 ps-1" style="min-width: 125px;">
-                                    <option value="all">All Status</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            </div>
-
-                            <!-- View Mode Toggle (Month vs Agenda) -->
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-primary active fw-semibold"
-                                    id="dior-bs-cal-view-month">
-                                    <i class="fas fa-calendar-days me-1"></i> Month
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary fw-semibold"
-                                    id="dior-bs-cal-view-agenda">
-                                    <i class="fas fa-list-ul me-1"></i> Agenda
-                                </button>
-                            </div>
-
-                            <!-- Book Visit Button -->
-                            <button type="button" onclick="diorOpenDocBookerModal();"
-                                class="btn btn-primary btn-sm rounded-pill px-3 fw-bold d-inline-flex align-items-center gap-1 shadow-sm ms-2 ms-sm-3">
-                                <i class="fas fa-calendar-plus"></i> Book Visit
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Main Content Area: 2 Columns Grid -->
-                <div class="card-body p-3 p-lg-4">
-                    <div class="row g-4">
-
-                        <!-- Left Column: Calendar Grid / Agenda List (8 Cols) -->
-                        <div class="col-lg-8 col-12">
-
-                            <!-- 1. Month View (Bootstrap 5 Table Grid) -->
-                            <div id="dior-bs-cal-month-wrap" class="dior-bs-calendar-container">
-                                <div class="table-responsive rounded-3 border">
-                                    <table class="table table-bordered mb-0 dior-bs-cal-table">
-                                        <thead>
-                                            <tr class="text-center text-uppercase text-secondary bg-light"
-                                                style="font-size: 11px; letter-spacing: 0.8px;">
-                                                <th style="width: 14.28%; padding: 10px 4px;">Sun</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Mon</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Tue</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Wed</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Thu</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Fri</th>
-                                                <th style="width: 14.28%; padding: 10px 4px;">Sat</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="dior-bs-cal-grid-body">
-                                            <!-- Dynamically generated month days via JS -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- 2. Agenda View (Initially Hidden) -->
-                            <div id="dior-bs-cal-agenda-wrap" style="display: none;">
-                                <div id="dior-bs-cal-agenda-list" class="d-flex flex-column gap-3">
-                                    <!-- Dynamically generated agenda cards via JS -->
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Right Column: Day Schedule & Quick Actions (4 Cols) -->
-                        <div class="col-lg-4 col-12">
-                            <div
-                                class="card border border-light-subtle rounded-4 shadow-none bg-light h-100 d-flex flex-column">
-                                <!-- Day Schedule Header -->
-                                <div
-                                    class="card-header bg-white border-bottom py-3 px-3 rounded-top-4 d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="text-muted small fw-bold text-uppercase"
-                                            style="font-size: 11px;">Selected Date</span>
-                                        <h5 class="mb-0 fw-bold text-dark fs-6 mt-1" id="dior-bs-cal-selected-header">
-                                            Wednesday, Oct 14, 2026
-                                        </h5>
-                                    </div>
-                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1 fw-bold"
-                                        id="dior-bs-cal-selected-count">
-                                        0 Visits
-                                    </span>
-                                </div>
-
-                                <!-- Day Schedule Body -->
-                                <div class="card-body p-3 flex-grow-1 overflow-auto" id="dior-bs-cal-selected-body"
-                                    style="max-height: 480px;">
-                                    <!-- Populated dynamically via JS -->
-                                </div>
-
-                                <!-- Day Schedule Footer: Attending Doctor Banner & Legend -->
-                                <div class="card-footer bg-white border-top py-3 px-3 rounded-bottom-4">
-                                    <!-- Lead Physician Box -->
-                                    <div class="p-2.5 rounded-3 mb-3"
-                                        style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.15);">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
-                                                style="width: 32px; height: 32px; background: #1A528E; font-size: 12px;">
-                                                MS
-                                            </div>
-                                            <div class="lh-sm">
-                                                <div class="fw-bold text-dark" style="font-size: 13px;">Dr. Marcus
-                                                    Sterling, DO</div>
-                                                <small class="text-muted" style="font-size: 11px;">Lead Telehealth
-                                                    Physician</small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Legend Indicator -->
-                                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 small text-muted"
-                                        style="font-size: 11px;">
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span
-                                                style="width: 8px; height: 8px; border-radius: 50%; background: #1A528E; display: inline-block;"></span>
-                                            <span>Video</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span
-                                                style="width: 8px; height: 8px; border-radius: 50%; background: #0ea5e9; display: inline-block;"></span>
-                                            <span>Phone</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span
-                                                style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-                                            <span>Confirmed</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span
-                                                style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block;"></span>
-                                            <span>Cancelled</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
         <!-- 1. Book Appointment -->
         <div class="dior-subtab-panel" id="dior-subtab-book" style="display: block;">
             <!-- DocBooker Consultation Trigger Card -->
             <div class="dior-booking-banner-card"
-                style="background: linear-gradient(135deg, #0b1120 0%, #00346C 100%); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
+                style="background: linear-gradient(135deg, #00346C 0%, #00346C 100%); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div
-                        style="width: 52px; height: 52px; border-radius: 12px; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #d4af37;">
+                        style="width: 52px; height: 52px; border-radius: 12px; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1A528E;">
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                     <div>
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                             <span
-                                style="display: inline-block; padding: 2px 8px; background: rgba(212, 175, 55, 0.2); color: #d4af37; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DocBooker
+                                style="display: inline-block; padding: 2px 8px; background: rgba(212, 175, 55, 0.2); color: #1A528E; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DocBooker
                                 Live</span>
                             <span
-                                style="display: inline-block; padding: 2px 8px; background: rgba(16, 185, 129, 0.2); color: #10b981; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Single
+                                style="display: inline-block; padding: 2px 8px; background: rgba(16, 185, 129, 0.2); color: #059669; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Single
                                 Doctor: Dr. Marcus Sterling, DO</span>
                         </div>
                         <h4 style="margin: 0 0 4px 0; color: #ffffff; font-size: 17px; font-weight: 700;">Telehealth
@@ -417,7 +139,7 @@
                     </div>
                 </div>
                 <button type="button" onclick="diorOpenDocBookerModal();" class="dior-btn-gold-primary btn"
-                    style="background: linear-gradient(135deg, #d4af37 0%, #b89628 100%); color: #0f172a; border: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35); transition: all 0.2s ease;">
+                    style="background: linear-gradient(135deg, #1A528E 0%, #1A528E 100%); color: #0f172a; border: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35); transition: all 0.2s ease;">
                     <i class="fa-solid fa-calendar-plus"></i> Schedule Appointment Now
                 </button>
             </div>
@@ -534,8 +256,8 @@
                                         <tr>
                                             <td>
                                                 <div class="cell-content cell-image-name">
-                                                    <img src="<?php echo esc_url($tm[7]); ?>"
-                                                        alt="<?php echo esc_attr($tm[0]); ?>" class="cell-avatar">
+                                                    <?php if (!empty($tm[7])): ?><img src="<?php echo esc_url($tm[7]); ?>"
+                                                        alt="<?php echo esc_attr($tm[0]); ?>" class="cell-avatar"><?php endif; ?>
                                                     <span
                                                         class="cell-text doctor-name"><?php echo esc_html($tm[0]); ?></span>
                                                 </div>
@@ -590,6 +312,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="dior-table-pagination" id="dior-today-pagination" style="display:none;"></div>
 
                     </div>
                 </div>
@@ -750,6 +473,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="dior-table-pagination" id="dior-upcoming-pagination" style="display:none;"></div>
                     </div>
                 </div>
             </div>
@@ -834,8 +558,8 @@
                                         <tr>
                                             <td>
                                                 <div class="cell-content cell-image-name">
-                                                    <img src="<?php echo esc_url($pm[8]); ?>"
-                                                        alt="<?php echo esc_attr($pm[0]); ?>" class="cell-avatar">
+                                                    <?php if (!empty($pm[8])): ?><img src="<?php echo esc_url($pm[8]); ?>"
+                                                        alt="<?php echo esc_attr($pm[0]); ?>" class="cell-avatar"><?php endif; ?>
                                                     <span
                                                         class="cell-text doctor-name"><?php echo esc_html($pm[0]); ?></span>
                                                 </div>
@@ -862,6 +586,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="dior-table-pagination" id="dior-past-pagination" style="display:none;"></div>
                     </div>
                 </div>
             </div>
@@ -876,6 +601,7 @@
             window.diorInitBootstrapCalendar();
         }
     </script>
+
 
 </section>
 <!-- ============================================================== -->

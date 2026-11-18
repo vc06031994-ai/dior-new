@@ -426,7 +426,10 @@
         var card = table.closest('.view-appointment-card, .docs-card, .medidash-card, .dior-card, .dior-tab-panel, .dior-ref-card');
         if (!card) return null;
 
-        var host = card.querySelector('.va-footer, .dior-table-pagination-wrap, .dior-static-pagination');
+        // `.master-table-footer` is the footer bar some legacy pages (Insurance &
+        // Claims) already ship: reusing it keeps a single pager instead of
+        // injecting a second one right above it.
+        var host = card.querySelector('.va-footer, .dior-table-pagination-wrap, .dior-static-pagination, .master-table-footer');
         if (!host) {
             host = document.createElement('div');
             host.className = 'dior-static-pagination dior-table-pagination-wrap';

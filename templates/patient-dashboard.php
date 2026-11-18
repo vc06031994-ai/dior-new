@@ -49,8 +49,6 @@
                                     class="fas fa-angle-right"></i> Upcoming Appointments</a>
                             <a href="#tab=appointments&subtab=past" class="dior-nav-dropdown-item" data-appt-subtab="past"><i
                                     class="fas fa-angle-right"></i> Past Appointments</a>
-                            <a href="#tab=appointments&subtab=calendar" class="dior-nav-dropdown-item" data-appt-subtab="calendar"><i
-                                    class="fas fa-angle-right"></i> Appointment Calendar</a>
                         </div>
                     </div>
                     <button type="button" class="dior-nav-btn btn" data-tab="docs_meds">
@@ -93,8 +91,82 @@
                         <i class="fas fa-gear"></i>
                         <span class="nav-label">Settings</span>
                     </button>
+
+                    <!-- Collapse / Expand Sidebar Toggle (matches the Doctor Dashboard) -->
+                    <button type="button" class="dior-nav-btn dior-patient-collapse-btn btn"
+                        id="dior-patient-sidebar-toggle" onclick="diorTogglePatientSidebarCollapse(event)"
+                        title="Collapse Menu">
+                        <i class="fas fa-angles-left collapse-icon" id="dior-patient-collapse-icon"></i>
+                        <span class="nav-label">Collapse Menu</span>
+                    </button>
                 </div>
             </nav>
+            <script>
+                function diorTogglePatientSidebarCollapse(e) {
+                    if (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                    }
+                    var app = document.getElementById('dior-patient-portal-app');
+                    if (!app) return;
+
+                    var isCollapsed = app.classList.toggle('dior-sidebar-collapsed');
+                    var icon = document.getElementById('dior-patient-collapse-icon');
+                    var btn = document.getElementById('dior-patient-sidebar-toggle');
+
+                    if (icon) {
+                        if (isCollapsed) {
+                            icon.classList.remove('fa-angles-left');
+                            icon.classList.add('fa-angles-right');
+                        } else {
+                            icon.classList.remove('fa-angles-right');
+                            icon.classList.add('fa-angles-left');
+                        }
+                    }
+                    if (btn) {
+                        var label = btn.querySelector('.nav-label');
+                        if (isCollapsed) {
+                            btn.setAttribute('title', 'Expand Menu');
+                            if (label) label.textContent = 'Expand Menu';
+                        } else {
+                            btn.setAttribute('title', 'Collapse Menu');
+                            if (label) label.textContent = 'Collapse Menu';
+                        }
+                    }
+
+                    try {
+                        localStorage.setItem('dior_patient_sidebar_collapsed', isCollapsed ? '1' : '0');
+                    } catch (err) { }
+
+                    // Let responsive widgets re-fit after the width transition.
+                    setTimeout(function () {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 280);
+                }
+
+                // Restore the saved collapsed state on load (desktop only).
+                (function () {
+                    try {
+                        if (localStorage.getItem('dior_patient_sidebar_collapsed') === '1' && window.innerWidth >= 1025) {
+                            var app = document.getElementById('dior-patient-portal-app');
+                            if (app) {
+                                app.classList.add('dior-sidebar-collapsed');
+                                var icon = document.getElementById('dior-patient-collapse-icon');
+                                var btn = document.getElementById('dior-patient-sidebar-toggle');
+                                if (icon) {
+                                    icon.classList.remove('fa-angles-left');
+                                    icon.classList.add('fa-angles-right');
+                                }
+                                if (btn) {
+                                    btn.setAttribute('title', 'Expand Menu');
+                                    var label = btn.querySelector('.nav-label');
+                                    if (label) label.textContent = 'Expand Menu';
+                                }
+                            }
+                        }
+                    } catch (e) { }
+                })();
+            </script>
 
             <!-- Bottom Sidebar User Profile Card -->
             <div class="dior-sidebar-bottom-profile">
@@ -815,7 +887,7 @@
                         <div>
                             <strong class="dior-ic-3a5e03a707">Consultation
                                 Mode</strong>
-                            <span id="pat-modal-appt-mode" class="dior-ic-035b2e7453"><i class="fas fa-video me-1" style="color:#22c55e;"></i> Video Visit</span>
+                            <span id="pat-modal-appt-mode" class="dior-ic-035b2e7453"><i class="fas fa-video me-1" style="color:#059669;"></i> Video Visit</span>
                         </div>
                         <div class="dior-ic-b652b6f21e">
                             <strong class="dior-ic-3a5e03a707">Service
@@ -830,7 +902,7 @@
                 <div id="pat-modal-zoom-wrap" class="dior-ic-5d5fe245c5">
                     <div class="dior-ic-63a4b96787">
                         <div class="dior-ic-99e83aaa9f">
-                            <i class="fas fa-video" style="color:#22c55e;font-size:18px;"></i>
+                            <i class="fas fa-video" style="color:#059669;font-size:18px;"></i>
                         </div>
                         <div>
                             <strong class="dior-ic-08abd803b3">Live Virtual Consultation
@@ -840,7 +912,7 @@
                     </div>
                     <a id="pat-modal-zoom-link" href="#" target="_blank" rel="noopener noreferrer"
                         class="dior-ic-459d58fbd7">
-                        <i class="fas fa-video me-1" style="color:#22c55e;"></i> Join Video Call &rarr;
+                        <i class="fas fa-video me-1" style="color:#059669;"></i> Join Video Call &rarr;
                     </a>
                 </div>
 

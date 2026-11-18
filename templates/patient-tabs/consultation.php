@@ -10,7 +10,7 @@
     <div class="dior-ic-3c0b10badc">
         <div class="dior-ic-b7f55b7e4a">
             <div class="dior-ic-18a3c7f768">
-                <i class="fas fa-video fs-5" style="color:#22c55e;"></i>
+                <i class="fas fa-video fs-5" style="color:#059669;"></i>
             </div>
             <div>
                 <h2 class="dior-ic-418a393e7b">HD Telehealth Consultation Room</h2>
@@ -59,7 +59,7 @@
                     <i class="fas fa-microphone"></i>
                 </button>
                 <button type="button" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'" class="dior-ic-df9983a8cc btn">
-                    <i class="fas fa-video" style="color:#22c55e;"></i>
+                    <i class="fas fa-video" style="color:#059669;"></i>
                 </button>
                 <button type="button" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'" class="dior-ic-df9983a8cc btn">
                     <i class="fas fa-desktop"></i>
@@ -67,7 +67,7 @@
                 <button type="button" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'" class="dior-ic-df9983a8cc btn">
                     <i class="far fa-comment-dots"></i>
                 </button>
-                <button type="button" onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#EF4444'" class="dior-ic-7c877a95fa btn">
+                <button type="button" onmouseover="this.style.background='#DC2626'" onmouseout="this.style.background='#DC2626'" class="dior-ic-7c877a95fa btn">
                     <i class="fas fa-phone-slash"></i>
                 </button>
             </div>
