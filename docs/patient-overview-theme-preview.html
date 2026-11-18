@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patient Dashboard — Home / Overview Theme Match</title>
+    <style>
+        :root {
+            --ink: #0F172A;
+            --muted: #64748B;
+            --line: #E2E8F0;
+            --navy: #00346C;
+            --bg: #F8FAFC;
+            --ok: #0F7B47;
+            --bad: #B91C1C;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 20px 64px;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.6 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .wrap { max-width: 1080px; margin: 0 auto; }
+
+        h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; color: var(--navy); }
+        h2 { font-size: 18px; margin: 38px 0 12px; color: var(--navy); }
+        .sub { color: var(--muted); margin: 0 0 26px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 0 0 18px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        }
+
+        .shot { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+        .shot.narrow { max-width: 340px; }
+
+        ul { margin: 8px 0 0; padding-left: 20px; }
+        li { margin: 0 0 8px; }
+
+        code {
+            background: #F1F5F9;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 1px 5px;
+            font-size: 12.5px;
+            word-break: break-word;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+        .pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .pill.bad { background: #FEE2E2; color: var(--bad); }
+        .pill.ok { background: #DCFCE7; color: var(--ok); }
+
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: start; }
+        .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 8px; }
+        .label.ok { color: var(--ok); }
+        .note { background: #F8FAFC; border-left: 3px solid var(--navy); padding: 10px 14px; margin: 14px 0 0; border-radius: 0 8px 8px 0; }
+        .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.08); }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>Patient Dashboard — Home / Overview</h1>
+        <p class="sub">Home template ab doctor dashboard ke saath consistent hai. Browser audit se jo off-theme
+            colours mile, sab palette par aa gaye — orange progress bars, Bootstrap blue heading, aur hardcoded slate
+            text.</p>
+
+        <h2>1. Browser audit — kya mila</h2>
+        <div class="card">
+            <p>Sirf CSS padhne ke bajaye, page ko headless browser me render karke har element ka
+                <strong>actual computed colour</strong> nikala, phir palette se compare kiya. Yeh mila:</p>
+            <table>
+                <tr>
+                    <th>Element</th>
+                    <th>Pehle</th>
+                    <th>Ab</th>
+                </tr>
+                <tr>
+                    <td><strong>Health goal progress bars</strong></td>
+                    <td><span class="pill bad">orange</span> <code>#D97706</code> — teeno bars orange, jo site ke navy
+                        se bilkul match nahi karta tha.</td>
+                    <td><span class="pill ok">navy</span> <code>#1A528E</code>, track <code>#E2E8F0</code>, 8px height,
+                        pill radius (pehle 6px).</td>
+                </tr>
+                <tr>
+                    <td><strong>“Health Goals” heading</strong></td>
+                    <td><span class="pill bad">BS blue</span> <code>.text-primary</code> = <code>#0d6efd</code> —
+                        Bootstrap ka default blue, theme ka nahi.</td>
+                    <td><span class="pill ok">navy</span> <code>#1A528E</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>“Welcome Back” heading</strong></td>
+                    <td><span class="pill bad">slate</span> Hardcoded <code>#334155</code> — baaki headings se alag.</td>
+                    <td><span class="pill ok">navy</span> <code>#00346C</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Stat numbers</strong> (00 / 02 / 00)</td>
+                    <td><span class="pill bad">BS blue</span> <code>#0d6efd</code></td>
+                    <td><span class="pill ok">navy</span> <code>#00346C</code> — darker, better contrast.</td>
+                </tr>
+                <tr>
+                    <td><strong>“View All →” links</strong></td>
+                    <td><span class="pill bad">BS blue</span> <code>#0d6efd</code></td>
+                    <td><span class="pill ok">navy</span> <code>#1A528E</code>, hover <code>#00346C</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Status pills</strong></td>
+                    <td><span class="pill bad">raw BS</span> Amber <code>#ffc107</code> / green
+                        <code>#198754</code> — Bootstrap ke raw tokens.</td>
+                    <td><span class="pill ok">tuned</span> Palette amber (<code>#B45309</code> on
+                        <code>#FEF3C7</code>) aur green (<code>#047857</code> on <code>#ECFDF5</code>).</td>
+                </tr>
+                <tr>
+                    <td><strong>Profile-incomplete banner CTA</strong></td>
+                    <td><span class="pill bad">off-palette</span> <code>#2C6CB1</code> — not one of our tokens.</td>
+                    <td><span class="pill ok">navy</span> <code>#1A528E</code> / hover <code>#00346C</code>.</td>
+                </tr>
+            </table>
+            <p class="note"><strong>Design decision:</strong> warning banner amber <em>hi rahega</em> — wahan amber
+                kaam kar raha hai (real alert), brand colour nahi. Bas tonality palette ke amber par shift ki, taaki
+                raw Bootstrap <code>#ffc107</code> na dikhe. Green (completed) aur red (danger) bhi semantic hain, wo
+                bhi unchanged intent ke saath tuned kiye.</p>
+        </div>
+
+        <h2>2. Desktop</h2>
+        <div class="card">
+            <img class="shot" src="screenshots/patient-overview-desktop.png" alt="Patient overview desktop">
+        </div>
+        <div class="card">
+            <ul>
+                <li><strong>Health Goals</strong> — navy progress bars, slate track, pill radius.</li>
+                <li><strong>Buttons</strong> — Book An Appointment / Edit Profile / Join Video navy; Reschedule aur
+                    View soft slate.</li>
+                <li><strong>Cards</strong> — 1px <code>#E2E8F0</code> border, halka shadow (doctor dashboard jaisa).</li>
+                <li><strong>Focus rings</strong> — visible navy outline, keyboard ke liye.</li>
+            </ul>
+        </div>
+
+        <h2>3. Profile-incomplete banner</h2>
+        <div class="grid">
+            <div>
+                <p class="label ok">Desktop</p>
+                <img class="shot" src="screenshots/patient-banner-desktop.png" alt="Banner desktop">
+            </div>
+            <div>
+                <p class="label ok">Mobile — icon hata, CTA full width</p>
+                <img class="shot narrow" src="screenshots/patient-banner-mobile.png" alt="Banner mobile">
+            </div>
+        </div>
+        <div class="card">
+            <p><strong>Mobile fix:</strong> 42px icon circle top-aligned tha jabki paragraph 4 line ka — isliye icon
+                block ke beech me latak raha tha. Phone par icon hide karke text ko poori width de di, aur CTA
+                full-width button ban gaya.</p>
+        </div>
+
+        <h2>4. Mobile overview</h2>
+        <div class="card">
+            <img class="shot narrow" src="screenshots/patient-overview-mobile.png" alt="Patient overview mobile">
+        </div>
+        <div class="card">
+            <ul>
+                <li>Stats, profile card, goals, tables, sidebar cards — sab single column me stack.</li>
+                <li>Progress bars 7px, stat numbers 1.6rem — chhoti screen par breathing room.</li>
+                <li>Koi horizontal scroll nahi, koi clipped label nahi.</li>
+            </ul>
+        </div>
+
+        <h2>5. Verification</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Width</th>
+                    <th>Overflow</th>
+                    <th>Clipped labels</th>
+                    <th>Progress colour</th>
+                    <th>Small tap targets</th>
+                </tr>
+                <tr><td>1440px</td><td>no</td><td>none</td><td>navy</td><td>0</td></tr>
+                <tr><td>1024px</td><td>no</td><td>none</td><td>navy</td><td>0</td></tr>
+                <tr><td>820px</td><td>no</td><td>none</td><td>navy</td><td>0</td></tr>
+                <tr><td>390px</td><td>no</td><td>none</td><td>navy</td><td>0</td></tr>
+                <tr><td>320px</td><td>no</td><td>none</td><td>navy</td><td>0</td></tr>
+            </table>
+            <p class="note"><strong>Colour sweep:</strong> fix ke baad dobara audit chalaya — jo non-neutral colours
+                bache wo sirf yeh hain: warning pill amber, success pill green, doctor photo ka light-blue ring, aur
+                banner ka amber. Sab intentional aur semantic.</p>
+            <p class="note"><strong>Regression:</strong> patient notification/profile dropdowns, doctor settings page,
+                sidebar toggle aur popup theme suite — sab pass, zero console errors.</p>
+        </div>
+
+        <h2>6. Files</h2>
+        <div class="card">
+            <p><code>assets/css/dior-custom.css</code> — end me naya block
+                <strong>PATIENT DASHBOARD → HOME / OVERVIEW — theme lock</strong>,
+                <code>#tab-overview</code> par scoped. Sirf CSS: koi PHP/JS change nahi, isliye health-goals modal,
+                appointment booking aur tab switching jaisa tha waisa hi hai.</p>
+        </div>
+    </div>
+</body>
+
+</html>

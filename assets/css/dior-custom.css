@@ -71316,3 +71316,278 @@ a.va-btn-primary:hover {
         border-color: rgba(255, 255, 255, 0.08) !important;
     }
 }
+
+/* ==========================================================================
+   PATIENT DASHBOARD → HOME / OVERVIEW — theme lock
+
+   Same treatment as the Doctor dashboard: every interactive accent pinned
+   to the navy family, Bootstrap defaults and third-party oranges removed.
+   Led by a browser audit of #tab-overview which found:
+     • health-goal progress bars  — orange #D97706
+     • a "text-primary" heading   — Bootstrap blue #0d6efd
+     • .content-head              — hardcoded slate #334155
+     • status pill                — amber #ffc107 on #fff3cd
+   Scoped to #tab-overview / #dior-patient-portal-app so other tabs are
+   untouched.
+   ========================================================================== */
+
+/* ---------- 1. Health goal progress bars -------------------------------- */
+/* These were orange. Progress is a positive/neutral metric here, so it
+   follows the brand navy; the track stays a light slate. */
+.dior-patient-portal-wrap #tab-overview .progress {
+    background-color: #E2E8F0 !important;
+    height: 8px !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .progress-bar,
+.dior-patient-portal-wrap #tab-overview .dior-progress-orange {
+    background-color: #1A528E !important;
+    background-image: none !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    transition: width 0.4s ease !important;
+}
+
+/* ---------- 2. Headings and links --------------------------------------- */
+.dior-patient-portal-wrap #tab-overview .text-primary,
+.dior-patient-portal-wrap #tab-overview .stat-num,
+.dior-patient-portal-wrap #tab-overview .view-all,
+.dior-patient-portal-wrap #tab-overview .section-title i,
+.dior-patient-portal-wrap #tab-overview h3 i,
+.dior-patient-portal-wrap #tab-overview h4 i {
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .view-all:hover {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* .content-head carried a hardcoded slate that fought the theme. */
+.dior-patient-portal-wrap #tab-overview .content-head .h3,
+.dior-patient-portal-wrap #tab-overview .content-head h1 {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* ---------- 3. Status pills -------------------------------------------- */
+/* Amber pills (warning / pending) keep a warning *hue* but move off the
+   Bootstrap #ffc107 onto the palette's amber, so they read as alerts
+   rather than as theme accents. */
+.dior-patient-portal-wrap #tab-overview .badge.bg-warning-subtle,
+.dior-patient-portal-wrap #tab-overview .badge.text-warning {
+    background-color: #FEF3C7 !important;
+    background-image: none !important;
+    border-color: #FDE68A !important;
+    color: #B45309 !important;
+    -webkit-text-fill-color: #B45309 !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .badge.bg-success-subtle,
+.dior-patient-portal-wrap #tab-overview .badge.text-success {
+    background-color: #ECFDF5 !important;
+    border-color: #A7F3D0 !important;
+    color: #047857 !important;
+    -webkit-text-fill-color: #047857 !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .badge.bg-primary-subtle,
+.dior-patient-portal-wrap #tab-overview .badge.text-primary {
+    background-color: #EAF2FB !important;
+    border-color: #C7D8EA !important;
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+/* ---------- 4. Buttons ------------------------------------------------- */
+.dior-patient-portal-wrap #tab-overview .btn-primary,
+.dior-patient-portal-wrap #tab-overview .dior-btn-gold,
+.dior-patient-portal-wrap #tab-overview .dior-btn-gold-primary {
+    background-color: #1A528E !important;
+    background-image: none !important;
+    border: 1px solid #1A528E !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(26, 82, 142, 0.20) !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .btn-primary:hover,
+.dior-patient-portal-wrap #tab-overview .btn-primary:focus,
+.dior-patient-portal-wrap #tab-overview .dior-btn-gold:hover,
+.dior-patient-portal-wrap #tab-overview .dior-btn-gold-primary:hover {
+    background-color: #00346C !important;
+    border-color: #00346C !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .btn-primary i,
+.dior-patient-portal-wrap #tab-overview .dior-btn-gold i {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* Secondary / outline actions (Reschedule, Edit Profile). */
+.dior-patient-portal-wrap #tab-overview .btn-outline-primary,
+.dior-patient-portal-wrap #tab-overview .btn-outline-secondary,
+.dior-patient-portal-wrap #tab-overview .btn-light {
+    background-color: #F1F5F9 !important;
+    background-image: none !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    box-shadow: none !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .btn-outline-primary:hover,
+.dior-patient-portal-wrap #tab-overview .btn-outline-secondary:hover,
+.dior-patient-portal-wrap #tab-overview .btn-light:hover {
+    background-color: #E2E8F0 !important;
+    border-color: #CBD5E1 !important;
+    color: #0F172A !important;
+    -webkit-text-fill-color: #0F172A !important;
+}
+
+/* The joined video-consultation CTA keeps the primary weight but drops the
+   theme's hover repaint. */
+.dior-patient-portal-wrap #tab-overview .btn:not(.btn-outline-primary):not(.btn-outline-secondary):not(.btn-light):not(.btn-link):hover {
+    background-image: none !important;
+}
+
+/* ---------- 5. Cards and stat tiles ------------------------------------ */
+.dior-patient-portal-wrap #tab-overview .card,
+.dior-patient-portal-wrap #tab-overview .stat-card {
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.dior-patient-portal-wrap #tab-overview .stat-num {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* ---------- 6. Profile card ------------------------------------------- */
+.dior-patient-portal-wrap #tab-overview .profile-card h4,
+.dior-patient-portal-wrap #tab-overview .profile-card .h4 {
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+}
+
+/* "DM-10001" id chip */
+.dior-patient-portal-wrap #tab-overview .profile-card .badge,
+.dior-patient-portal-wrap #tab-overview .patient-id-chip {
+    background-color: #EAF2FB !important;
+    border: 1px solid #C7D8EA !important;
+    color: #1A528E !important;
+    -webkit-text-fill-color: #1A528E !important;
+}
+
+/* Height / Weight separators and the small labels. */
+.dior-patient-portal-wrap #tab-overview .profile-card hr,
+.dior-patient-portal-wrap #tab-overview .profile-card .vr {
+    background-color: #E2E8F0 !important;
+    opacity: 1 !important;
+}
+
+/* ---------- 7. Focus rings -------------------------------------------- */
+.dior-patient-portal-wrap #tab-overview .btn:focus-visible,
+.dior-patient-portal-wrap #tab-overview a:focus-visible {
+    outline: 2px solid #1A528E !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+}
+
+/* ---------- 8. Profile-incomplete banner ------------------------------ */
+/* Was an amber alert with a #2C6CB1 button. Kept as a *notice* (amber is
+   doing real semantic work here), but moved onto the palette's amber and
+   the button onto brand navy. */
+.dior-patient-portal-wrap .dior-ic-c03948b3c3 {
+    background: #FFFBEB !important;
+    border: 1px solid #FDE68A !important;
+    border-left: 4px solid #F59E0B !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(180, 83, 9, 0.07) !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-3fb01cc77f {
+    background: #F59E0B !important;
+    color: #FFFFFF !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-11190ca3a8 {
+    color: #92400E !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-acb9b5ec47 {
+    color: #B45309 !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a {
+    background: #1A528E !important;
+    background-image: none !important;
+    border: 1px solid #1A528E !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(26, 82, 142, 0.20) !important;
+    border-radius: 9px !important;
+}
+
+.dior-patient-portal-wrap .dior-ic-4ee0445c2a:hover {
+    background: #00346C !important;
+    border-color: #00346C !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* ---------- 9. Mobile -------------------------------------------------- */
+@media (max-width: 575.98px) {
+    .dior-patient-portal-wrap #tab-overview .stat-card {
+        padding: 14px 16px !important;
+    }
+
+    .dior-patient-portal-wrap #tab-overview .stat-num {
+        font-size: 1.6rem !important;
+    }
+
+    .dior-patient-portal-wrap #tab-overview .progress {
+        height: 7px !important;
+    }
+}
+
+/* Banner on phones: the 42px icon circle was top-aligned against a
+   multi-line paragraph, leaving it stranded mid-block. Align it to the
+   top of the text and let the CTA go full width. */
+@media (max-width: 575.98px) {
+    .dior-patient-portal-wrap .dior-ic-c03948b3c3 {
+        padding: 14px 16px !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-ic-29bdac4ec4 {
+        align-items: flex-start !important;
+        gap: 0 !important;
+    }
+
+    .dior-patient-portal-wrap .dior-ic-3fb01cc77f {
+        display: none !important;
+    }
+
+    .dior-patient-portal-wrap .dior-ic-11190ca3a8 {
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+
+    .dior-patient-portal-wrap .dior-ic-acb9b5ec47 {
+        font-size: 12.5px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-ic-4ee0445c2a {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 10px 16px !important;
+    }
+}
