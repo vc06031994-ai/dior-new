@@ -104,6 +104,7 @@
 
         <div class="toc">
             <a href="#before">Pehle kya galat tha</a>
+            <a href="#hotfix">White-button fix</a>
             <a href="#tokens">Theme tokens</a>
             <a href="#alerts">Alerts</a>
             <a href="#modals">Bootstrap modals</a>
@@ -174,7 +175,63 @@
             </table>
         </div>
 
-        <h2 id="tokens">2. Theme tokens (ek hi source)</h2>
+        <h2 id="hotfix">2. Follow-up fix: white-on-white primary button</h2>
+        <div class="card">
+            <p>Live site par <em>Complete Your Provider Information</em> popup me primary button <strong>white
+                    text, white background</strong> dikh raha tha, aur DevTools me
+                <code>--dior-dialog-primary is not defined</code> aa raha tha.</p>
+            <table>
+                <tr>
+                    <th>Kya hua</th>
+                    <th>Detail</th>
+                </tr>
+                <tr>
+                    <td><strong>Root cause</strong></td>
+                    <td>Tokens sirf <code>:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap)</code>
+                        par define the — yaani dashboard wrapper ke <em>andar</em>. Lekin alert engine modal ko
+                        <code>document.body</code> me append karta hai
+                        (<code>dior-bootstrap-alert.js:210</code>), matlab wrapper ke <em>bahar</em>.
+                        Wahan <code>var(--dior-dialog-primary)</code> undefined tha, to
+                        <code>background: var(...)</code> invalid-at-computed-value-time ban gaya aur background
+                        gir gaya. Text white tha — isliye button poora safed.</td>
+                </tr>
+                <tr>
+                    <td><strong>Kyun test me nahi pakda</strong></td>
+                    <td>Harness page ki <code>&lt;body class="dior-doctor-wrap"&gt;</code> thi — isliye token "mil"
+                        raha tha. Production me body plain hoti hai. Yeh test ka blind spot tha, product ka nahi.</td>
+                </tr>
+                <tr>
+                    <td><strong>Fix 1 — scope</strong></td>
+                    <td>Tokens ab <code>:root</code> par bhi hain, plus <code>.dior-bs-alert-modal</code>,
+                        <code>.dior-bs-toast</code>, <code>.dior-swal-modal</code> par — jo bhi body me append hota
+                        hai wo apne tokens khud le kar aata hai.</td>
+                </tr>
+                <tr>
+                    <td><strong>Fix 2 — fallback</strong></td>
+                    <td>Theme block ke <strong>saare 45</strong> <code>var()</code> calls me literal fallback hai,
+                        e.g. <code>var(--dior-dialog-primary, #1A528E)</code>. Token future me kisi bhi wajah se miss
+                        ho jaye, button phir bhi navy rahega — white-on-white structurally impossible.</td>
+                </tr>
+                <tr>
+                    <td><strong>Fix 3 — harness</strong></td>
+                    <td>Harness ko production jaisa banaya: wrapper ab ek <code>&lt;div&gt;</code> hai,
+                        <code>&lt;body&gt;</code> plain. Modal <code>parentIsBody: true</code> aur
+                        <code>insideWrapper: false</code> ke saath test hota hai.</td>
+                </tr>
+                <tr>
+                    <td><strong>Bonus</strong></td>
+                    <td>Alert title ko dedicated token <code>--dior-dialog-title: #00346C</code> mila, taaki alert
+                        aur Bootstrap modal ke titles exactly same navy hon (pehle alert title ink
+                        <code>#0F172A</code> par tha).</td>
+                </tr>
+            </table>
+            <p class="note"><strong>Stress test:</strong> tokens ko <code>initial</code> karke poori tarah disable
+                kiya gaya — confirm button phir bhi <code>rgb(26, 82, 142)</code>, delete confirm
+                <code>rgb(220, 38, 38)</code>, cancel <code>rgb(241, 245, 249)</code>. Fallback layer akela hi kaafi
+                hai.</p>
+        </div>
+
+        <h2 id="tokens">3. Theme tokens (ek hi source)</h2>
         <div class="card">
             <table>
                 <tr>
@@ -191,8 +248,12 @@
                 </tr>
                 <tr>
                     <td>Titles</td>
-                    <td><span class="swatch" style="background:#0F172A"></span><code>--dior-dialog-ink: #0F172A</code>,
-                        modal titles <code>#00346C</code></td>
+                    <td><span class="swatch" style="background:#00346C"></span><code>--dior-dialog-title: #00346C</code>
+                        (alerts aur modals dono)</td>
+                </tr>
+                <tr>
+                    <td>Ink</td>
+                    <td><span class="swatch" style="background:#0F172A"></span><code>--dior-dialog-ink: #0F172A</code></td>
                 </tr>
                 <tr>
                     <td>Body text</td>
@@ -210,12 +271,15 @@
                         <span class="swatch" style="background:#DC2626"></span>danger button</td>
                 </tr>
             </table>
+            <p class="note"><strong>Scope:</strong> tokens <code>:root</code> par define hain — isliye
+                <code>document.body</code> me append hone wale alerts/toasts ko bhi milte hain — aur har
+                <code>var()</code> par literal fallback hai.</p>
             <p class="note"><strong>Note:</strong> semantic colours (green check, amber warning, red error) jaan-boojh
                 kar rakhe hain — inka meaning theme se nahi badalta. Sirf primary/neutral/interactive elements brand
                 navy par aaye hain.</p>
         </div>
 
-        <h2 id="alerts">3. Alerts (SweetAlert engine)</h2>
+        <h2 id="alerts">4. Alerts (SweetAlert engine)</h2>
         <div class="grid">
             <div>
                 <p class="label ok">Provider info — primary + secondary ek row me</p>
@@ -245,7 +309,7 @@
             </ul>
         </div>
 
-        <h2 id="modals">4. Bootstrap modals</h2>
+        <h2 id="modals">5. Bootstrap modals</h2>
         <div class="card">
             <p class="label ok">Upload Patient Document (documents.php ka real modal)</p>
             <img class="shot" src="screenshots/popup-bootstrap-modal-desktop.png" alt="Bootstrap modal themed">
@@ -260,7 +324,7 @@
             </ul>
         </div>
 
-        <h2 id="dropdowns">5. Notification aur profile dropdown</h2>
+        <h2 id="dropdowns">6. Notification aur profile dropdown</h2>
         <div class="card">
             <img class="shot" src="screenshots/popup-dropdowns-desktop.png" alt="Notification and profile dropdowns">
         </div>
@@ -274,7 +338,7 @@
             </ul>
         </div>
 
-        <h2 id="mobile">6. Mobile (390px)</h2>
+        <h2 id="mobile">7. Mobile (390px)</h2>
         <div class="grid">
             <div>
                 <p class="label ok">Info — stacked, primary upar</p>
@@ -302,7 +366,7 @@
             </ul>
         </div>
 
-        <h2 id="files">7. Files aur deploy</h2>
+        <h2 id="files">8. Files aur deploy</h2>
         <div class="card">
             <table>
                 <tr>
@@ -327,7 +391,7 @@
                 leak nahi hota.</p>
         </div>
 
-        <h2>8. Test kaise karein</h2>
+        <h2>9. Test kaise karein</h2>
         <div class="card">
             <ul>
                 <li>Doctor dashboard par profile-incomplete popup aaye (naya doctor) — <em>Complete Profile Now</em>
