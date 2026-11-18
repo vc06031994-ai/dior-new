@@ -2985,39 +2985,6 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
         }
 
         // =========================================================================
-        // 10. PHARMACY PREFERENCE CONTROLLER
-        // =========================================================================
-        window.diorOnPharmacySelectChange = function(selectEl) {
-            const val = selectEl.value;
-            if (val === 'custom') {
-                return;
-            }
-            const parts = val.split('|');
-            if (parts.length >= 3) {
-                document.getElementById('q_pharm_name').value = parts[0];
-                document.getElementById('q_pharm_address').value = parts[1];
-                document.getElementById('q_pharm_phone').value = parts[2];
-            }
-        };
-
-        const quickPharmForm = document.getElementById('dior-form-quick-pharmacy');
-        if (quickPharmForm) {
-            quickPharmForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const data = {
-                    pharmacy_name: this.pharmacy_name.value,
-                    pharmacy_address: this.pharmacy_address.value,
-                    pharmacy_phone: this.pharmacy_phone.value
-                };
-
-                sendAjax('dior_patient_update_pharmacy', data, () => {
-                    diorCloseModal('modal-change-pharmacy');
-                    setTimeout(() => window.location.reload(), 1000);
-                });
-            });
-        }
-
-        // =========================================================================
         // 11. RECEIPT, DOCUMENT & RX DETAIL VIEWERS
         // =========================================================================
         window.diorViewReceipt = function(id, amount, service, date) {

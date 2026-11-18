@@ -5,13 +5,6 @@
         <div>
             <h4 class="mb-0 text-dark" style="font-size:20px;font-weight:700;">Prescriptions</h4>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;">
-            <button type="button" class="btn btn-sm btn-outline-primary"
-                onclick="diorOpenModal('modal-change-pharmacy')">
-                <i class="fas fa-store"></i> Update Pharmacy
-            </button>
-
-        </div>
     </div>
 
     <!-- Prescriptions Table (same design as Appointments) -->

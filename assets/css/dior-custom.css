@@ -65803,40 +65803,6 @@ a.va-btn-primary:hover {
     color: #00346C !important;
 }
 
-/* the one page-level action ("Update Pharmacy") reads as a doctor-dashboard
-   secondary button: white plate, hairline border, navy label */
-#dior-patient-portal-app#dior-patient-portal-app #tab-docs_meds>.mb-4 .btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    min-height: 40px !important;
-    margin: 0 !important;
-    padding: 0 16px !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 10px !important;
-    background: #FFFFFF !important;
-    color: #00346C !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, .04) !important;
-    transition: background-color .15s ease, border-color .15s ease, color .15s ease !important;
-}
-
-#dior-patient-portal-app#dior-patient-portal-app #tab-docs_meds>.mb-4 .btn i {
-    font-size: 13px !important;
-    color: #1A528E !important;
-}
-
-#dior-patient-portal-app#dior-patient-portal-app #tab-docs_meds>.mb-4 .btn:hover,
-#dior-patient-portal-app#dior-patient-portal-app #tab-docs_meds>.mb-4 .btn:focus-visible {
-    background: #F0F6FC !important;
-    border-color: #CBD5E1 !important;
-    color: #1A528E !important;
-}
-
 /* ---------- 2. card shell ---------- */
 #dior-patient-portal-app#dior-patient-portal-app #tab-docs_meds .docs-card,
 #dior-patient-portal-app#dior-patient-portal-app #tab-telemedicine .docs-card {

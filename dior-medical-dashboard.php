@@ -988,7 +988,6 @@ class Dior_Medical_Auth
         add_action('wp_ajax_dior_patient_bulk_delete_notifications', [__CLASS__, 'ajax_bulk_delete_notifications']);
         add_action('wp_ajax_dior_patient_get_live_notifications', [__CLASS__, 'ajax_get_live_notifications']);
         add_action('wp_ajax_dior_meeting_participant_joined', [__CLASS__, 'ajax_meeting_participant_joined']);
-        add_action('wp_ajax_dior_patient_update_pharmacy', [__CLASS__, 'ajax_update_pharmacy']);
         add_action('wp_ajax_dior_patient_check_intake_status', [__CLASS__, 'ajax_check_intake_status']);
         add_action('wp_ajax_dior_patient_save_emergency_contact', [__CLASS__, 'ajax_save_emergency_contact']);
         add_action('wp_ajax_dior_patient_delete_emergency_contact', [__CLASS__, 'ajax_delete_emergency_contact']);
@@ -4896,28 +4895,6 @@ class Dior_Medical_Auth
             'latest_id' => !empty($notifications) ? $notifications[0]['id'] : '',
             'new_alerts' => $new_alerts
         ]);
-    }
-
-    /**
-     * AJAX Update Pharmacy
-     */
-    public static function ajax_update_pharmacy()
-    {
-        Dior_Auth_Service::verify_ajax_nonce(['dior_portal_nonce', 'dior_auth_nonce']);
-
-        $user_id = get_current_user_id();
-        if (!$user_id)
-            wp_send_json_error(['message' => 'Authentication required.']);
-
-        $pharm_name = sanitize_text_field($_POST['pharmacy_name'] ?? '');
-        $pharm_address = sanitize_text_field($_POST['pharmacy_address'] ?? '');
-        $pharm_phone = sanitize_text_field($_POST['pharmacy_phone'] ?? '');
-
-        update_user_meta($user_id, 'preferred_pharmacy_name', $pharm_name);
-        update_user_meta($user_id, 'preferred_pharmacy_address', $pharm_address);
-        update_user_meta($user_id, 'preferred_pharmacy_phone', $pharm_phone);
-
-        wp_send_json_success(['message' => 'Preferred pharmacy updated successfully!']);
     }
 
     /**

@@ -657,59 +657,6 @@
         </div>
     </div>
 
-    <!-- 5. CHANGE PHARMACY MODAL -->
-    <div class="dior-modal-overlay" id="modal-change-pharmacy">
-        <div class="dior-modal-dialog">
-            <div class="dior-modal-header">
-                <h3><i class="fas fa-store"></i> Update Preferred Pharmacy</h3>
-                <button type="button" class="dior-modal-close btn"
-                    onclick="diorCloseModal('modal-change-pharmacy')">&times;</button>
-            </div>
-            <div class="dior-modal-body">
-                <form id="dior-form-quick-pharmacy">
-                    <div class="dior-form-group">
-                        <label for="quick_pharmacy_select">Select Local Pharmacy or Enter Custom</label>
-                        <select id="quick_pharmacy_select" onchange="diorOnPharmacySelectChange(this)">
-                            <option value="custom">-- Enter Custom Pharmacy Details --</option>
-                            <option value="CVS Pharmacy #4829|9045 Wilshire Blvd, Beverly Hills, CA|(310) 555-0199">CVS
-                                Pharmacy #4829 - Beverly Hills</option>
-                            <option value="Walgreens Pharmacy #1034|300 N Canon Dr, Beverly Hills, CA|(310) 555-0244">
-                                Walgreens Pharmacy #1034 - Beverly Hills</option>
-                            <option
-                                value="Rite Aid Pharmacy #5411|8440 Santa Monica Blvd, West Hollywood, CA|(323) 555-0188">
-                                Rite Aid Pharmacy - West Hollywood</option>
-                            <option
-                                value="Capsule Digital Delivery Pharmacy|Direct Delivery to Doorstep|(888) 910-1212">
-                                Capsule Direct Delivery Pharmacy</option>
-                        </select>
-                    </div>
-
-                    <div class="dior-form-group">
-                        <label for="q_pharm_name">Pharmacy Name <span class="req">*</span></label>
-                        <input type="text" id="q_pharm_name" name="pharmacy_name"
-                            value="<?php echo esc_attr($profile['pharmacy_name']); ?>" required>
-                    </div>
-                    <div class="dior-form-group">
-                        <label for="q_pharm_address">Pharmacy Address <span class="req">*</span></label>
-                        <input type="text" id="q_pharm_address" name="pharmacy_address"
-                            value="<?php echo esc_attr($profile['pharmacy_address']); ?>" required>
-                    </div>
-                    <div class="dior-form-group">
-                        <label for="q_pharm_phone">Pharmacy Phone</label>
-                        <input type="tel" id="q_pharm_phone" name="pharmacy_phone"
-                            value="<?php echo esc_attr($profile['pharmacy_phone']); ?>">
-                    </div>
-
-                    <div class="dior-modal-footer">
-                        <button type="button" class="dior-btn-gold-secondary btn"
-                            onclick="diorCloseModal('modal-change-pharmacy')">Cancel</button>
-                        <button type="submit" class="dior-btn-gold-primary btn">Save Pharmacy</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- 6. VIEW RECEIPT MODAL -->
     <div class="dior-modal-overlay dior-ic-44a70a0420" id="modal-view-receipt">
         <div class="dior-modal-dialog dior-ic-3eca92ddc0">
