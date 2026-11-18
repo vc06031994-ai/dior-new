@@ -14316,7 +14316,8 @@ body {
 }
 
 .dior-side-close {
-    display: flex !important;
+    /* drawer-only control: hidden until the mobile drawer opens */
+    display: none !important;
     align-items: center !important;
     justify-content: center !important;
     width: 32px !important;
@@ -35616,7 +35617,8 @@ body {
 }
 
 .dior-side-close {
-    display: flex !important;
+    /* drawer-only control: hidden until the mobile drawer opens */
+    display: none !important;
     align-items: center !important;
     justify-content: center !important;
     width: 32px !important;
@@ -54121,7 +54123,10 @@ a.va-btn-primary:hover {
    Stops Elementor Global Kit .elementor-kit-6 a (78px clamp) from bleeding
    into dashboard links and standardizes patient profile navigation pills.
    ========================================================================== */
-:is(.dior-patient-portal-wrap, .dior-doctor-wrap, #tab-doc-patients-profile, #pp-chart, .dior-main-content) a:not(.btn):not(.view-all):not([class*="fs-"]) {
+/* `font-size: inherit` is right for prose links, but the sidebar's Appointments
+   sub-items are links too and set their own size. Without the exclusion below
+   they inherited the 15px body size and lost the drawer's compact 13px rows. */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, #tab-doc-patients-profile, #pp-chart, .dior-main-content) a:not(.btn):not(.view-all):not([class*="fs-"]):not(.dior-nav-dropdown-item) {
     font-size: inherit !important;
     line-height: inherit !important;
 }
@@ -72095,5 +72100,346 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
     .dior-bs-alert-modal .modal-dialog {
         margin-left: 0.75rem !important;
         margin-right: 0.75rem !important;
+    }
+}
+
+/* =====================================================================
+   PATIENT MOBILE DRAWER — MATCHED TO THE DOCTOR DASHBOARD OFF-CANVAS
+   ---------------------------------------------------------------------
+   The patient drawer had drifted away from the doctor one it mirrors:
+
+     • width     304px (min(304px, 88vw))   vs  the doctor's 280px
+     • nav rows  46px, square, 0 24px pad   vs  32px, 10px radius, 7px 16px
+     • icons     18px box, 16px glyph       vs  20px box, 15px glyph
+     • parent    gap 10px                   vs  gap 12px
+     • active    .16 white, weight 500      vs  .10 white, weight 700
+     • submenu   dark block, 15px, no radius vs  inset rows, 13px, 8px radius
+     • header    52px + hairline rule        vs  no rule, logo centred
+     • profile   full-width strip            vs  inset rounded card
+
+   Values below are read straight off the doctor off-canvas so both
+   dashboards read as one drawer. Desktop is untouched — this drawer
+   only exists at ≤1024.98px.
+   ===================================================================== */
+@media (max-width: 1024.98px) {
+
+    /* ---------- panel ---------- */
+    .dior-patient-portal-wrap .dior-side,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side,
+    .dior-patient-portal-wrap #dior-sidebar.dior-side {
+        width: 280px !important;
+        min-width: 280px !important;
+        max-width: 85vw !important;
+        background: #00346C !important;
+        border-right: 0 !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35) !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* ---------- brand band: same centred, rule-less band as the doctor ----
+       The doctor's header is the generic `:is(...)` block — centred brand,
+       no bottom rule, `0 20px 30px 0` padding — and its height simply falls
+       out of the logo. Using the same values keeps the two logos the same
+       size instead of shrinking the patient one. */
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 0 20px 30px 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border-bottom: 0 !important;
+        position: relative !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-header .brand,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-header .brand-link {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+        overflow: hidden !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-header .brand-logo,
+    .dior-patient-portal-wrap #dior-sidebar .brand-logo {
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        /* same box as the doctor logo: capped by height, not width, so both
+           crests render at identical size */
+        max-width: 100% !important;
+        max-height: 120px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        object-fit: contain !important;
+        object-position: center !important;
+    }
+
+    /* ---------- nav shell ---------- */
+    .dior-patient-portal-wrap .dior-side-nav,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav {
+        padding: 0 12px !important;
+        margin: 0 !important;
+        background: transparent !important;
+        flex: 1 1 auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .grp,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .grp {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* ---------- nav rows: the doctor's rounded rows ---------- */
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 0 3px 0 !important;
+        padding: 7px 16px !important;
+        gap: 12px !important;
+        border: 0 !important;
+        border-radius: 10px !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        line-height: 1.35 !important;
+        text-align: left !important;
+        box-shadow: none !important;
+        transition: background-color 0.18s ease, color 0.18s ease !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn>i:first-of-type,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn>i:first-of-type {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        max-width: 20px !important;
+        font-size: 15px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        color: inherit !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn .nav-label {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        text-align: left !important;
+        color: inherit !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover {
+        background: rgba(255, 255, 255, 0.10) !important;
+        color: #FFFFFF !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active {
+        background: rgba(255, 255, 255, 0.10) !important;
+        border-radius: 10px !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        box-shadow: none !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active .nav-label,
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active i {
+        color: #FFFFFF !important;
+    }
+
+    /* trailing chevron on "Appointments" gets the same 20px icon box */
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn>.fa-chevron-down {
+        flex: 0 0 auto !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        max-width: 20px !important;
+        margin-left: auto !important;
+        font-size: 12px !important;
+        line-height: 1 !important;
+        text-align: center !important;
+        opacity: 0.75 !important;
+        transition: transform 0.2s ease !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover>.fa-chevron-down,
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active>.fa-chevron-down {
+        opacity: 1 !important;
+    }
+
+    /* ---------- Appointments sub-items ----------
+       Two 0,3,0 rules outside this media query force 38px/35px heights and
+       12px text on `.dior-patient-portal-wrap .dior-nav-dropdown-item`, so
+       these selectors carry the extra `#dior-sidebar` id to win outright.
+       Rows match the doctor's submenu: 8px radius, 13px text, 7px/16px pad. */
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown {
+        padding: 2px 0 4px 0 !important;
+        margin: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        height: auto !important;
+        /* the doctor's submenu rows are 42px on phones */
+        min-height: 42px !important;
+        max-height: none !important;
+        margin: 0 0 3px 0 !important;
+        padding: 7px 16px 7px 34px !important;
+        gap: 12px !important;
+        border-radius: 8px !important;
+        color: rgba(255, 255, 255, 0.72) !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        line-height: 1.35 !important;
+        text-align: left !important;
+        text-decoration: none !important;
+        white-space: normal !important;
+        box-sizing: border-box !important;
+        opacity: 1 !important;
+        transition: background-color 0.18s ease, color 0.18s ease !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item i {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        max-width: 20px !important;
+        font-size: 11px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        color: inherit !important;
+        opacity: 1 !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #FFFFFF !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item.active {
+        background: rgba(255, 255, 255, 0.16) !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+
+    /* ---------- close button: ghost control in the brand band ----------
+       The doctor drawer carries a close button while it is open; the patient
+       template had it commented out, so the only way back was the backdrop. */
+    /* Matches the doctor drawer's injected close control: 34px ghost circle
+       in the brand band, × glyph, shown only while the drawer is open. */
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-close {
+        position: absolute !important;
+        top: 12px !important;
+        right: 12px !important;
+        z-index: 2 !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
+        max-height: 34px !important;
+        padding: 0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.14) !important;
+        color: #FFFFFF !important;
+        font-family: Montserrat, sans-serif !important;
+        font-size: 25px !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        text-align: center !important;
+        box-shadow: none !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-close:hover,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-close:focus-visible {
+        background: rgba(255, 255, 255, 0.24) !important;
+        border-color: rgba(255, 255, 255, 0.55) !important;
+        color: #FFFFFF !important;
+        outline: none !important;
+    }
+
+    .dior-patient-portal-wrap #dior-sidebar.mobile-open .dior-side-close,
+    .dior-patient-portal-wrap #dior-sidebar.open .dior-side-close {
+        display: inline-flex !important;
+    }
+
+    /* ---------- bottom profile card ---------- */
+    .dior-patient-portal-wrap .dior-sidebar-bottom-profile {
+        margin: 14px 12px 18px 12px !important;
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .dior-patient-portal-wrap .dior-sidebar-bottom-profile .dior-sidebar-user-name {
+        color: #FFFFFF !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+    }
+
+    .dior-patient-portal-wrap .dior-sidebar-bottom-profile .dior-sidebar-user-status {
+        color: rgba(255, 255, 255, 0.72) !important;
+        font-size: 11.5px !important;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Sidebar close control is drawer-only.
+   The portal's generic `:is(.dior-patient-portal-wrap, ...) .btn` rule sets
+   `display: inline-flex !important` at 0,2,0 and outranked every
+   `.dior-side-close` (0,1,0) hide rule, so the button also rendered on the
+   desktop sidebar. Same specificity, declared last, wins.
+   --------------------------------------------------------------------- */
+.dior-patient-portal-wrap .dior-side-close {
+    display: none !important;
+}
+
+@media (max-width: 1024.98px) {
+    .dior-patient-portal-wrap #dior-sidebar.mobile-open .dior-side-close,
+    .dior-patient-portal-wrap #dior-sidebar.open .dior-side-close {
+        display: inline-flex !important;
     }
 }

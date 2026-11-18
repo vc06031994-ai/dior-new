@@ -20,15 +20,17 @@
                         <img src="<?php echo esc_url($logo_url); ?>" alt="Dior Medical" class="brand-logo">
                     </a>
                 </div>
-                <!-- <button type="button" class="dior-side-close btn" id="dior-side-close" onclick="diorCloseMobileDrawer()"
-                    aria-label="Close sidebar">
-                    <i class="fas fa-xmark"></i>
-                </button> -->
+                <!-- Close control for the mobile drawer. Hidden on desktop by the
+                     stylesheet, shown while the drawer is open, and wired to the
+                     same close helper as the backdrop. -->
+                <button type="button" class="dior-side-close btn" id="dior-side-close" onclick="diorCloseMobileDrawer()"
+                    aria-label="Close sidebar" title="Close menu">&times;</button>
             </div>
 
             <!-- Navigation Links -->
             <nav class="dior-side-nav">
                 <div class="grp">
+                    <span class="grp-title">PATIENT MENU</span>
                     <button type="button" class="dior-nav-btn active btn" data-tab="overview">
                         <i class="fas fa-gauge-high"></i>
                         <span class="nav-label">Dashboard</span>
