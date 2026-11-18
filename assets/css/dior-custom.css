@@ -2964,10 +2964,10 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     width: 100% !important;
     max-width: 580px !important;
     max-height: 92vh !important;
-    background: #FFFFFF !important;
-    border-radius: 16px !important;
-    box-shadow: 0 20px 50px rgba(11, 16, 48, 0.16), 0 2px 10px rgba(11, 16, 48, 0.05) !important;
-    border: 1px solid #E2E8F0 !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border-radius: var(--dior-radius-panel, 16px) !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.16) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     z-index: 10 !important;
@@ -3000,7 +3000,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     justify-content: space-between !important;
     align-items: flex-start !important;
     padding: 18px 24px 12px !important;
-    border-bottom: 1px solid #F1F5F9 !important;
+    border-bottom: 1px solid var(--dior-color-border, #E2E8F0) !important;
 }
 
 .dior-db-header-left {
@@ -3009,18 +3009,18 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-title {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
     font-size: 20px !important;
     font-weight: 700 !important;
-    color: #1b4f8a !important;
+    color: var(--dior-color-primary, #1A528E) !important;
     margin: 0 0 3px 0 !important;
     line-height: 1.25 !important;
 }
 
 .dior-db-subtitle {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
     font-size: 13px !important;
-    color: #64748B !important;
+    color: var(--dior-color-text-muted, #64748B) !important;
     margin: 0 !important;
     line-height: 1.35 !important;
 }
@@ -3153,9 +3153,9 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     align-items: center !important;
     justify-content: space-between !important;
     padding: 12px 14px !important;
-    background: #F8FAFC !important;
-    border: 1px solid #D1D5DB !important;
-    border-radius: 8px !important;
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
     user-select: none !important;
@@ -3163,14 +3163,14 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-service-card:hover {
-    border-color: #2C6CB1 !important;
-    background: #FFFFFF !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
 }
 
 .dior-db-service-card.active {
-    border-color: #2C6CB1 !important;
-    background: #F0F7FF !important;
-    box-shadow: 0 0 0 1px #2C6CB1 !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    box-shadow: 0 0 0 1px var(--dior-color-primary, #1A528E) !important;
 }
 
 .dior-db-service-left {
@@ -3335,10 +3335,10 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 11.5px !important;
     font-weight: 500 !important;
-    color: #334155 !important;
-    background: #FFFFFF !important;
-    border: 1px solid #D1D5DB !important;
-    border-radius: 6px !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
     cursor: pointer !important;
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -3348,17 +3348,17 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-slot-btn:hover:not(:disabled) {
-    border-color: #2C6CB1 !important;
-    color: #2C6CB1 !important;
-    background: #F0F7FF !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
 }
 
 .dior-db-slot-btn.active {
-    background: #2C6CB1 !important;
-    border-color: #2C6CB1 !important;
-    color: #FFFFFF !important;
+    background: var(--dior-color-primary, #1A528E) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
     font-weight: 600 !important;
-    box-shadow: 0 2px 6px rgba(44, 108, 177, 0.25) !important;
+    box-shadow: none !important;
 }
 
 .dior-db-slot-btn:disabled,
@@ -3420,15 +3420,20 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 .dior-btn-reg-submit {
     all: unset !important;
     box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
     width: 100% !important;
     max-width: 420px !important;
     height: 44px !important;
-    background: #2C6CB1 !important;
-    color: #FFFFFF !important;
-    font-family: 'Montserrat', sans-serif !important;
+    background: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
     font-size: 14.5px !important;
     font-weight: 600 !important;
-    border-radius: 25px !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
     border: none !important;
     cursor: pointer !important;
     display: flex !important;
@@ -3441,9 +3446,10 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-btn-reg-submit:hover {
-    background: #1B4F8A !important;
+    background: var(--dior-color-primary-hover, #00346C) !important;
+    background-image: none !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 18px rgba(44, 108, 177, 0.35) !important;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18) !important;
 }
 
 .dior-btn-reg-submit:active {
@@ -72908,4 +72914,124 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
         font-size: 13px !important;
         margin: 0 !important;
     }
+}
+
+/* =====================================================================
+   DOCBOOKER BOOKING MODAL — THEME COLOURS
+   ---------------------------------------------------------------------
+   This modal inherited its button styling from the login screen's
+   .dior-btn-reg-submit, which still carries the old gold keyline and a
+   dark gradient. Everything below is scoped to #dior-docbooker-modal so
+   the rest of the portal is untouched, and everything is a theme token
+   with the previous value as a fallback.
+   ===================================================================== */
+#dior-docbooker-modal .dior-btn-reg-submit {
+    background: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-primary, #1A528E) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+    box-shadow: 0 2px 6px rgba(26, 82, 142, 0.22) !important;
+    gap: 8px !important;
+}
+
+#dior-docbooker-modal .dior-btn-reg-submit:hover {
+    background: var(--dior-color-primary-hover, #00346C) !important;
+    background-image: none !important;
+    border-color: var(--dior-color-primary-hover, #00346C) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 52, 108, 0.26) !important;
+}
+
+#dior-docbooker-modal .dior-btn-reg-submit:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0, 52, 108, 0.14) !important;
+}
+
+/* Cancel: a quiet text button, not a bordered .btn */
+#dior-docbooker-modal .dior-db-cancel-link,
+#dior-docbooker-modal button.dior-db-cancel-link.btn {
+    all: unset !important;
+    box-sizing: border-box !important;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: var(--dior-color-text-muted, #64748B) !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    padding: 4px 8px !important;
+    text-align: center !important;
+    transition: color 0.15s ease !important;
+}
+
+#dior-docbooker-modal .dior-db-cancel-link:hover {
+    color: var(--dior-color-primary-hover, #00346C) !important;
+    text-decoration: underline !important;
+}
+
+/* Time slots: the generic `.btn` rule was winning the border */
+#dior-docbooker-modal .dior-db-slot-btn,
+#dior-docbooker-modal button.dior-db-slot-btn.btn {
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+}
+
+#dior-docbooker-modal .dior-db-slot-btn:hover:not(:disabled),
+#dior-docbooker-modal button.dior-db-slot-btn.btn:hover:not(:disabled) {
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+/* the .btn variant in the base selector above is one class heavier, so the
+   active state has to carry the same shape or it drops back to white */
+#dior-docbooker-modal .dior-db-slot-btn.active,
+#dior-docbooker-modal button.dior-db-slot-btn.active.btn {
+    background: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    box-shadow: none !important;
+}
+
+/* Inputs: theme surface, border and control radius */
+#dior-docbooker-modal .dior-db-input,
+#dior-docbooker-modal .dior-db-input.form-control {
+    background-color: var(--dior-color-surface, #FFFFFF) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    color: var(--dior-color-text, #0F172A) !important;
+    box-shadow: none !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
+}
+
+#dior-docbooker-modal .dior-db-input:focus,
+#dior-docbooker-modal .dior-db-input.form-control:focus {
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    box-shadow: 0 0 0 3px rgba(0, 52, 108, 0.12) !important;
+    outline: none !important;
+}
+
+/* Section headings + the physician bar */
+#dior-docbooker-modal .dior-db-doctor-banner {
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+}
+
+#dior-docbooker-modal .dior-db-close-btn {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+#dior-docbooker-modal .dior-db-close-btn:hover {
+    color: var(--dior-color-primary, #1A528E) !important;
 }
