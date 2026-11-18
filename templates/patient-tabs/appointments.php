@@ -346,7 +346,8 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <button type="button" aria-label="Add new record" class="btn btn-sm btn-primary btn"
-                                        title="Book Appointment" data-switch-tab="appointments">
+                                        id="dior-upcoming-book-btn" title="Book Appointment"
+                                        onclick="if(typeof window.diorSwitchApptSubTab==='function'){window.diorSwitchApptSubTab('book');}">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                     <button type="button" aria-label="Export to CSV" class="btn btn-sm btn-success btn"
