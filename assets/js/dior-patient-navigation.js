@@ -75,7 +75,8 @@
             if (!panel || !app.contains(panel)) return false;
 
             app.querySelectorAll('.dior-nav-btn[data-tab]').forEach(function (button) {
-                button.classList.toggle('active', button.getAttribute('data-tab') === tabId);
+                var isActive = button.getAttribute('data-tab') === tabId && !diorIsSubmenuParentBtn(button);
+                button.classList.toggle('active', isActive);
             });
 
             app.querySelectorAll('.dior-tab-panel').forEach(function (item) {
@@ -98,6 +99,17 @@
             }
 
             return true;
+        }
+
+        // A row that owns a submenu (the patient's "Appointments") behaves like the
+        // Doctor Dashboard's parent row: it only toggles the list and never takes
+        // the .active fill. Its label is the thing that stays highlighted, and the
+        // fill was the exact background the user asked to remove.
+            function diorIsSubmenuParentBtn(btn) {
+            if (!btn) return false;
+            if (btn.classList.contains('submenu-btn')) return false;
+            return !!(btn.closest('.dior-nav-item-has-children') ||
+                      btn.closest('.dior-nav-item.has-submenu'));
         }
 
         // Appointments toggle affordance mirrors the Doctor Dashboard: +/−.

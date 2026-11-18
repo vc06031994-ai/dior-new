@@ -704,8 +704,11 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
                         
                         // Switch Main Tab to Appointments
                         navBtns.forEach(function(b) {
-                            if (b.getAttribute('data-tab') === 'appointments') b.classList.add('active');
-                            else b.classList.remove('active');
+                            if (b.getAttribute('data-tab') === 'appointments' && !diorIsSubmenuParentBtn(b)) {
+                                b.classList.add('active');
+                            } else {
+                                b.classList.remove('active');
+                            }
                         });
                         tabPanels.forEach(function(p) {
                             if (p.id === 'tab-appointments') {
@@ -3170,7 +3173,10 @@ window.dior_patient_appts_data = (window.dior_patient_dashboard && window.dior_p
         }
 
         document.querySelectorAll('.dior-nav-btn[data-tab]').forEach(function (btn) {
-            if (btn.getAttribute('data-tab') === tabId) {
+            // A submenu parent row (Appointments) opens its list; it must not
+            // take the .active fill. That fill is reserved for leaf rows and
+            // is exactly the background the doctor sidebar never shows here.
+            if (btn.getAttribute('data-tab') === tabId && !diorIsSubmenuParentBtn(btn)) {
                 btn.classList.add('active');
             } else {
                 btn.classList.remove('active');
@@ -3197,6 +3203,18 @@ window.dior_patient_appts_data = (window.dior_patient_dashboard && window.dior_p
                 pill.classList.remove('active');
             }
         });
+
+
+    // A row that owns a submenu (the patient's "Appointments") behaves like the
+    // Doctor Dashboard's parent row: it only toggles the list and never takes
+    // the .active fill. Its label is the thing that stays highlighted, and the
+    // fill was the exact background the user asked to remove.
+    function diorIsSubmenuParentBtn(btn) {
+        if (!btn) return false;
+        if (btn.classList.contains('submenu-btn')) return false;
+        return !!(btn.closest('.dior-nav-item-has-children') ||
+                  btn.closest('.dior-nav-item.has-submenu'));
+    }
 
         var title = document.getElementById('dior-current-page-title');
         var titles = {

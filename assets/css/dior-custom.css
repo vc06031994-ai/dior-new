@@ -64050,37 +64050,93 @@ a.va-btn-primary:hover {
         margin: 0 auto !important;
     }
 
-    /* hide every text label, group heading and the submenu chevron */
+    /* Hide every text label, group heading and the submenu affordance.
+       The doctor rail drops the +/- icon entirely so the collapsed sidebar
+       shows one glyph per row; the patient rail kept it and drew a stray "+"
+       next to the calendar icon (image-26). */
     .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .nav-label,
     .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .grp-title,
-    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .fa-chevron-down {
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .fa-chevron-down,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .submenu-icon,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn .submenu-icon {
         display: none !important;
         opacity: 0 !important;
         visibility: hidden !important;
         width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        flex: 0 0 0 !important;
     }
 
+    /* The row needs a 72px rail to sit in, but the doctor's rail is 72px wide
+       with a centred icon and no extra gutters, so the group must not stretch
+       across the sidebar. */
     .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .grp {
-        padding: 6px !important;
+        display: block !important;
+        width: 56px !important;
+        padding: 6px 0 !important;
+        margin: 0 !important;
         overflow: visible !important;
     }
 
-    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn {
-        justify-content: center !important;
-        padding: 11px 0 !important;
-        width: 100% !important;
-        margin-bottom: 4px !important;
-        text-align: center !important;
-        gap: 0 !important;
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav {
+        padding: 0 8px !important;
     }
 
-    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn i {
+    /* Icon-only row: 56px wide inside the 72px rail, same as the doctor. */
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn {
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 9px 0 !important;
+        width: 100% !important;
+        max-width: 56px !important;
+        margin: 0 auto 3px auto !important;
+        text-align: center !important;
+        gap: 0 !important;
+        border-radius: 10px !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn>i:first-of-type {
         margin: 0 !important;
-        width: 24px !important;
-        font-size: 18px !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        max-width: 20px !important;
+        font-size: 15px !important;
+        line-height: 1 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Appointments owner row keeps a soft pill when its list is open, never
+       the solid white hover fill. */
+    /* the `#dior-sidebar` variant is required: the expanded-sidebar hover rule
+       is just as specific and comes later in the file, so without it the rail
+       still flashed the solid white block. */
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn:hover,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-side-nav .dior-nav-btn:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        color: #FFFFFF !important;
+        transform: none !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn:hover i,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn:hover svg,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn:hover .nav-label,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-side-nav .dior-nav-btn:hover i,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-side-nav .dior-nav-btn:hover svg {
+        color: #FFFFFF !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-side-nav .dior-nav-btn.active {
+        background: rgba(255, 255, 255, 0.16) !important;
+        color: #FFFFFF !important;
+        border-radius: 10px !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18) !important;
     }
 
     .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-patient-collapse-btn {
@@ -72488,14 +72544,31 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
     color: #000000 !important;
 }
 
+/* Only leaf rows take the active fill. The Appointments row owns a submenu,
+   and the Doctor Dashboard leaves that parent row transparent whether its
+   list is open or closed — the fill was the extra background to remove. */
 .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active,
-.dior-patient-portal-wrap .dior-nav-item-has-children.active>.dior-nav-btn,
-.dior-patient-portal-wrap .dior-nav-item-has-children>.dior-nav-btn.active,
-.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn.active,
-.dior-patient-portal-wrap #dior-sidebar .dior-nav-item-has-children>.dior-nav-btn.active {
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn.active {
     background: rgba(255, 255, 255, 0.10) !important;
     color: #FFFFFF !important;
     font-weight: 700 !important;
+}
+
+.dior-patient-portal-wrap .dior-nav-item-has-children>.dior-nav-btn,
+.dior-patient-portal-wrap .dior-nav-item.has-submenu>.dior-nav-btn,
+.dior-patient-portal-wrap .dior-nav-item-has-children>.dior-nav-btn.active,
+.dior-patient-portal-wrap .dior-nav-item.has-submenu>.dior-nav-btn.active,
+.dior-patient-portal-wrap .dior-nav-item-has-children.open>.dior-nav-btn,
+.dior-patient-portal-wrap .dior-nav-item.has-submenu.open>.dior-nav-btn,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-item-has-children>.dior-nav-btn,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-item-has-submenu>.dior-nav-btn,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-item-has-children>.dior-nav-btn.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-item.has-submenu>.dior-nav-btn.active {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
 }
 
 .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active .nav-label,
