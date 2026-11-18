@@ -70417,3 +70417,453 @@ a.va-btn-primary:hover {
         color: #FFFFFF !important;
     }
 }
+
+/* ==========================================================================
+   POPUP / MODAL THEME CONSISTENCY  (doctor + patient dashboard)
+
+   Ek hi jagah se saare dialogs ka look: SweetAlert-style alerts, Bootstrap
+   modals, notification dropdown aur profile dropdown. Sab theme tokens par
+   (#00346C / #1A528E family) — koi third-party blue, purple ya teal nahi.
+   Bootstrap components par .btn-primary / inline styles ko override karne ke
+   liye selective !important use hua hai (dashboards already aise likhe hain).
+   ========================================================================== */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) {
+    --dior-dialog-primary: #1A528E;
+    --dior-dialog-primary-hover: #00346C;
+    --dior-dialog-ring: rgba(0, 52, 108, 0.16);
+    --dior-dialog-ink: #0F172A;
+    --dior-dialog-muted: #475569;
+    --dior-dialog-border: #E2E8F0;
+    --dior-dialog-soft: #F1F5F9;
+}
+
+/* --------------------------------------------------------------------------
+   1. SweetAlert replacement (dior-bootstrap-alert.js) — modal shell
+   -------------------------------------------------------------------------- */
+.dior-bs-alert-modal .modal-content {
+    border-radius: 16px !important;
+    border: 1px solid var(--dior-dialog-border) !important;
+    box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.28) !important;
+    overflow: hidden !important;
+}
+
+.dior-bs-alert-modal .modal-body {
+    padding: 26px 26px 10px !important;
+}
+
+.dior-bs-alert-modal .modal-title {
+    color: var(--dior-dialog-ink) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.dior-bs-alert-modal .modal-body-text {
+    color: var(--dior-dialog-muted) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+.dior-bs-alert-modal .modal-footer {
+    background: transparent !important;
+    border-top: 0 !important;
+    padding: 14px 26px 24px !important;
+    /* The engine emits Cancel before Confirm. Rendering the row reversed
+       puts the primary action on the right (and first in DOM order visually),
+       and flex-nowrap guarantees both buttons share one line — earlier the
+       row wrapped and Cancel sat above the primary button. */
+    flex-direction: row-reverse !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+}
+
+.dior-bs-alert-modal .modal-footer .dior-bs-btn-confirm {
+    order: -1 !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+.dior-bs-alert-modal .modal-footer .dior-bs-btn-cancel {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+/* 440px dialog + 26px side padding leaves ~386px. The engine's px-4/py-2
+   buttons (180px "Remind Me Later" + 238px "Complete Profile Now") needed
+   428px and spilled out of the card, so trim the horizontal padding. */
+.dior-bs-alert-modal .modal-footer .btn {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+}
+
+.dior-bs-alert-modal .modal-footer .btn i {
+    font-size: 12.5px !important;
+}
+
+/* Phones: stack the pair, primary on top (same order as the app's sheets). */
+@media (max-width: 575.98px) {
+    .dior-bs-alert-modal .modal-footer {
+        flex-direction: column !important;
+        flex-wrap: wrap !important;
+        align-items: stretch !important;
+        padding: 12px 18px 20px !important;
+    }
+
+    .dior-bs-alert-modal .modal-footer .dior-bs-btn-confirm,
+    .dior-bs-alert-modal .modal-footer .dior-bs-btn-cancel {
+        width: 100% !important;
+    }
+
+    .dior-bs-alert-modal .modal-body {
+        padding: 22px 18px 8px !important;
+    }
+}
+
+/* Icons: brand navy for info, semantic colours for success/warning/error. */
+.dior-bs-alert-icon svg {
+    width: 58px !important;
+    height: 58px !important;
+}
+
+.dior-bs-alert-modal .dior-bs-icon-info circle,
+.dior-bs-alert-modal .dior-bs-icon-info [stroke] {
+    stroke: var(--dior-dialog-primary) !important;
+}
+
+.dior-bs-alert-modal .dior-bs-icon-question circle,
+.dior-bs-alert-modal .dior-bs-icon-question [stroke] {
+    stroke: var(--dior-dialog-primary) !important;
+}
+
+.dior-bs-alert-modal .dior-bs-icon-question circle {
+    fill: #EFF6FF !important;
+    stroke-opacity: 0.25 !important;
+}
+
+/* Buttons — override the inline background the engine sets per call, so a
+   stray hex (#3b82f6, #00A896, #6c757d) never reaches the UI. */
+.dior-bs-alert-modal .dior-bs-btn-confirm,
+.dior-bs-alert-modal .dior-bs-btn-confirm.btn-primary,
+.dior-bs-alert-modal .modal-footer .btn-primary {
+    background: var(--dior-dialog-primary) !important;
+    background-color: var(--dior-dialog-primary) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-dialog-primary) !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    border-radius: 9px !important;
+    box-shadow: 0 4px 12px rgba(26, 82, 142, 0.25) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+}
+
+.dior-bs-alert-modal .dior-bs-btn-confirm:hover,
+.dior-bs-alert-modal .dior-bs-btn-confirm:focus,
+.dior-bs-alert-modal .dior-bs-btn-confirm.btn-primary:hover,
+.dior-bs-alert-modal .modal-footer .btn-primary:hover {
+    background: var(--dior-dialog-primary-hover) !important;
+    background-color: var(--dior-dialog-primary-hover) !important;
+    border-color: var(--dior-dialog-primary-hover) !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    box-shadow: 0 6px 16px rgba(0, 52, 108, 0.3) !important;
+}
+
+.dior-bs-alert-modal .dior-bs-btn-confirm:focus-visible,
+.dior-bs-alert-modal .dior-bs-btn-cancel:focus-visible {
+    outline: 0 !important;
+    box-shadow: 0 0 0 3px var(--dior-dialog-ring) !important;
+}
+
+.dior-bs-alert-modal .dior-bs-btn-cancel,
+.dior-bs-alert-modal .dior-bs-btn-cancel.btn-secondary,
+.dior-bs-alert-modal .modal-footer .btn-secondary {
+    background: var(--dior-dialog-soft) !important;
+    background-color: var(--dior-dialog-soft) !important;
+    background-image: none !important;
+    border: 1px solid #CBD5E1 !important;
+    color: var(--dior-dialog-muted) !important;
+    -webkit-text-fill-color: var(--dior-dialog-muted) !important;
+    font-weight: 600 !important;
+    font-size: 13.5px !important;
+    border-radius: 9px !important;
+    box-shadow: none !important;
+}
+
+.dior-bs-alert-modal .dior-bs-btn-cancel:hover,
+.dior-bs-alert-modal .modal-footer .btn-secondary:hover {
+    background: #E2E8F0 !important;
+    background-color: #E2E8F0 !important;
+    border-color: #CBD5E1 !important;
+    color: var(--dior-dialog-ink) !important;
+    -webkit-text-fill-color: var(--dior-dialog-ink) !important;
+}
+
+/* Close (X) button inside every dialog + Bootstrap modal header. */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .btn-close,
+.dior-bs-alert-modal .btn-close {
+    background-color: transparent !important;
+    border-radius: 8px !important;
+    opacity: 0.55 !important;
+    transition: opacity 0.15s ease, background-color 0.15s ease !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .btn-close:hover,
+.dior-bs-alert-modal .btn-close:hover {
+    opacity: 1 !important;
+    background-color: var(--dior-dialog-soft) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Toasts (same engine) — theme border + progress bar
+   -------------------------------------------------------------------------- */
+.dior-bs-toast-container .toast,
+.dior-bs-toast {
+    border-radius: 12px !important;
+    border: 1px solid var(--dior-dialog-border) !important;
+    box-shadow: 0 10px 24px rgba(0, 52, 108, 0.14) !important;
+}
+
+.dior-bs-toast .toast-body {
+    color: var(--dior-dialog-ink) !important;
+    font-size: 13.5px !important;
+}
+
+.dior-bs-toast .progress-bar {
+    background-color: var(--dior-dialog-primary) !important;
+    background-image: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Bootstrap modals (upload document, view appointment, review, telemedicine…)
+   -------------------------------------------------------------------------- */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-content {
+    border-radius: 16px !important;
+    border: 1px solid var(--dior-dialog-border) !important;
+    box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.28) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-header {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid var(--dior-dialog-border) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-title {
+    color: #00346C !important;
+    font-weight: 700 !important;
+}
+
+/* Icon inside a modal title (e.g. "Upload Patient Document"). */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-title > i:first-child,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-header .fas:first-child {
+    color: var(--dior-dialog-primary) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer {
+    background: #F8FAFC !important;
+    border-top: 1px solid var(--dior-dialog-border) !important;
+}
+
+/* Primary / secondary buttons inside modals follow the theme even when the
+   markup carries Bootstrap's default colours. */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-primary,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-body .btn-primary {
+    background-color: var(--dior-dialog-primary) !important;
+    border-color: var(--dior-dialog-primary) !important;
+    background-image: none !important;
+    box-shadow: 0 4px 12px rgba(26, 82, 142, 0.22) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-primary:hover,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-body .btn-primary:hover {
+    background-color: var(--dior-dialog-primary-hover) !important;
+    border-color: var(--dior-dialog-primary-hover) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn i,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-body .btn-primary i {
+    color: inherit !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Header dropdowns — notifications + profile
+   -------------------------------------------------------------------------- */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-dropdown {
+    border: 1px solid var(--dior-dialog-border) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 40px -12px rgba(15, 23, 42, 0.25) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-header {
+    background: #F8FAFC !important;
+    border-bottom: 1px solid var(--dior-dialog-border) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-header h4 {
+    color: #00346C !important;
+    font-weight: 700 !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-header button {
+    color: var(--dior-dialog-primary) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-header button:hover {
+    color: var(--dior-dialog-primary-hover) !important;
+    text-decoration: underline !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item .notif-icon,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item .notif-icon i {
+    color: var(--dior-dialog-primary) !important;
+    background-color: #EFF6FF !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item.unread {
+    background: #F5F9FE !important;
+    border-left: 3px solid var(--dior-dialog-primary) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item strong {
+    color: var(--dior-dialog-ink) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item p,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-item .notif-time {
+    color: #64748B !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-footer {
+    background: #F8FAFC !important;
+    border-top: 1px solid var(--dior-dialog-border) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-footer button {
+    color: var(--dior-dialog-primary) !important;
+    font-weight: 700 !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-footer button:hover {
+    color: var(--dior-dialog-primary-hover) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-notif-indicator {
+    background: #EF4444 !important; /* unread badge stays red = "attention" */
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown {
+    border: 1px solid var(--dior-dialog-border) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 40px -12px rgba(15, 23, 42, 0.25) !important;
+    overflow: hidden !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown-header {
+    background: #00346C !important;
+    color: #FFFFFF !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown a,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown button {
+    color: var(--dior-dialog-muted) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown a:hover,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown button:hover {
+    background: #F1F5F9 !important;
+    color: var(--dior-dialog-primary) !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown a i,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .dior-profile-dropdown button i {
+    color: var(--dior-dialog-primary) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Full-bleed popups (HIPAAtizer booking, FDA prescription, doc booker):
+      strip leftover accent colours from their headers/titles.
+   -------------------------------------------------------------------------- */
+.dior-hipaatizer-popup-v17 .dior-hipaatizer-popup-title-v17 {
+    color: #00346C !important;
+    font-weight: 700 !important;
+}
+
+#dior-docbooker-modal .modal-header,
+#dior-fda-prescription-modal .modal-header {
+    background: #00346C !important;
+    border-bottom: 0 !important;
+}
+
+#dior-docbooker-modal .modal-header .modal-title,
+#dior-fda-prescription-modal .modal-header .modal-title {
+    color: #FFFFFF !important;
+}
+
+#dior-docbooker-modal .modal-header .btn-close,
+#dior-fda-prescription-modal .modal-header .btn-close {
+    filter: brightness(0) invert(1) !important;
+    opacity: 0.85 !important;
+}
+
+/* Secondary/outline buttons inside dialogs share the alert's "soft slate"
+   treatment so Cancel looks identical in a Bootstrap modal and a Swal alert. */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-outline-secondary,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-secondary,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-light {
+    background: #F1F5F9 !important;
+    background-color: #F1F5F9 !important;
+    background-image: none !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-outline-secondary:hover,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-secondary:hover,
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-light:hover {
+    background: #E2E8F0 !important;
+    background-color: #E2E8F0 !important;
+    border-color: #CBD5E1 !important;
+    color: #0F172A !important;
+    -webkit-text-fill-color: #0F172A !important;
+}
+
+/* Danger buttons keep red, in theme's tone. */
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-danger {
+    background-color: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+}
+
+:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap) .modal-footer .btn-danger:hover {
+    background-color: #B91C1C !important;
+    border-color: #B91C1C !important;
+}
+
+/* Destructive confirms keep the danger tone (engine adds .dior-bs-alert-danger). */
+.dior-bs-alert-modal.dior-bs-alert-danger .dior-bs-btn-confirm,
+.dior-bs-alert-modal.dior-bs-alert-danger .dior-bs-btn-confirm.btn-primary {
+    background: #DC2626 !important;
+    background-color: #DC2626 !important;
+    border-color: #DC2626 !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28) !important;
+}
+
+.dior-bs-alert-modal.dior-bs-alert-danger .dior-bs-btn-confirm:hover,
+.dior-bs-alert-modal.dior-bs-alert-danger .dior-bs-btn-confirm:focus {
+    background: #B91C1C !important;
+    background-color: #B91C1C !important;
+    border-color: #B91C1C !important;
+    box-shadow: 0 6px 16px rgba(185, 28, 28, 0.32) !important;
+}

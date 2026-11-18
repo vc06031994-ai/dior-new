@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Popups / Modals / Notifications — Theme Consistency (Task 6)</title>
+    <style>
+        :root {
+            --ink: #0F172A;
+            --muted: #64748B;
+            --line: #E2E8F0;
+            --navy: #00346C;
+            --bg: #F8FAFC;
+            --ok: #0F7B47;
+            --bad: #B91C1C;
+            --warn: #B45309;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 20px 64px;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.6 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .wrap { max-width: 1080px; margin: 0 auto; }
+
+        h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; color: var(--navy); }
+        h2 { font-size: 18px; margin: 38px 0 12px; color: var(--navy); }
+        .sub { color: var(--muted); margin: 0 0 26px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 0 0 18px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        }
+
+        .shot { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+
+        ul { margin: 8px 0 0; padding-left: 20px; }
+        li { margin: 0 0 8px; }
+
+        code {
+            background: #F1F5F9;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 1px 5px;
+            font-size: 12.5px;
+            word-break: break-word;
+        }
+
+        .pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .pill.bad { background: #FEE2E2; color: var(--bad); }
+        .pill.ok { background: #DCFCE7; color: var(--ok); }
+        .pill.warn { background: #FEF3C7; color: var(--warn); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+        .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 8px; }
+        .label.ok { color: var(--ok); }
+
+        .swatch {
+            display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+            margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(0, 0, 0, .08);
+        }
+
+        .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+        .toc a {
+            font-size: 13px; font-weight: 600; color: var(--navy); text-decoration: none;
+            border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 14px;
+        }
+        .toc a:hover { border-color: var(--navy); }
+
+        .note { background: #F8FAFC; border-left: 3px solid var(--navy); padding: 10px 14px; margin: 14px 0 0; border-radius: 0 8px 8px 0; }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>Popups, Modals &amp; Notifications — Theme Consistency</h1>
+        <p class="sub">Task 6: doctor aur patient dashboard ke saare dialogs, alerts, toasts, notification dropdown
+            aur profile dropdown ek hi theme palette par laaye — button colours, icon colours, borders aur radius sab
+            consistent.</p>
+
+        <div class="toc">
+            <a href="#before">Pehle kya galat tha</a>
+            <a href="#tokens">Theme tokens</a>
+            <a href="#alerts">Alerts</a>
+            <a href="#modals">Bootstrap modals</a>
+            <a href="#dropdowns">Notification / profile</a>
+            <a href="#mobile">Mobile</a>
+            <a href="#files">Files / deploy</a>
+        </div>
+
+        <h2 id="before">1. Root cause (browser me verify kiya)</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Popup</th>
+                    <th>Pehle</th>
+                    <th>Ab</th>
+                </tr>
+                <tr>
+                    <td><strong>Confirm button</strong> (har alert)</td>
+                    <td><span class="pill bad">drift</span> Call sites 14 different hex bhej rahe the —
+                        <code>#2C6CB1</code> (37×), <code>#2563eb</code>, <code>#3b82f6</code>, <code>#00A896</code>,
+                        <code>#6c757d</code>, <code>#dc3545</code>… Isliye har popup ka blue/red thoda alag dikhta
+                        tha.</td>
+                    <td><span class="pill ok">fixed</span> Stylesheet se ek hi navy
+                        <code>#1A528E</code> (hover <code>#00346C</code>); call sites ka inline colour override ho
+                        jaata hai.</td>
+                </tr>
+                <tr>
+                    <td><strong>Info / question icon</strong></td>
+                    <td><span class="pill bad">off-brand</span> Info icon <code>#00346C</code> tha par question icon
+                        purple <code>#6366F1</code>.</td>
+                    <td><span class="pill ok">fixed</span> Dono brand navy; success/warning/error semantic hi rahe
+                        (green/amber/red) — wahi meaning, theme tone me.</td>
+                </tr>
+                <tr>
+                    <td><strong>Cancel button</strong></td>
+                    <td><span class="pill warn">inconsistent</span> Kahin solid slate (<code>#64748B</code>), kahin
+                        <code>#94A3B8</code>, kahin Bootstrap ka default outline.</td>
+                    <td><span class="pill ok">fixed</span> Sab jagah soft slate: <code>#F1F5F9</code> bg,
+                        <code>#CBD5E1</code> border.</td>
+                </tr>
+                <tr>
+                    <td><strong>Button order</strong> (2-button alerts)</td>
+                    <td><span class="pill bad">broken</span> Narrow dialog me row wrap ho jaati thi — <em>Cancel</em>
+                        primary button ke <em>upar</em> chala jaata tha (screenshot wali "Remind Me Later" popup).</td>
+                    <td><span class="pill ok">fixed</span> Ek row, primary right; phones par stack with primary
+                        upar.</td>
+                </tr>
+                <tr>
+                    <td><strong>Notification dropdown</strong></td>
+                    <td><span class="pill warn">inconsistent</span> "Mark all read" link <code>#2563EB</code>,
+                        unread row ka accent aur header plain tha.</td>
+                    <td><span class="pill ok">fixed</span> Navy headers, navy "Mark all read" + "View All",
+                        unread row par navy left-accent, icon soft blue tile.</td>
+                </tr>
+                <tr>
+                    <td><strong>Profile dropdown</strong></td>
+                    <td><span class="pill warn">plain</span> Header grey text, flat menu, koi brand presence nahi.</td>
+                    <td><span class="pill ok">fixed</span> Navy header bar + navy icons, hover par slate row.</td>
+                </tr>
+                <tr>
+                    <td><strong>Destructive confirms</strong></td>
+                    <td><span class="pill bad">muted</span> Delete confirms bhi navy primary ke saath aate the —
+                        danger visually read nahi hota tha.</td>
+                    <td><span class="pill ok">fixed</span> Delete/remove/discard/cancel labels par engine
+                        <code>.dior-bs-alert-danger</code> lagata hai → red primary
+                        (<code>#DC2626</code>).</td>
+                </tr>
+            </table>
+        </div>
+
+        <h2 id="tokens">2. Theme tokens (ek hi source)</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Role</th>
+                    <th>Token / value</th>
+                </tr>
+                <tr>
+                    <td>Primary</td>
+                    <td><span class="swatch" style="background:#1A528E"></span><code>--dior-dialog-primary: #1A528E</code></td>
+                </tr>
+                <tr>
+                    <td>Primary hover</td>
+                    <td><span class="swatch" style="background:#00346C"></span><code>--dior-dialog-primary-hover: #00346C</code></td>
+                </tr>
+                <tr>
+                    <td>Titles</td>
+                    <td><span class="swatch" style="background:#0F172A"></span><code>--dior-dialog-ink: #0F172A</code>,
+                        modal titles <code>#00346C</code></td>
+                </tr>
+                <tr>
+                    <td>Body text</td>
+                    <td><span class="swatch" style="background:#475569"></span><code>--dior-dialog-muted: #475569</code></td>
+                </tr>
+                <tr>
+                    <td>Borders / soft fill</td>
+                    <td><code>#E2E8F0</code> / <code>#F1F5F9</code></td>
+                </tr>
+                <tr>
+                    <td>Semantic (icons only)</td>
+                    <td><span class="swatch" style="background:#10B981"></span>success
+                        <span class="swatch" style="background:#F59E0B"></span>warning
+                        <span class="swatch" style="background:#EF4444"></span>error
+                        <span class="swatch" style="background:#DC2626"></span>danger button</td>
+                </tr>
+            </table>
+            <p class="note"><strong>Note:</strong> semantic colours (green check, amber warning, red error) jaan-boojh
+                kar rakhe hain — inka meaning theme se nahi badalta. Sirf primary/neutral/interactive elements brand
+                navy par aaye hain.</p>
+        </div>
+
+        <h2 id="alerts">3. Alerts (SweetAlert engine)</h2>
+        <div class="grid">
+            <div>
+                <p class="label ok">Provider info — primary + secondary ek row me</p>
+                <img class="shot" src="screenshots/popup-provider-info-desktop.png" alt="Provider info popup">
+            </div>
+            <div>
+                <p class="label ok">Delete confirm — danger red</p>
+                <img class="shot" src="screenshots/popup-delete-confirm-desktop.png" alt="Delete confirm popup">
+            </div>
+            <div>
+                <p class="label ok">Success</p>
+                <img class="shot" src="screenshots/popup-success-desktop.png" alt="Success popup">
+            </div>
+            <div>
+                <p class="label ok">Error</p>
+                <img class="shot" src="screenshots/popup-error-desktop.png" alt="Error popup">
+            </div>
+        </div>
+        <div class="card">
+            <ul>
+                <li>Sab alerts 440px, radius 16px, ek hi shadow — pehle har call site apna size le raha tha.</li>
+                <li>Confirm (navy, ya destructive par red) + Cancel (soft slate) dono <code>9px</code> radius, 13px
+                    label.</li>
+                <li><code>window.alert()</code> / <code>window.confirm()</code> bhi isi engine par mapped hain, so
+                    browser ke default dialogs kahin nahi aate.</li>
+                <li>Toast notifications same palette: white card, navy progress bar.</li>
+            </ul>
+        </div>
+
+        <h2 id="modals">4. Bootstrap modals</h2>
+        <div class="card">
+            <p class="label ok">Upload Patient Document (documents.php ka real modal)</p>
+            <img class="shot" src="screenshots/popup-bootstrap-modal-desktop.png" alt="Bootstrap modal themed">
+        </div>
+        <div class="card">
+            <ul>
+                <li>Modal content radius 16px, border <code>#E2E8F0</code>, shadow wahi jo alerts ka.</li>
+                <li>Title navy <code>#00346C</code> + title ke pehle wala icon navy
+                    <code>#1A528E</code> (pehle Bootstrap ka default blue tha).</li>
+                <li>Footer soft <code>#F8FAFC</code>; primary button navy, Cancel soft slate — alerts jaisa hi.</li>
+                <li>Danger buttons red rehte hain; close (×) hover par slate tile.</li>
+            </ul>
+        </div>
+
+        <h2 id="dropdowns">5. Notification aur profile dropdown</h2>
+        <div class="card">
+            <img class="shot" src="screenshots/popup-dropdowns-desktop.png" alt="Notification and profile dropdowns">
+        </div>
+        <div class="card">
+            <ul>
+                <li><strong>Notification:</strong> header <code>#F8FAFC</code> + navy title, "Mark all read" aur "View
+                    All →" navy links, unread item par 3px navy left accent + halka blue tint, icon soft-blue tile.</li>
+                <li><strong>Profile:</strong> navy header bar (white text), navy icons, hover par slate row, Logout
+                    red.</li>
+                <li>Unread badge red hi raha — wo "attention" signal hai, brand colour nahi.</li>
+            </ul>
+        </div>
+
+        <h2 id="mobile">6. Mobile (390px)</h2>
+        <div class="grid">
+            <div>
+                <p class="label ok">Info — stacked, primary upar</p>
+                <img class="shot" src="screenshots/popup-provider-info-mobile.png" alt="Info popup mobile">
+            </div>
+            <div>
+                <p class="label ok">Delete confirm — mobile</p>
+                <img class="shot" src="screenshots/popup-delete-confirm-mobile.png" alt="Delete popup mobile">
+            </div>
+            <div>
+                <p class="label ok">Success — mobile</p>
+                <img class="shot" src="screenshots/popup-success-mobile.png" alt="Success mobile">
+            </div>
+            <div>
+                <p class="label ok">Error — mobile</p>
+                <img class="shot" src="screenshots/popup-error-mobile.png" alt="Error mobile">
+            </div>
+        </div>
+        <div class="card">
+            <ul>
+                <li>575px se neeche buttons full-width stack hote hain, primary sabse upar (same order jo documents
+                    ke bottom sheet me hai).</li>
+                <li>Body padding kam hota hai taaki text 320px par bhi comfortable rahe.</li>
+                <li>390px par koi horizontal overflow nahi (<code>scrollWidth === clientWidth</code>).</li>
+            </ul>
+        </div>
+
+        <h2 id="files">7. Files aur deploy</h2>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>File</th>
+                    <th>Role</th>
+                </tr>
+                <tr>
+                    <td><code>assets/css/dior-custom.css</code></td>
+                    <td>End me <strong>POPUP / MODAL THEME CONSISTENCY</strong> block: tokens, alert shell, icons,
+                        buttons, toasts, Bootstrap modal shell, notification + profile dropdown, full-bleed popups,
+                        danger variant, 575px mobile rules.</td>
+                </tr>
+                <tr>
+                    <td><code>assets/js/dior-bootstrap-alert.js</code></td>
+                    <td>Destructive-label detection (delete / remove / discard / revoke / deactivate / cancel) →
+                        <code>.dior-bs-alert-danger</code> class. Baaki behaviour same.</td>
+                </tr>
+            </table>
+            <p class="note"><strong>Coverage:</strong> dono dashboards ek hi CSS par chalte hain, aur selectors
+                <code>:is(.dior-patient-portal-wrap, .dior-doctor-wrap, .dior-admin-wrap)</code> par scoped hain —
+                isliye patient portal aur doctor dashboard dono me same result, aur kisi doosre plugin/template par
+                leak nahi hota.</p>
+        </div>
+
+        <h2>8. Test kaise karein</h2>
+        <div class="card">
+            <ul>
+                <li>Doctor dashboard par profile-incomplete popup aaye (naya doctor) — <em>Complete Profile Now</em>
+                    navy, <em>Remind Me Later</em> slate, dono ek row me.</li>
+                <li>Documents → Templates me delete karein — confirm ka button red hoga.</li>
+                <li>Top-right bell icon — dropdown ka "Mark all read" aur "View All" navy hone chahiye.</li>
+                <li>Avatar pill par click — profile dropdown ka header navy bar.</li>
+                <li>Koi bhi upload modal kholein — title navy, primary navy, Cancel slate.</li>
+                <li>Phone par dialogs stacked, primary upar, koi horizontal scroll nahi.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

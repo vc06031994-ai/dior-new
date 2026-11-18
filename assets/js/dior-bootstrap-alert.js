@@ -168,6 +168,19 @@
             var confirmColor = options.confirmButtonColor || '#00346C';
             var cancelColor = options.cancelButtonColor || '#64748B';
 
+            // Destructive confirms (delete / remove / cancel …) keep a red
+            // primary so the danger reads instantly; everything else follows
+            // the brand navy from the stylesheet.
+            var confirmLabel = String(options.confirmButtonText || '');
+            var titleText = String(options.title || '');
+            var isDestructive = /delete|remove|discard|revoke|deactivate|\bcancel\b/i.test(confirmLabel + ' ' + titleText) &&
+                !/cancel$/i.test(confirmLabel.trim()) &&
+                !/remind/i.test(confirmLabel);
+            if (isDestructive && !options.confirmButtonColor) {
+                confirmColor = '#DC2626';
+            }
+            modalEl.classList.add(isDestructive ? 'dior-bs-alert-danger' : 'dior-bs-alert-standard');
+
             var customPopupClass = (options.customClass && options.customClass.popup) ? ' ' + options.customClass.popup : '';
             var isLeftAlign = customPopupClass.indexOf('dior-meeting-swal-popup') !== -1;
             var alignClass = isLeftAlign ? 'text-start' : 'text-center';
