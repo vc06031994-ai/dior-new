@@ -61,8 +61,7 @@
             var w = document.getElementById('dior-appt-dropdown-wrap');
             if (w) {
                 w.classList.remove('open');
-                var ch = w.querySelector('.fa-chevron-down');
-                if (ch) ch.style.transform = 'rotate(0deg)';
+                diorSetApptToggleIcon(w, false);
             }
         }
 
@@ -80,6 +79,15 @@
         return true;
     }
 
+    // Appointments toggle affordance mirrors the Doctor Dashboard: +/−.
+    function diorSetApptToggleIcon(wrap, isOpen) {
+        if (!wrap) return;
+        var icon = wrap.querySelector('.submenu-icon');
+        if (!icon) return;
+        icon.classList.toggle('fa-minus', !!isOpen);
+        icon.classList.toggle('fa-plus', !isOpen);
+    }
+
     var _diorLastApptToggleTime = 0;
     function toggleApptDropdown(e) {
         if (e) {
@@ -94,14 +102,13 @@
 
         var w = document.getElementById('dior-appt-dropdown-wrap');
         if (!w) return;
-        var ch = w.querySelector('.fa-chevron-down');
         var isOpen = w.classList.contains('open');
         if (isOpen) {
             w.classList.remove('open');
-            if (ch) ch.style.transform = 'rotate(0deg)';
+            diorSetApptToggleIcon(w, false);
         } else {
             w.classList.add('open');
-            if (ch) ch.style.transform = 'rotate(180deg)';
+            diorSetApptToggleIcon(w, true);
             switchTab('appointments', true);
             if (typeof window.diorSwitchApptSubTab === 'function') {
                 var activeSub = w.querySelector('.dior-nav-dropdown-item.active');

@@ -25156,20 +25156,23 @@ textarea.dior-form-control {
     gap: 4px !important;
 }
 
+/* Row box matches the Doctor sidebar (7px/16px, 8px radius, 12.5px text).
+   It used to be 46px tall, full-bleed and square, which is what made the
+   Appointments dropdown read as a different, darker block. */
 .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn {
     width: 100% !important;
-    min-height: 46px !important;
-    height: 46px !important;
-    margin: 0 !important;
-    padding: 0 24px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 0 3px 0 !important;
+    padding: 7px 16px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 12px !important;
     border: 0 !important;
-    border-radius: 0 !important;
+    border-radius: 8px !important;
     background: transparent !important;
-    color: #fff !important;
-    font-size: 14px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 12.5px !important;
     font-weight: 500 !important;
     text-align: left !important;
     transform: none !important;
@@ -25178,10 +25181,10 @@ textarea.dior-form-control {
 
 .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn i,
 .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn svg {
-    width: 18px !important;
-    min-width: 18px !important;
-    font-size: 16px !important;
-    color: #fff !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    font-size: 15px !important;
+    color: inherit !important;
     text-align: center !important;
 }
 
@@ -25212,60 +25215,12 @@ textarea.dior-form-control {
 }
 
 /* Appointment dropdown stays functional, but follows the same sidebar visual language. */
-.dior-patient-portal-wrap .dior-nav-dropdown {
-    background: #00346C !important;
-    border-radius: 0 !important;
-    padding: 3px 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-}
-
-.dior-patient-portal-wrap .dior-nav-dropdown-item {
-    min-height: 38px !important;
-    height: 38px !important;
-    padding: 0 10px 0 26px !important;
-    color: #E2E8F0 !important;
-    background: transparent !important;
-    font-size: 12.5px !important;
-    font-weight: 500 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 7px !important;
-    white-space: nowrap !important;
-    text-decoration: none !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
-    transition: all 0.2s ease !important;
-}
-
-.dior-patient-portal-wrap .dior-nav-dropdown-item i {
-    font-size: 10px !important;
-    color: inherit !important;
-    opacity: 0.75 !important;
-    flex-shrink: 0 !important;
-    transition: transform 0.2s ease, opacity 0.2s ease !important;
-}
-
-.dior-patient-portal-wrap .dior-nav-dropdown-item:hover {
-    background: rgba(0, 52, 108, 0.6) !important;
-    color: #fff !important;
-}
-
-.dior-patient-portal-wrap .dior-nav-dropdown-item.active {
-    background: #00346C !important;
-    color: #fff !important;
-    font-weight: 600 !important;
-}
-
-.dior-patient-portal-wrap .dior-nav-dropdown-item:hover i,
-.dior-patient-portal-wrap .dior-nav-dropdown-item.active i {
-    opacity: 1 !important;
-    color: #fff !important;
-    transform: translateX(2px) !important;
-}
-
+/* The Appointments dropdown is rendered with the Doctor Dashboard's own
+   classes (.dior-submenu / .submenu-btn / .submenu-icon) so it inherits the
+   doctor styling — indented list, no panel, 12.5px rows, white hover and the
+   +/− affordance. The old patient-only overrides that painted a darker panel
+   and 38px rows are gone on purpose: they were what made the two sidebars
+   look different. */
 /* Patient portal footer: matches the reference instead of the old profile card. */
 .dior-patient-portal-wrap .dior-sidebar-bottom-profile {
     display: none !important;
@@ -72259,7 +72214,7 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
 
     .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active {
         background: rgba(255, 255, 255, 0.10) !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         color: #FFFFFF !important;
         font-weight: 700 !important;
         box-shadow: none !important;
@@ -72441,5 +72396,433 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
     .dior-patient-portal-wrap #dior-sidebar.mobile-open .dior-side-close,
     .dior-patient-portal-wrap #dior-sidebar.open .dior-side-close {
         display: inline-flex !important;
+    }
+}
+
+/* =====================================================================
+   PATIENT SIDEBAR — NAV GEOMETRY LOCKED TO THE DOCTOR SIDEBAR
+   ---------------------------------------------------------------------
+   The patient nav was built on its own metrics (14px rows, 46px tall,
+   full-bleed, square, 24px gutter) while every other value in the portal
+   follows the doctor's (12.5px text, ~32px rows, 10px radius, 12px gutter).
+   That difference is what made the Appointments dropdown sit inside a
+   full-width darker band instead of the doctor's inset list, and what made
+   the orange/› sub-items read as a different component.
+
+   These rules mirror the doctor block exactly and are hardware-independent:
+   no new tokens, same values as `.dior-doctor-wrap` at each breakpoint.
+   ===================================================================== */
+
+/* ---------- nav shell: 12px gutter like the doctor ---------- */
+.dior-patient-portal-wrap .dior-side-nav {
+    padding: 0 12px !important;
+    background: transparent !important;
+}
+
+/* ---------- rows: same box as the doctor ---------- */
+.dior-patient-portal-wrap .dior-side-nav .grp {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+/* The row box is not restated here: it is inherited from the shared
+   `:is(.dior-patient-portal-wrap, .dior-doctor-wrap, ...) .dior-nav-btn`
+   rules, so the patient row keeps whatever padding/height/radius the doctor
+   row has at each breakpoint (7px 16px / 9px 13px, 32px / 35px) instead of a
+   hardcoded value that only matches one screen. */
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 3px 0 !important;
+    padding: 7px 16px !important;
+    gap: 12px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+    text-align: left !important;
+}
+
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn>i:first-of-type {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    color: inherit !important;
+}
+
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn .nav-label {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    color: inherit !important;
+}
+
+/* ---------- states: the doctor's white hover and .16 active ---------- */
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn:hover {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    transform: translateX(3px) !important;
+}
+
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover .nav-label,
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover i,
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover svg,
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn:hover .submenu-icon,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn:hover .nav-label,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn:hover i,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn:hover svg,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn:hover .submenu-icon {
+    color: #000000 !important;
+}
+
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active,
+.dior-patient-portal-wrap .dior-nav-item-has-children.active>.dior-nav-btn,
+.dior-patient-portal-wrap .dior-nav-item-has-children>.dior-nav-btn.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-item-has-children>.dior-nav-btn.active {
+    background: rgba(255, 255, 255, 0.10) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active .nav-label,
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active i,
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn.active svg {
+    color: #FFFFFF !important;
+}
+
+/* ---------- the +/− affordance, exactly as the doctor draws it ---------- */
+.dior-patient-portal-wrap .dior-side-nav .dior-nav-btn .submenu-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+    margin-left: auto !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    opacity: 0.75 !important;
+    color: inherit !important;
+}
+
+/* ---------- sub-items: inset, transparent, indented by the parent pad ---- */
+.dior-patient-portal-wrap .dior-submenu,
+.dior-patient-portal-wrap .dior-nav-dropdown,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown {
+    display: none;
+    flex-direction: column !important;
+    padding: 2px 0 4px 25px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+}
+
+.dior-patient-portal-wrap .dior-nav-item.open>.dior-submenu,
+.dior-patient-portal-wrap .dior-nav-item.active>.dior-submenu,
+.dior-patient-portal-wrap .dior-nav-item-has-children.open>.dior-nav-dropdown,
+.dior-patient-portal-wrap .dior-nav-item-has-children.active>.dior-nav-dropdown {
+    display: flex !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn,
+.dior-patient-portal-wrap .dior-nav-dropdown-item,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 3px 0 !important;
+    padding: 7px 16px !important;
+    gap: 12px !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+    text-align: left !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn i,
+.dior-patient-portal-wrap .dior-nav-dropdown-item i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    color: inherit !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn .nav-label,
+.dior-patient-portal-wrap .dior-nav-dropdown-item .nav-label {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    white-space: nowrap !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn:hover,
+.dior-patient-portal-wrap .dior-nav-dropdown-item:hover,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn:hover,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item:hover,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .submenu-btn:hover,
+.dior-patient-portal-wrap .dior-side-nav .submenu-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #FFFFFF !important;
+    transform: none !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn:hover i,
+.dior-patient-portal-wrap .dior-submenu .submenu-btn:hover .nav-label,
+.dior-patient-portal-wrap .dior-nav-dropdown-item:hover i,
+.dior-patient-portal-wrap .dior-nav-dropdown-item:hover .nav-label,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn:hover i,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn:hover .nav-label,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .submenu-btn:hover i,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .submenu-btn:hover .nav-label,
+.dior-patient-portal-wrap .dior-side-nav .submenu-btn:hover i,
+.dior-patient-portal-wrap .dior-side-nav .submenu-btn:hover .nav-label {
+    color: #FFFFFF !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn.active,
+.dior-patient-portal-wrap .dior-nav-dropdown-item.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item.active,
+.dior-patient-portal-wrap #dior-sidebar .dior-side-nav .submenu-btn.active,
+.dior-patient-portal-wrap .dior-side-nav .submenu-btn.active {
+    background: rgba(255, 255, 255, 0.10) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    transform: none !important;
+}
+
+.dior-patient-portal-wrap .dior-submenu .submenu-btn.active i,
+.dior-patient-portal-wrap .dior-submenu .submenu-btn.active .nav-label,
+.dior-patient-portal-wrap .dior-nav-dropdown-item.active i,
+.dior-patient-portal-wrap .dior-nav-dropdown-item.active .nav-label {
+    color: #FFFFFF !important;
+}
+
+/* Breakpoint metrics. The doctor rows are 7px/16px at <=1099px, 9px/13px
+   from 1100px and 8px/12px under 1024px; the patient nav now reads the same
+   numbers so the two sidebars cannot drift apart again. */
+@media (min-width: 1100px) {
+
+    /* parent rows: 12.5px, as the doctor has them */
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn {
+        padding: 9px 13px !important;
+        font-size: 12.5px !important;
+    }
+
+    /* sub-items: the doctor button is 12.5px but its label renders 13.5px */
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        padding: 9px 13px !important;
+        font-size: 12.5px !important;
+        line-height: 17.55px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item .nav-label {
+        font-size: 13.5px !important;
+        line-height: 17.55px !important;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1099px) {
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn {
+        padding: 8px 12px !important;
+        gap: 9px !important;
+        font-size: 12px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn>i:first-of-type {
+        width: 16px !important;
+        min-width: 16px !important;
+        font-size: 12.5px !important;
+    }
+}
+
+@media (max-width: 1024.98px) {
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-side-nav .dior-nav-btn,
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        padding: 7px 16px !important;
+        font-size: 13px !important;
+    }
+
+    /* the Appointments list keeps the doctor's 25px indent on phones too */
+    .dior-patient-portal-wrap .dior-submenu,
+    .dior-patient-portal-wrap .dior-nav-dropdown,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown {
+        padding: 2px 0 4px 25px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        margin-bottom: 3px !important;
+        border-radius: 8px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn {
+        border-radius: 8px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn i,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item i,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn i {
+        font-size: 13px !important;
+    }
+
+    .dior-patient-portal-wrap .dior-side-nav .dior-nav-btn .submenu-icon {
+        font-size: 15px !important;
+    }
+
+    /* doctor sub-rows are 42px tall on phones */
+    .dior-patient-portal-wrap .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap #dior-sidebar .dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap #dior-sidebar .dior-nav-dropdown-item {
+        min-height: 42px !important;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Collapsed rail: the patient flyout must be the doctor's flyout
+   Scoped to the collapsed rail only — in the expanded sidebar the list
+   renders inline, exactly as the doctor's does.
+   --------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children {
+        position: relative !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu>.dior-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children>.dior-nav-dropdown,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu>.dior-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children>.dior-nav-dropdown {
+        display: none !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu:hover>.dior-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children:hover>.dior-nav-dropdown,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu:hover>.dior-submenu,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children:hover>.dior-nav-dropdown {
+        display: flex !important;
+        flex-direction: column !important;
+        position: absolute !important;
+        left: 64px !important;
+        top: 0 !important;
+        width: 222px !important;
+        min-width: 222px !important;
+        max-width: 222px !important;
+        padding: 8px !important;
+        margin: 0 !important;
+        background: #002752 !important;
+        background-color: #002752 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-left: none !important;
+        border-radius: 0 10px 10px 0 !important;
+        box-shadow: 6px 6px 22px rgba(0, 0, 0, 0.35) !important;
+        z-index: 10005 !important;
+        overflow: visible !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item {
+        justify-content: flex-start !important;
+        width: 100% !important;
+        padding: 8px 12px !important;
+        margin: 0 0 2px 0 !important;
+        gap: 10px !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+        text-align: left !important;
+        white-space: nowrap !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item .nav-label,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn .nav-label,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item .nav-label {
+        display: inline-block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        width: auto !important;
+        min-width: 0 !important;
+        color: #FFFFFF !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+    }
+
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn i,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item i,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item.has-submenu:hover>.dior-submenu .submenu-btn i,
+    .dior-patient-portal-wrap.dior-sidebar-collapsed #dior-sidebar .dior-nav-item-has-children:hover>.dior-nav-dropdown .dior-nav-dropdown-item i {
+        width: 16px !important;
+        min-width: 16px !important;
+        max-width: 16px !important;
+        font-size: 13px !important;
+        margin: 0 !important;
     }
 }

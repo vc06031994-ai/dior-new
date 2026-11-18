@@ -35,22 +35,29 @@
                         <i class="fas fa-gauge-high"></i>
                         <span class="nav-label">Dashboard</span>
                     </button>
-                    <div class="dior-nav-item-has-children" id="dior-appt-dropdown-wrap">
+                    <?php
+                    // Same structure and class contract as the Doctor Dashboard's
+                    // Appointments menu (dior-nav-item / dior-submenu / submenu-btn /
+                    // submenu-icon) so the dropdown inherits the doctor styling —
+                    // indented list, +/− affordance, white hover row — at every
+                    // breakpoint instead of being styled separately.
+                    ?>
+                    <div class="dior-nav-item has-submenu dior-nav-item-has-children" id="dior-appt-dropdown-wrap">
                         <button type="button" class="dior-nav-btn btn" data-tab="appointments"
                             onclick="if(typeof window.diorToggleApptDropdown==='function'){window.diorToggleApptDropdown(event);}">
                             <i class="far fa-calendar-check"></i>
                             <span class="nav-label">Appointments</span>
-                            <i class="fas fa-chevron-down ms-auto dior-ic-fdf55d6c0a"></i>
+                            <i class="fas fa-plus submenu-icon"></i>
                         </button>
-                        <div class="dior-nav-dropdown">
-                            <a href="#tab=appointments&subtab=book" class="dior-nav-dropdown-item active" data-appt-subtab="book"><i
-                                    class="fas fa-angle-right"></i> Book Appointment</a>
-                            <a href="#tab=appointments&subtab=today" class="dior-nav-dropdown-item" data-appt-subtab="today"><i
-                                    class="fas fa-angle-right"></i> Today Appointments</a>
-                            <a href="#tab=appointments&subtab=upcoming" class="dior-nav-dropdown-item" data-appt-subtab="upcoming"><i
-                                    class="fas fa-angle-right"></i> Upcoming Appointments</a>
-                            <a href="#tab=appointments&subtab=past" class="dior-nav-dropdown-item" data-appt-subtab="past"><i
-                                    class="fas fa-angle-right"></i> Past Appointments</a>
+                        <div class="dior-submenu dior-nav-dropdown">
+                            <a href="#tab=appointments&subtab=book" class="dior-nav-btn submenu-btn dior-nav-dropdown-item active" data-appt-subtab="book"><i
+                                    class="fas fa-calendar-plus"></i><span class="nav-label">Book Appointment</span></a>
+                            <a href="#tab=appointments&subtab=today" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="today"><i
+                                    class="fas fa-calendar-day"></i><span class="nav-label">Today Appointments</span></a>
+                            <a href="#tab=appointments&subtab=upcoming" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="upcoming"><i
+                                    class="fas fa-calendar-week"></i><span class="nav-label">Upcoming Appointments</span></a>
+                            <a href="#tab=appointments&subtab=past" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="past"><i
+                                    class="fas fa-clock-rotate-left"></i><span class="nav-label">Past Appointments</span></a>
                         </div>
                     </div>
                     <button type="button" class="dior-nav-btn btn" data-tab="docs_meds">

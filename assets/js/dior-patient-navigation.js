@@ -20,6 +20,10 @@
         function ensureMobileCloseButton() {
             var sidebar = document.getElementById('dior-sidebar');
             if (!sidebar || sidebar.querySelector('.dior-mobile-drawer-close')) return;
+            // The template already ships its own close control
+            // (#dior-side-close). Injecting a second one stacked two ×
+            // buttons in the drawer, so only add one when none exists.
+            if (sidebar.querySelector('.dior-side-close')) return;
 
             var header = sidebar.querySelector('.dior-side-header') || sidebar;
             var closeButton = document.createElement('button');
@@ -85,8 +89,7 @@
                 var w = document.getElementById('dior-appt-dropdown-wrap');
                 if (w) {
                     w.classList.remove('open');
-                    var ch = w.querySelector('.fa-chevron-down');
-                    if (ch) ch.style.transform = 'rotate(0deg)';
+                    diorSetApptToggleIcon(w, false);
                 }
             }
 
@@ -95,6 +98,15 @@
             }
 
             return true;
+        }
+
+        // Appointments toggle affordance mirrors the Doctor Dashboard: +/−.
+        function diorSetApptToggleIcon(wrap, isOpen) {
+            if (!wrap) return;
+            var icon = wrap.querySelector('.submenu-icon');
+            if (!icon) return;
+            icon.classList.toggle('fa-minus', !!isOpen);
+            icon.classList.toggle('fa-plus', !isOpen);
         }
 
         // Public API used by existing dashboard controls.
@@ -120,12 +132,10 @@
                         var isOpen = w.classList.contains('open');
                         if (isOpen) {
                             w.classList.remove('open');
-                            var ch = w.querySelector('.fa-chevron-down');
-                            if (ch) ch.style.transform = 'rotate(0deg)';
+                            diorSetApptToggleIcon(w, false);
                         } else {
                             w.classList.add('open');
-                            var ch = w.querySelector('.fa-chevron-down');
-                            if (ch) ch.style.transform = 'rotate(180deg)';
+                            diorSetApptToggleIcon(w, true);
                             activate('appointments', true);
                             if (typeof window.diorSwitchApptSubTab === 'function') {
                                 window.diorSwitchApptSubTab('book');

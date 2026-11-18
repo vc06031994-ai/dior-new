@@ -751,8 +751,12 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
                         var dropdownWrap = document.getElementById('dior-appt-dropdown-wrap');
                         if (dropdownWrap) {
                             dropdownWrap.classList.add('open');
-                            var chevron = dropdownWrap.querySelector('.fa-chevron-down');
-                            if (chevron) chevron.style.transform = 'rotate(180deg)';
+                            // Doctor contract: the affordance is a +/− toggle icon.
+                            var toggleIcon = dropdownWrap.querySelector('.submenu-icon');
+                            if (toggleIcon) {
+                                toggleIcon.classList.remove('fa-plus');
+                                toggleIcon.classList.add('fa-minus');
+                            }
                         }
                         document.querySelectorAll('#dior-appt-dropdown-wrap .dior-nav-dropdown-item').forEach(function(item) {
                             if (item.getAttribute('data-appt-subtab') === targetSubTab) {
@@ -3217,8 +3221,7 @@ window.dior_patient_appts_data = (window.dior_patient_dashboard && window.dior_p
             var w = document.getElementById('dior-appt-dropdown-wrap');
             if (w) {
                 w.classList.remove('open');
-                var ch = w.querySelector('.fa-chevron-down');
-                if (ch) ch.style.transform = 'rotate(0deg)';
+                if (typeof diorSetApptToggleIcon === 'function') diorSetApptToggleIcon(w, false);
             }
         }
 
@@ -3262,12 +3265,10 @@ window.dior_patient_appts_data = (window.dior_patient_dashboard && window.dior_p
                             var isOpen = w.classList.contains('open');
                             if (isOpen) {
                                 w.classList.remove('open');
-                                var ch = w.querySelector('.fa-chevron-down');
-                                if (ch) ch.style.transform = 'rotate(0deg)';
+                                diorSetApptToggleIcon(w, false);
                             } else {
                                 w.classList.add('open');
-                                var ch = w.querySelector('.fa-chevron-down');
-                                if (ch) ch.style.transform = 'rotate(180deg)';
+                                diorSetApptToggleIcon(w, true);
                                 switchPatientTab('appointments');
                                 if (typeof window.diorSwitchApptSubTab === 'function') {
                                     window.diorSwitchApptSubTab('book');
@@ -3637,6 +3638,16 @@ document.addEventListener('click', function (event) {
 (function () {
     if (window.__diorTodayAppointmentActionsBound) return;
     window.__diorTodayAppointmentActionsBound = true;
+
+    // The Appointments entry follows the Doctor Dashboard's affordance: a
+    // +/− icon that flips with the menu state.
+    function diorSetApptToggleIcon(wrap, isOpen) {
+        if (!wrap) return;
+        var icon = wrap.querySelector('.submenu-icon');
+        if (!icon) return;
+        icon.classList.toggle('fa-minus', !!isOpen);
+        icon.classList.toggle('fa-plus', !isOpen);
+    }
 
     function getAppointmentAjaxConfig() {
         const config = window.dior_patient_dashboard || window.dior_vars || {};
