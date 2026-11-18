@@ -64226,6 +64226,9 @@ a.va-btn-primary:hover {
     height: 0 !important;
 }
 
+/* The four Appointments sub-tab pills. Geometry is untouched (they were
+   already responsive); only the colours move onto the theme tokens so they
+   cannot drift from the rest of the portal when the palette changes. */
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill {
     display: inline-flex !important;
     width: auto !important;
@@ -64234,16 +64237,18 @@ a.va-btn-primary:hover {
     justify-content: center !important;
     gap: 7px !important;
     padding: 8px 13px !important;
-    border: 1px solid #E2E8F0 !important;
-    border-radius: 8px !important;
-    background: #FFFFFF !important;
-    color: #334155 !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    font-family: var(--dior-font-body, "Montserrat", Arial, sans-serif) !important;
     font-size: 12px !important;
     font-weight: 600 !important;
     line-height: 1.25 !important;
     white-space: nowrap !important;
     box-shadow: none !important;
     text-align: left !important;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease !important;
 }
 
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill i {
@@ -64252,21 +64257,26 @@ a.va-btn-primary:hover {
 }
 
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill:hover {
-    border-color: #1A528E !important;
-    background: #F0F6FC !important;
-    color: #1A528E !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+.dior-patient-portal-wrap #tab-appointments .dior-subtab-pill:focus-visible {
+    outline: 2px solid var(--dior-color-primary, #1A528E) !important;
+    outline-offset: 2px !important;
 }
 
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill.active,
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill.active:hover {
-    border-color: #1A528E !important;
-    background: #1A528E !important;
-    color: #FFFFFF !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
     box-shadow: none !important;
 }
 
 .dior-patient-portal-wrap #tab-appointments .dior-subtab-pill.active i {
-    color: #FFFFFF !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
 }
 
 /* ---------- 2. toolbar icon buttons (all widths) ---------- */
