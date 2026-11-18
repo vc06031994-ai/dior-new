@@ -223,8 +223,13 @@ class Dior_Appointment_Service
             return new WP_Error('unauthorized', 'Unauthorized to reschedule this appointment.');
         }
 
-        // Validate status: Only active appointments can be rescheduled
-        $allowed_status = ['Success', 'In-Queue'];
+        // Validate status: only appointments that are still going ahead can be
+        // rescheduled. 'Confirmed' and 'Scheduled' count as active everywhere
+        // else in the portal (upcoming/past split, notifications) and bookings
+        // can be created with that status, so leaving them out meant an
+        // upcoming appointment was listed with a Reschedule button that the
+        // server always refused.
+        $allowed_status = ['Success', 'In-Queue', 'Confirmed', 'Scheduled', 'Pending'];
         if (!in_array($appt['status'], $allowed_status, true)) {
             return new WP_Error('invalid_status', "This appointment is {$appt['status']} and cannot be rescheduled.");
         }
@@ -640,8 +645,8 @@ class Dior_Appointment_Service
             $r['avatar'] = $doc_avatar;
 
             $status = $r['status'] ?? 'Success';
-            $r['can_reschedule'] = in_array($status, ['Success', 'In-Queue'], true);
-            $r['can_cancel'] = in_array($status, ['Success', 'In-Queue'], true);
+            $r['can_reschedule'] = in_array($status, ['Success', 'In-Queue', 'Confirmed', 'Scheduled', 'Pending'], true);
+            $r['can_cancel'] = in_array($status, ['Success', 'In-Queue', 'Confirmed', 'Scheduled', 'Pending'], true);
             $r['can_join'] = in_array($status, ['Success', 'In Progress', 'In-Queue'], true);
         }
 

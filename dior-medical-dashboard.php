@@ -4403,8 +4403,16 @@ class Dior_Medical_Auth
             wp_send_json_error(['message' => $res->get_error_message()]);
         }
 
+        // Patients see this line verbatim in the dialog, so show the slot the
+        // way it is displayed everywhere else instead of the raw DB values.
+        $pretty_date = date_i18n('M j, Y', strtotime($new_date));
+        $pretty_time = $new_time;
+        if (preg_match('/^\d{1,2}:\d{2}/', $new_time)) {
+            $pretty_time = date_i18n('g:i A', strtotime($new_date . ' ' . $new_time));
+        }
+
         wp_send_json_success([
-            'message' => 'Appointment rescheduled successfully to ' . esc_html($new_date) . ' at ' . esc_html($new_time) . '.',
+            'message' => 'Appointment rescheduled successfully to ' . esc_html($pretty_date) . ' at ' . esc_html($pretty_time) . '.',
             'appt_id' => $appt_id,
             'new_date' => $new_date,
             'new_time' => $new_time,
