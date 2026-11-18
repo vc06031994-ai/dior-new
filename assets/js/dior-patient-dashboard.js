@@ -9,6 +9,22 @@
  * (.dior-page-btn: prev / numbers / next) so both dashboards share
  * one visual language: light square buttons + blue active page.
  * ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+ * Submenu-parent detection.
+ * A nav row that owns a submenu (the patient's "Appointments") must never
+ * take the .active fill — the Doctor Dashboard's parent row does not, and
+ * the fill was the stray background to remove. Declared at top level so it
+ * is available to the very first function that needs it; it previously sat
+ * inside diorSwitchApptSubTab's own body and threw ReferenceError, which
+ * killed the sub-tab switching entirely.
+ * ------------------------------------------------------------------ */
+function diorIsSubmenuParentBtn(btn) {
+    if (!btn) return false;
+    if (btn.classList.contains('submenu-btn')) return false;
+    return !!(btn.closest('.dior-nav-item-has-children') ||
+              btn.closest('.dior-nav-item.has-submenu'));
+}
+
 function diorPagerChevron(direction) {
     return '<i class="fa-solid fa-chevron-' + direction + ' dior-pager-chevron"></i>';
 }
@@ -3204,17 +3220,6 @@ window.dior_patient_appts_data = (window.dior_patient_dashboard && window.dior_p
             }
         });
 
-
-    // A row that owns a submenu (the patient's "Appointments") behaves like the
-    // Doctor Dashboard's parent row: it only toggles the list and never takes
-    // the .active fill. Its label is the thing that stays highlighted, and the
-    // fill was the exact background the user asked to remove.
-    function diorIsSubmenuParentBtn(btn) {
-        if (!btn) return false;
-        if (btn.classList.contains('submenu-btn')) return false;
-        return !!(btn.closest('.dior-nav-item-has-children') ||
-                  btn.closest('.dior-nav-item.has-submenu'));
-    }
 
         var title = document.getElementById('dior-current-page-title');
         var titles = {
