@@ -499,6 +499,7 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
             <div class="d-flex flex-column gap-2 mt-3">
               <?php if (!empty($next_appointment)): ?>
                 <?php
+                $next_uid = !empty($next_appointment['id']) ? $next_appointment['id'] : (!empty($next_appointment['appt_uid']) ? $next_appointment['appt_uid'] : '');
                 // Only offer "Join" when there is a real meeting link to go to.
                 // Without one the button used to land the patient on an empty
                 // Telehealth tab even though the card said "No upcoming
@@ -516,7 +517,6 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
                   // No meeting link yet (Zoom credentials missing or the link was
                   // not created). Open the Telemedicine details modal, which is the
                   // same fallback the Telemedicine tab itself uses for these rows.
-                  $next_uid = !empty($next_appointment['id']) ? $next_appointment['id'] : (!empty($next_appointment['appt_uid']) ? $next_appointment['appt_uid'] : '');
                   ?>
                   <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
                     data-switch-tab="telemedicine"
@@ -525,9 +525,30 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
                     <i class="fas fa-video me-2"></i>View Consultation Details
                   </button>
                 <?php endif; ?>
-                <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100"
-                  data-switch-tab="appointments"
-                  onclick="if(typeof diorSwitchTab==='function') diorSwitchTab('appointments');">
+                <?php
+                // Reschedule opens the reschedule dialog directly for this
+                // appointment. Before this the button only switched to the
+                // Appointments tab and the patient had to find the row again.
+                $next_date_raw = !empty($next_appointment['date']) ? $next_appointment['date'] : '';
+                $next_ts = $next_date_raw ? strtotime($next_date_raw) : 0;
+                $next_ymd = $next_ts ? date('Y-m-d', $next_ts) : '';
+                $next_time_raw = !empty($next_appointment['time']) ? $next_appointment['time'] : '';
+                $next_time_hm = '';
+                if ($next_time_raw && preg_match('/(\d{1,2}):(\d{2})\s*([AP]M)?/i', $next_time_raw, $tm)) {
+                  $h = (int) $tm[1];
+                  $mins = $tm[2];
+                  if (!empty($tm[3])) {
+                    $pm = (strtoupper($tm[3]) === 'PM');
+                    if ($pm && $h < 12) { $h += 12; }
+                    if (!$pm && $h === 12) { $h = 0; }
+                  }
+                  $next_time_hm = sprintf('%02d:%s', $h, $mins);
+                }
+                ?>
+                <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100 dior-card-reschedule"
+                  data-appt-uid="<?php echo esc_attr($next_uid); ?>"
+                  data-appt-date="<?php echo esc_attr($next_ymd); ?>"
+                  data-appt-time="<?php echo esc_attr($next_time_hm); ?>">
                   <i class="far fa-calendar me-2"></i>Reschedule
                 </button>
               <?php else: ?>

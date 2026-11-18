@@ -3671,11 +3671,16 @@ document.addEventListener('click', function (event) {
         return Promise.resolve();
     }
 
+    // Builds the reschedule dialog. The dashboard runs on the Bootstrap alert
+    // shim (window.Swal) rather than SweetAlert2, and that shim has no
+    // preConfirm / showValidationMessage support, so the form lives here as a
+    // plain markup block and validates itself before sending the AJAX call.
     function rescheduleTodayAppointment(button) {
         const uid = (button.getAttribute('data-appt-uid') || '').trim();
-        const currentDate = button.getAttribute('data-appt-date') || '';
-        const currentTime = button.getAttribute('data-appt-time') || '';
         if (!uid) return;
+
+        const currentDate = (button.getAttribute('data-appt-date') || '').trim();
+        const currentTime = (button.getAttribute('data-appt-time') || '').trim();
 
         if (!window.Swal) {
             showAppointmentMessage('error', 'Unavailable', 'Appointment rescheduling requires the dashboard dialog component.');
@@ -3687,55 +3692,121 @@ document.addEventListener('click', function (event) {
             String(today.getMonth() + 1).padStart(2, '0') + '-' +
             String(today.getDate()).padStart(2, '0');
 
+        // Only prefill values the date/time inputs can actually display. The
+        // row templates hand over a display time ("02:00 PM"), so normalise it
+        // to the 24-hour value an <input type="time"> expects.
+        const dateValue = /^\d{4}-\d{2}-\d{2}$/.test(currentDate) && currentDate >= minDate ? currentDate : '';
+        let timeValue = '';
+        const timeMatch = currentTime.match(/^\s*(\d{1,2}):(\d{2})\s*([AaPp][Mm])?\s*$/);
+        if (timeMatch) {
+            let hours = parseInt(timeMatch[1], 10);
+            const minutes = timeMatch[2];
+            const suffix = timeMatch[3] ? timeMatch[3].toUpperCase() : '';
+            if (suffix === 'PM' && hours < 12) hours += 12;
+            if (suffix === 'AM' && hours === 12) hours = 0;
+            if (hours >= 0 && hours <= 23) {
+                timeValue = String(hours).padStart(2, '0') + ':' + minutes;
+            }
+        }
+
         Swal.fire({
             title: 'Reschedule Appointment',
             html:
-                '<div class="text-start">' +
-                    '<label for="dior-reschedule-date" class="form-label">New date</label>' +
-                    '<input id="dior-reschedule-date" type="date" class="swal2-input" min="' + minDate + '" value="' + currentDate + '" style="width:85%;margin:0 auto 14px;">' +
-                    '<label for="dior-reschedule-time" class="form-label">New time</label>' +
-                    '<input id="dior-reschedule-time" type="time" class="swal2-input" value="" style="width:85%;margin:0 auto;">' +
+                '<div class="dior-reschedule-body">' +
+                    '<label class="dior-reschedule-label" for="dior-reschedule-date">New date</label>' +
+                    '<input id="dior-reschedule-date" class="dior-reschedule-field" type="date" min="' + minDate + '" value="' + dateValue + '">' +
+                    '<label class="dior-reschedule-label" for="dior-reschedule-time">New time</label>' +
+                    '<input id="dior-reschedule-time" class="dior-reschedule-field" type="time" value="' + timeValue + '">' +
+                    '<p class="dior-reschedule-error" role="alert" style="display:none;"></p>' +
                 '</div>',
-            focusConfirm: false,
             showCancelButton: true,
             confirmButtonText: 'Confirm Reschedule',
             cancelButtonText: 'Keep Current Time',
-            preConfirm: function () {
-                const dateInput = document.getElementById('dior-reschedule-date');
-                const timeInput = document.getElementById('dior-reschedule-time');
-                const date = dateInput ? dateInput.value : '';
-                const time = timeInput ? timeInput.value : '';
-                if (!date || !time) {
-                    Swal.showValidationMessage('Please select both a date and a time.');
-                    return false;
+            customClass: {
+                popup: 'dior-meeting-swal-popup',
+                confirmButton: 'dior-bs-btn-confirm',
+                cancelButton: 'dior-bs-btn-cancel'
+            },
+            didOpen: function (modalEl) {
+                const dateInput = modalEl.querySelector('#dior-reschedule-date');
+                const timeInput = modalEl.querySelector('#dior-reschedule-time');
+                const confirmBtn = modalEl.querySelector('.dior-bs-btn-confirm');
+                const errorEl = modalEl.querySelector('.dior-reschedule-error');
+
+                if (!dateInput || !timeInput || !confirmBtn) return;
+
+                function showError(message) {
+                    if (!errorEl) return;
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
                 }
-                if (date < minDate) {
-                    Swal.showValidationMessage('Appointment date cannot be in the past.');
-                    return false;
+
+                function clearError() {
+                    if (!errorEl) return;
+                    errorEl.textContent = '';
+                    errorEl.style.display = 'none';
                 }
-                return { date: date, time: time };
+
+                function submit() {
+                    const date = dateInput.value;
+                    const time = timeInput.value;
+
+                    clearError();
+                    if (!date || !time) {
+                        showError('Please select both a new date and a new time.');
+                        return;
+                    }
+                    if (date < minDate) {
+                        showError('Appointment date cannot be in the past.');
+                        return;
+                    }
+
+                    freshConfirm.disabled = true;
+                    freshConfirm.textContent = 'Rescheduling\u2026';
+
+                    sendAppointmentAction('dior_patient_reschedule_appointment', {
+                        appt_id: uid,
+                        date: date,
+                        time: time
+                    }).then(function (response) {
+                        if (!response || !response.success) {
+                            throw new Error(response && response.data && response.data.message ? response.data.message : 'Unable to reschedule this appointment.');
+                        }
+                        if (window.Swal && typeof Swal.close === 'function') {
+                            Swal.close();
+                        }
+                        return showAppointmentMessage('success', 'Appointment Rescheduled', response.data.message || 'Your appointment has been rescheduled.')
+                            .then(function () { window.location.reload(); });
+                    }).catch(function (error) {
+                        freshConfirm.disabled = false;
+                        freshConfirm.textContent = 'Confirm Reschedule';
+                        showError(error.message || 'Please try again.');
+                    });
+                }
+
+                // The shim already bound its own confirm handler (it resolves
+                // the dialog without looking at the fields). Swapping the node
+                // for a clone drops those listeners so only our validating
+                // handler remains.
+                const freshConfirm = confirmBtn.cloneNode(true);
+                confirmBtn.parentNode.replaceChild(freshConfirm, confirmBtn);
+                freshConfirm.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    submit();
+                });
+
+                [dateInput, timeInput].forEach(function (input) {
+                    input.addEventListener('input', clearError);
+                    input.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            submit();
+                        }
+                    });
+                });
+
+                dateInput.focus();
             }
-        }).then(function (result) {
-            if (!result.isConfirmed || !result.value) return;
-            button.disabled = true;
-            return sendAppointmentAction('dior_patient_reschedule_appointment', {
-                appt_id: uid,
-                date: result.value.date,
-                time: result.value.time
-            }).then(function (response) {
-                if (!response || !response.success) {
-                    throw new Error(response && response.data && response.data.message ? response.data.message : 'Unable to reschedule this appointment.');
-                }
-                return Swal.fire({
-                    icon: 'success',
-                    title: 'Appointment Rescheduled',
-                    text: response.data.message || 'Your appointment has been rescheduled.',
-                    confirmButtonText: 'OK'
-                }).then(function () { window.location.reload(); });
-            }).catch(function (error) {
-                button.disabled = false;
-                showAppointmentMessage('error', 'Reschedule Failed', error.message || 'Please try again.');
-            });
         });
     }
 
@@ -3778,6 +3849,16 @@ document.addEventListener('click', function (event) {
     }
 
     document.addEventListener('click', function (event) {
+        // The Overview consultation card carries its own Reschedule button; it
+        // opens the same dialog as the Appointments tab rows instead of just
+        // switching tabs and leaving the patient to hunt for the row.
+        const cardReschedule = event.target.closest('.dior-card-reschedule');
+        if (cardReschedule) {
+            event.preventDefault();
+            rescheduleTodayAppointment(cardReschedule);
+            return;
+        }
+
         const rescheduleButton = event.target.closest('.dior-today-reschedule');
         if (rescheduleButton) {
             event.preventDefault();

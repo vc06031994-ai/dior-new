@@ -71982,3 +71982,118 @@ body .dior-bs-alert-modal .dior-modal-del-goal-btn {
         background: transparent !important;
     }
 }
+
+/* ==========================================================================
+   RESCHEDULE APPOINTMENT DIALOG — field styling
+
+   The dialog body is built in JS (dior-patient-dashboard.js) and used to ride
+   on Swal's `.swal2-input` class: the library default gave the two inputs a
+   near-full 85% width with auto margins (so they never lined up with their
+   labels), no theme border and no focus ring. The fields below line the two
+   columns up with the dialog, use the same 8px-radius / #E2E8F0 control
+   treatment as the rest of the portal, and keep the native pickers.
+   ========================================================================== */
+.dior-bs-alert-modal .dior-reschedule-body {
+    text-align: left !important;
+    margin: 0 !important;
+    padding: 2px 0 4px !important;
+}
+
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-label {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 6px 0 !important;
+    padding: 0 !important;
+    color: #00346C !important;
+    -webkit-text-fill-color: #00346C !important;
+    font-family: inherit !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.3 !important;
+    text-align: left !important;
+    text-transform: uppercase !important;
+}
+
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 43px !important;
+    margin: 0 0 16px 0 !important;
+    padding: 8px 12px !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    color: #0F172A !important;
+    -webkit-text-fill-color: #0F172A !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    box-shadow: none !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field:focus {
+    border-color: #1A528E !important;
+    box-shadow: 0 0 0 3px rgba(26, 82, 142, 0.14) !important;
+    outline: none !important;
+}
+
+/* Native picker indicators, toned into the palette. */
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field::-webkit-calendar-picker-indicator {
+    opacity: 0.6 !important;
+    cursor: pointer !important;
+    transition: opacity 0.15s ease !important;
+}
+
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field::-webkit-calendar-picker-indicator:hover {
+    opacity: 1 !important;
+}
+
+/* The two fields are the last thing above the footer, so drop the trailing gap. */
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field:last-of-type {
+    margin-bottom: 4px !important;
+}
+
+/* Inline validation line — warning amber, then red for hard failures. */
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-error {
+    display: none;
+    margin: 0 !important;
+    padding: 7px 10px !important;
+    border: 1px solid #FECACA !important;
+    border-radius: 8px !important;
+    background: #FEF2F2 !important;
+    color: #B91C1C !important;
+    -webkit-text-fill-color: #B91C1C !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+}
+
+.dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-error:empty {
+    display: none !important;
+}
+
+/* Phones: full-width fields, larger tap targets and the iOS zoom guard. */
+@media (max-width: 575.98px) {
+    .dior-bs-alert-modal .dior-reschedule-body .dior-reschedule-field {
+        height: 44px !important;
+        margin-bottom: 14px !important;
+        font-size: 16px !important;
+    }
+}
+
+/* Portal dialogs sit edge to edge on phones: the alert shim writes an inline
+   `margin: 1.75rem auto` on .modal-dialog, and auto side margins with an auto
+   width collapse to zero below 576px. Give them a real gutter. */
+@media (max-width: 575.98px) {
+    .dior-bs-alert-modal .modal-dialog {
+        margin-left: 0.75rem !important;
+        margin-right: 0.75rem !important;
+    }
+}
