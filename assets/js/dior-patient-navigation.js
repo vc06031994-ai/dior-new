@@ -181,3 +181,62 @@
         boot();
     }
 })();
+
+/* ==========================================================================
+   Dead-tab guard (patient portal)
+
+   Several older buttons still point at tab ids that are not rendered in
+   this dashboard (for example `consultation` — templates/patient-tabs/
+   consultation.php is never included by patient-dashboard.php). Clicking
+   those used to switch to a panel that does not exist, so nothing visibly
+   happened and the button looked broken.
+
+   Instead of failing silently we forward such ids to the tab that actually
+   owns that content. Anything still unresolved falls back to the current
+   tab, so a stale attribute can never leave the user on a blank view.
+   ========================================================================== */
+(function () {
+    'use strict';
+
+    var ALIASES = {
+        consultation: 'telemedicine',   // consultation.php is an orphan template
+        profile: 'settings',            // profile form lives inside Settings
+        docs: 'documents',
+        meds: 'docs_meds'
+    };
+
+    function resolve(tabId) {
+        if (!tabId) return null;
+        var id = String(tabId).split('&subtab=')[0].replace(/^#tab=/, '');
+        if (id && document.getElementById('tab-' + id)) return null;   // real tab, leave alone
+        var mapped = ALIASES[id];
+        if (mapped && document.getElementById('tab-' + mapped)) return mapped;
+        return null;
+    }
+
+    function patch() {
+        if (typeof window.diorSwitchTab !== 'function' || window.diorSwitchTab.__diorAliased) return;
+
+        var original = window.diorSwitchTab;
+        var wrapped = function (tabId) {
+            var mapped = resolve(tabId);
+            if (mapped) {
+                try {
+                    console.info('[Dior] tab "' + tabId + '" is not rendered; opening "' + mapped + '"');
+                } catch (e) { }
+                tabId = mapped;
+            }
+            return original.apply(this, arguments.length ? [tabId].concat([].slice.call(arguments, 1)) : [tabId]);
+        };
+        wrapped.__diorAliased = true;
+        window.diorSwitchTab = wrapped;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', patch);
+    } else {
+        patch();
+    }
+    // dior-dashboard.js may finish after this file; retry once the page is idle.
+    window.addEventListener('load', patch);
+})();
