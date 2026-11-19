@@ -1259,10 +1259,10 @@ class Dior_Medical_Auth
         );
 
         $portal_url = home_url('/patient-dashboard/');
-        $login_url = home_url('/diro-login/');
-        $reg_url = home_url('/diro-registration/');
-        $lost_pwd_url = home_url('/diro-lost-password/');
-        $reset_pwd_url = home_url('/diro-reset-password/');
+        $login_url = self::portal_login_url();
+        $reg_url = self::portal_registration_url();
+        $lost_pwd_url = self::portal_lost_password_url();
+        $reset_pwd_url = self::portal_reset_password_url();
         $current_user_id = get_current_user_id();
         $hipaa_intake_data = $current_user_id ? get_user_meta($current_user_id, 'dior_hipaa_intake', true) : null;
         $profile_data = $current_user_id ? Dior_Patient_Portal_Data::get_patient_profile($current_user_id) : null;
@@ -1383,7 +1383,14 @@ class Dior_Medical_Auth
 
         // Sites already running the portal never get pages created for them,
         // however their slugs have been renamed.
-        foreach (['patient-dashboard', 'patient-portal', 'diro-login', 'dior-login', 'diro-registration', 'diro-lost-password'] as $existing_slug) {
+        $existing_slugs = [
+            'patient-dashboard', 'patient-portal',
+            'dior-login', 'diro-login',
+            'dior-registration', 'diro-registration',
+            'dior-lost-password', 'diro-lost-password',
+            'dior-reset-password', 'diro-reset-password',
+        ];
+        foreach ($existing_slugs as $existing_slug) {
             if (get_page_by_path($existing_slug, OBJECT, 'page')) {
                 return;
             }
@@ -1415,20 +1422,20 @@ class Dior_Medical_Auth
             update_post_meta($dash_id, '_wp_page_template', 'elementor_canvas');
         }
 
-        // Login Page (/diro-login/)
-        $login_page = get_page_by_path('diro-login');
+        // Login Page (/dior-login/)
+        $login_page = get_page_by_path('dior-login');
         if (!$login_page) {
             $old_login = get_page_by_path('login');
             if ($old_login) {
                 wp_update_post([
                     'ID' => $old_login->ID,
-                    'post_name' => 'diro-login'
+                    'post_name' => 'dior-login'
                 ]);
                 $login_id = $old_login->ID;
             } else {
                 $login_id = wp_insert_post([
                     'post_title' => 'Patient Login',
-                    'post_name' => 'diro-login',
+                    'post_name' => 'dior-login',
                     'post_content' => '[dior_login_form]',
                     'post_status' => 'publish',
                     'post_type' => 'page'
@@ -1441,20 +1448,20 @@ class Dior_Medical_Auth
             update_post_meta($login_id, '_wp_page_template', 'elementor_header_footer');
         }
 
-        // Registration Page (/diro-registration/)
-        $reg_page = get_page_by_path('diro-registration');
+        // Registration Page (/dior-registration/)
+        $reg_page = get_page_by_path('dior-registration');
         if (!$reg_page) {
             $old_reg = get_page_by_path('register');
             if ($old_reg) {
                 wp_update_post([
                     'ID' => $old_reg->ID,
-                    'post_name' => 'diro-registration'
+                    'post_name' => 'dior-registration'
                 ]);
                 $reg_id = $old_reg->ID;
             } else {
                 $reg_id = wp_insert_post([
                     'post_title' => 'Patient Registration',
-                    'post_name' => 'diro-registration',
+                    'post_name' => 'dior-registration',
                     'post_content' => '[dior_registration_form]',
                     'post_status' => 'publish',
                     'post_type' => 'page'
@@ -1591,12 +1598,13 @@ class Dior_Medical_Auth
         }
 
         // Auth pages (Login, Registration, Lost Password, Reset Password) must display Header & Footer!
-        if (is_page(['diro-login', 'diro-registration', 'diro-lost-password', 'diro-reset-password', 'patient-portal-landing-page'])) {
+        $auth_slugs = ['dior-login', 'dior-registration', 'dior-lost-password', 'dior-reset-password', 'diro-login', 'diro-registration', 'diro-lost-password', 'diro-reset-password', 'patient-portal-landing-page'];
+        if (is_page($auth_slugs)) {
             return $template;
         }
 
         global $post;
-        if ($post && in_array($post->post_name, ['diro-login', 'diro-registration', 'diro-lost-password', 'diro-reset-password', 'patient-portal-landing-page'])) {
+        if ($post && in_array($post->post_name, $auth_slugs)) {
             return $template;
         }
 
@@ -2071,7 +2079,7 @@ class Dior_Medical_Auth
                         <span class="dior-checkmark"></span>
                         <span class="dior-check-text">Remember me on this device</span>
                     </label>
-                    <a href="<?php echo esc_url(home_url('/diro-lost-password/')); ?>" class="dior-forgot-link">Forgot
+                    <a href="<?php echo esc_url(self::portal_lost_password_url()); ?>" class="dior-forgot-link">Forgot
                         password?</a>
                 </div>
 
@@ -2086,7 +2094,7 @@ class Dior_Medical_Auth
 
             <!-- BOTTOM: SWITCH LINK TO REGISTRATION -->
             <div class="dior-auth-bottom-link-redesign">
-                <p>First time visiting? <a href="<?php echo esc_url(home_url('/diro-registration/')); ?>">Create Patient
+                <p>First time visiting? <a href="<?php echo esc_url(self::portal_registration_url()); ?>">Create Patient
                         Account</a></p>
             </div>
 
@@ -2276,7 +2284,7 @@ class Dior_Medical_Auth
         </form>
 
         <div class="dior-reg-bottom-link">
-            <p>Already have an account? <a href="<?php echo esc_url(home_url('/diro-login/')); ?>">Log in here</a></p>
+            <p>Already have an account? <a href="<?php echo esc_url(self::portal_login_url()); ?>">Log in here</a></p>
         </div>
 
         <?php endif; ?>
@@ -2386,7 +2394,7 @@ class Dior_Medical_Auth
 
             <!-- BOTTOM: SWITCH LINK TO LOGIN -->
             <div class="dior-auth-bottom-link-redesign">
-                <p>Remember your password? <a href="<?php echo esc_url(home_url('/diro-login/')); ?>">Back to Sign In
+                <p>Remember your password? <a href="<?php echo esc_url(self::portal_login_url()); ?>">Back to Sign In
                         &rarr;</a></p>
             </div>
         </div>
@@ -2449,11 +2457,11 @@ class Dior_Medical_Auth
         </div>
 
         <div class="dior-auth-actions" style="display: flex; flex-direction: column; gap: 12px;">
-            <a href="<?php echo esc_url(home_url('/diro-lost-password/')); ?>" class="dior-btn-auth-primary"
+            <a href="<?php echo esc_url(self::portal_lost_password_url()); ?>" class="dior-btn-auth-primary"
                 style="text-align: center; text-decoration: none;">
                 Request New Reset Link &rarr;
             </a>
-            <a href="<?php echo esc_url(home_url('/diro-login/')); ?>" class="dior-btn-auth-secondary"
+            <a href="<?php echo esc_url(self::portal_login_url()); ?>" class="dior-btn-auth-secondary"
                 style="text-align: center; text-decoration: none; display: block; padding: 12px 16px; border-radius: 8px; background: #F8FAFC; color: #475569; font-weight: 500; font-size: 13.5px; border: 1px solid #E2E8F0;">
                 &larr; Return to Sign In
             </a>
@@ -2519,7 +2527,7 @@ class Dior_Medical_Auth
         <div class="dior-auth-bottom-link"
             style="margin-top: 24px; text-align: center; border-top: 1px solid #F1F5F9; padding-top: 16px;">
             <p style="font-size: 13.5px; color: #64748B; margin: 0;">
-                <a href="<?php echo esc_url(home_url('/diro-login/')); ?>"
+                <a href="<?php echo esc_url(self::portal_login_url()); ?>"
                     style="font-weight: 600; color: #0284C7; text-decoration: none;">&larr; Back to Sign In</a>
             </p>
         </div>
@@ -2533,41 +2541,104 @@ class Dior_Medical_Auth
     }
 
     /**
+     * URL of the published page that renders $shortcode.
+     *
+     * Slugs belong to the site owner: /diro-login/ became /dior-login/ and any
+     * hardcoded path then returns a 404. The shortcode is the stable anchor, so
+     * every link and redirect follows the page wherever it is renamed. Nothing
+     * here creates, publishes or renames a page.
+     *
+     * $fallback_slugs is only consulted when no published page carries the
+     * shortcode (e.g. the page body was edited and lost it).
+     */
+    private static function portal_page_url($shortcode, array $fallback_slugs = [])
+    {
+        static $cache = [];
+        $cache_key = $shortcode . '|' . implode(',', $fallback_slugs);
+        if (array_key_exists($cache_key, $cache)) {
+            return $cache[$cache_key];
+        }
+
+        $candidates = get_posts([
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'posts_per_page' => 10,
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'fields' => 'ids',
+            // Search for the bare shortcode name: brackets are not reliable in
+            // a WP_Query search string. has_shortcode() below is the real test.
+            's' => $shortcode,
+            'no_found_rows' => true,
+        ]);
+
+        foreach ($candidates as $candidate_id) {
+            $candidate = get_post((int) $candidate_id);
+            if ($candidate && has_shortcode($candidate->post_content, $shortcode)) {
+                $permalink = get_permalink($candidate);
+                if ($permalink) {
+                    return $cache[$cache_key] = $permalink;
+                }
+            }
+        }
+
+        foreach ($fallback_slugs as $slug) {
+            $page = get_page_by_path($slug, OBJECT, 'page');
+            if ($page && $page->post_status === 'publish') {
+                return $cache[$cache_key] = get_permalink($page);
+            }
+        }
+
+        return $cache[$cache_key] = '';
+    }
+
+    /**
      * The login URL every redirect should land on.
      *
-     * Resolved by looking for the page that actually renders the login form
-     * rather than assuming a slug, so renaming /diro-login/ in the admin does
-     * not send logouts to a 404 or hand them off to some other page. Slugs are
-     * the site owner's to change; the shortcode is the reliable anchor.
-     *
-     * Order: the known slug, then any published page carrying [dior_login_form],
-     * then the registration page, then the site root.
+     * Order: the page carrying [dior_login_form], then the known/new slugs,
+     * then the registration page, then the site root. Nothing here creates or
+     * republishes a page — it only reports where the login form already lives.
      */
     public static function portal_login_url()
     {
-        $login = get_page_by_path('diro-login');
-        if ($login && $login->post_status === 'publish') {
-            return get_permalink($login);
+        $url = self::portal_page_url('dior_login_form', ['dior-login', 'diro-login']);
+        if ($url) {
+            return $url;
         }
 
-        $by_shortcode = get_posts([
-            'post_type' => 'page',
-            'post_status' => 'publish',
-            'posts_per_page' => 1,
-            'fields' => 'ids',
-            's' => '[dior_login_form]',
-            'no_found_rows' => true,
-        ]);
-        if (!empty($by_shortcode)) {
-            return get_permalink((int) $by_shortcode[0]);
-        }
-
-        $reg = get_page_by_path('diro-registration');
-        if ($reg && $reg->post_status === 'publish') {
-            return get_permalink($reg);
+        $reg = self::portal_page_url('dior_registration_form', ['dior-registration', 'diro-registration']);
+        if ($reg) {
+            return $reg;
         }
 
         return home_url('/');
+    }
+
+    /**
+     * The registration URL, resolved the same way.
+     */
+    public static function portal_registration_url()
+    {
+        return self::portal_page_url('dior_registration_form', ['dior-registration', 'diro-registration'])
+            ?: self::portal_login_url();
+    }
+
+    /**
+     * The lost-password URL, resolved the same way.
+     */
+    public static function portal_lost_password_url()
+    {
+        return self::portal_page_url('dior_lost_password_form', ['dior-lost-password', 'diro-lost-password'])
+            ?: self::portal_login_url();
+    }
+
+    /**
+     * The reset-password URL, resolved the same way.
+     */
+    public static function portal_reset_password_url()
+    {
+        return self::portal_page_url('dior_reset_password_form', ['dior-reset-password', 'diro-reset-password'])
+            ?: self::portal_lost_password_url();
     }
 
     /**
@@ -2623,7 +2694,7 @@ class Dior_Medical_Auth
     {
         // If not logged in, redirect directly to login page
         if (!is_user_logged_in()) {
-            $login_url = home_url('/diro-login/');
+            $login_url = self::portal_login_url();
             if (!headers_sent()) {
                 wp_safe_redirect($login_url);
                 exit;
@@ -2792,7 +2863,12 @@ class Dior_Medical_Auth
 
         if ($is_doctor) {
             $redirect = home_url('/doctor-dashboard/');
-        } elseif (!empty($redirect_to) && strpos($redirect_to, 'diro-login') === false && strpos($redirect_to, 'diro-registration') === false && strpos($redirect_to, 'doctor-dashboard') === false) {
+        } elseif (
+            !empty($redirect_to) &&
+            strpos($redirect_to, 'diro-login') === false && strpos($redirect_to, 'dior-login') === false &&
+            strpos($redirect_to, 'diro-registration') === false && strpos($redirect_to, 'dior-registration') === false &&
+            strpos($redirect_to, 'doctor-dashboard') === false
+        ) {
             $redirect = $redirect_to;
         } else {
             $redirect = home_url('/patient-dashboard/');
@@ -2951,7 +3027,7 @@ class Dior_Medical_Auth
      */
     public static function custom_lostpassword_url($lostpassword_url, $redirect)
     {
-        return home_url('/diro-lost-password/');
+        return self::portal_lost_password_url();
     }
 
     /**
@@ -2998,7 +3074,7 @@ class Dior_Medical_Auth
         $reset_url = add_query_arg([
             'key' => $key,
             'login' => rawurlencode($user->user_login),
-        ], home_url('/diro-reset-password/'));
+        ], self::portal_reset_password_url());
 
         $site_name = get_bloginfo('name') ?: 'Dior Medical';
         $user_name = $user->display_name ?: $user->user_login;
@@ -3128,7 +3204,7 @@ class Dior_Medical_Auth
 
         wp_send_json_success([
             'message' => 'Your password has been successfully reset! Redirecting to login...',
-            'redirect' => home_url('/diro-login/?reset=success')
+            'redirect' => self::portal_login_url() . '?reset=success'
         ]);
     }
 
@@ -5613,7 +5689,7 @@ function dior_portal_login_url()
     if (class_exists('Dior_Medical_Auth') && method_exists('Dior_Medical_Auth', 'portal_login_url')) {
         return Dior_Medical_Auth::portal_login_url();
     }
-    return home_url('/diro-login/');
+    return home_url('/dior-login/');
 }
 
 /**

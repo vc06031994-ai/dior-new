@@ -678,7 +678,11 @@ class Dior_Doctor_Dashboard
     public static function render($atts = [])
     {
         if (!is_user_logged_in()) {
-            $login_url = home_url("/diro-login/");
+            // Follow the page that actually carries [dior_login_form]; the slug
+            // is the site owner's to rename and a hardcoded path 404s after it.
+            $login_url = function_exists('dior_portal_login_url')
+                ? dior_portal_login_url()
+                : (class_exists('Dior_Medical_Auth') ? Dior_Medical_Auth::portal_login_url() : home_url('/dior-login/'));
             if (!headers_sent()) {
                 wp_safe_redirect($login_url);
                 exit;
