@@ -710,13 +710,13 @@ $dior_overview_book_url = trailingslashit($dior_overview_dashboard_url) . '#tab=
               <h3 class="fs-6 fw-bold text-dark mb-1">
                 <?php echo esc_html(!empty($hipaa_intake['service_condition']) ? $hipaa_intake['service_condition'] : 'Medical Intake Questionnaire'); ?>
               </h3>
-              <p class="small text-secondary mb-3">
+              <div class="small text-secondary mb-3">
                 <?php if ($has_intake): ?>
                   Submitted on <?php echo esc_html(date('M j, Y', strtotime($hipaa_intake['submitted_at'] ?? 'now'))); ?> &bull; Data verified for physician review
                 <?php else: ?>
                   Please complete your clinical questionnaire prior to your appointment.
                 <?php endif; ?>
-              </p>
+                </div>
             </div>
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm flex-grow-1"
