@@ -2064,17 +2064,6 @@ class Dior_Medical_Auth
                 </div>
             </form>
 
-            <div class="dior-login-divider">
-                <span>OR</span>
-            </div>
-
-            <button type="button" class="dior-btn-google"
-                onclick="Swal.fire({ icon: 'info', title: 'Google Login', text: 'Google Login will be implemented once Client ID is available.' });">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo"
-                    class="google-logo">
-                Sign In With Google
-            </button>
-
             <!-- BOTTOM: SWITCH LINK TO REGISTRATION -->
             <div class="dior-auth-bottom-link-redesign">
                 <p>First time visiting? <a href="<?php echo esc_url(home_url('/diro-registration/')); ?>">Create Patient
