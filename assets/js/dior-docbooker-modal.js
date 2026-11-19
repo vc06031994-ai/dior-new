@@ -18,6 +18,26 @@
     };
 
     /**
+     * The appointment modal only exists on a signed-in portal dashboard.
+     *
+     * The controller is enqueued only there, but the check is repeated here as
+     * a second line of defence: if the markup is missing, or the visitor has no
+     * portal session, nothing may auto-open. This is what previously let a
+     * guest on Start Your Visit have the modal pop up after submitting the
+     * HIPAAtizer form — the listener fired and diorOpenDocBookerModal() had a
+     * site-wide modal to open.
+     */
+    function isPortalBookingContext() {
+        if (!document.getElementById('dior-docbooker-modal')) {
+            return false;
+        }
+        if (typeof dior_vars === 'undefined' || !dior_vars) {
+            return false;
+        }
+        return parseInt(dior_vars.is_logged_in, 10) === 1;
+    }
+
+    /**
      * Open the DocBooker Booking Modal
      */
     window.diorOpenDocBookerModal = function(options) {
@@ -25,6 +45,14 @@
         var modal = document.getElementById('dior-docbooker-modal');
         if (!modal) {
             console.warn('[Dior Medical] Booking modal DOM not found.');
+            return;
+        }
+
+        // Hard gate: no portal session, no modal. Everything else in this file
+        // is already scoped to the dashboard, so this only ever blocks the
+        // accidental case (a stray caller on a public page).
+        if (!isPortalBookingContext()) {
+            console.warn('[Dior Medical] Booking modal is portal-only; ignored.');
             return;
         }
 
@@ -500,6 +528,11 @@
      * Listens to cross-origin iframe postMessage events from HIPAAtizer renderer
      */
     window.addEventListener('message', function(event) {
+        // Guests, and any page without the dashboard modal, must never react to
+        // a HIPAAtizer postMessage — the guest intake form is submitted on the
+        // public Start Your Visit page and nothing may open there.
+        if (!isPortalBookingContext()) return;
+
         if (!event || !event.data) return;
         var d = event.data;
 
@@ -562,6 +595,9 @@
     }
 
     function checkAndAutoOpenModal() {
+        // Never auto-open for a guest or on a page without the dashboard modal.
+        if (!isPortalBookingContext()) return;
+
         if (shouldAutoOpenBookingModal()) {
             if (typeof diorSwitchTab === 'function') {
                 try { diorSwitchTab('appointments'); } catch (e) {}

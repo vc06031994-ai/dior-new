@@ -2895,6 +2895,41 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
    Clean Registration-Style UI matching Dior Patient Registration standards.
    ========================================================================== */
 
+/* Token bridge.
+   The modal is printed in wp_footer, i.e. OUTSIDE .dior-patient-portal-wrap,
+   so it never inherited the portal design tokens and every var() fell back to
+   its literal. Re-declaring the tokens on the modal keeps the appointment
+   panel on exactly the same palette as the dashboard it belongs to. */
+#dior-docbooker-modal {
+    --dior-color-primary: #1A528E;
+    --dior-color-primary-hover: #00346C;
+    --dior-color-primary-active: #001B3A;
+    --dior-color-primary-soft: #F0F6FC;
+    --dior-color-gold: #C5A059;
+
+    --dior-color-page: #F8FAFC;
+    --dior-color-surface: #FFFFFF;
+    --dior-color-surface-muted: #F8FAFC;
+    --dior-color-border: #E2E8F0;
+    --dior-color-border-strong: #CBD5E1;
+
+    --dior-color-text: #0F172A;
+    --dior-color-text-secondary: #334155;
+    --dior-color-text-muted: #64748B;
+    --dior-color-text-inverse: #FFFFFF;
+
+    --dior-color-success: #059669;
+    --dior-color-success-soft: #ECFDF5;
+    --dior-color-danger: #DC2626;
+    --dior-color-danger-soft: #FEF2F2;
+
+    --dior-font-body: "Montserrat", Arial, sans-serif;
+    --dior-font-heading: "Montserrat", Georgia, serif;
+
+    --dior-radius-control: 8px;
+    --dior-radius-panel: 16px;
+}
+
 .dior-db-modal {
     position: fixed !important;
     top: 0 !important;
@@ -3047,7 +3082,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     height: 100% !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    border: 1.5px solid #2C6CB1 !important;
+    border: 1.5px solid var(--dior-color-primary, #1A528E) !important;
 }
 
 .dior-db-status-dot {
@@ -3079,7 +3114,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     margin: 1px 0 !important;
     font-size: 13.5px !important;
     font-weight: 700 !important;
-    color: #1b4f8a !important;
+    color: var(--dior-color-primary, #1A528E) !important;
 }
 
 .dior-db-doc-spec {
@@ -3162,8 +3197,8 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .video-icon {
-    background: #EFF6FF !important;
-    color: #2C6CB1 !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
 }
 
 .phone-icon {
@@ -3203,7 +3238,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-service-card.active .dior-db-service-radio {
-    border-color: #2C6CB1 !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
 }
 
 .dior-db-radio-dot {
@@ -3215,7 +3250,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-service-card.active .dior-db-radio-dot {
-    background: #2C6CB1 !important;
+    background: var(--dior-color-primary, #1A528E) !important;
 }
 
 /* 2. Date & Time Inputs */
@@ -3241,7 +3276,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     height: 40px !important;
     padding: 0 12px !important;
     border-radius: 6px !important;
-    border: 1px solid #D1D5DB !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
     background: #F8FAFC !important;
     font-family: 'Montserrat', sans-serif !important;
     font-size: 13px !important;
@@ -3253,8 +3288,8 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 
 .dior-db-input:focus,
 .dior-clean-db-form input:focus {
-    border-color: #2C6CB1 !important;
-    box-shadow: 0 0 0 3px rgba(44, 108, 177, 0.15) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    box-shadow: 0 0 0 3px rgba(26, 82, 142, 0.15) !important;
     background: #FFFFFF !important;
 }
 
@@ -3281,7 +3316,7 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 
 .dior-db-slots-spinner {
     font-size: 11px !important;
-    color: #2C6CB1 !important;
+    color: var(--dior-color-primary, #1A528E) !important;
     font-weight: 600 !important;
 }
 
@@ -3367,15 +3402,15 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-alert.alert-error {
-    background: #fef2f2 !important;
-    border: 1px solid #fecaca !important;
-    color: #dc2626 !important;
+    background: var(--dior-color-danger-soft, #FEF2F2) !important;
+    border: 1px solid var(--dior-color-danger, #DC2626) !important;
+    color: var(--dior-color-danger, #DC2626) !important;
 }
 
 .dior-db-alert.alert-success {
-    background: #f0fdf4 !important;
-    border: 1px solid #bbf7d0 !important;
-    color: #16a34a !important;
+    background: var(--dior-color-success-soft, #ECFDF5) !important;
+    border: 1px solid var(--dior-color-success, #059669) !important;
+    color: var(--dior-color-success, #059669) !important;
 }
 
 /* Submit Action (Registration Style) */
@@ -3460,19 +3495,19 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     height: 64px !important;
     margin: 0 auto 16px !important;
     border-radius: 50% !important;
-    background: #F0FDF4 !important;
+    background: var(--dior-color-success-soft, #ECFDF5) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     font-size: 32px !important;
-    color: #16a34a !important;
+    color: var(--dior-color-success, #059669) !important;
 }
 
 .dior-db-success-title {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 22px !important;
     font-weight: 700 !important;
-    color: #1b4f8a !important;
+    color: var(--dior-color-primary, #1A528E) !important;
     margin: 0 0 6px 0 !important;
 }
 
@@ -3513,14 +3548,14 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 }
 
 .dior-db-success-row strong {
-    color: #00346C !important;
+    color: var(--dior-color-primary-hover, #00346C) !important;
     font-weight: 600 !important;
 }
 
 .dior-db-badge-confirmed {
     display: inline-block !important;
-    background: #DCFCE7 !important;
-    color: #166534 !important;
+    background: var(--dior-color-success-soft, #ECFDF5) !important;
+    color: var(--dior-color-success, #059669) !important;
     font-size: 11px !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
@@ -4238,24 +4273,46 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
 /* === END: dior-fda-prescription-modal.css === */
 
 /* === BEGIN: dior-hipaatizer-popup.css === */
-/* HIPAAtizer appointment popup — dashboard v17 */
+/* HIPAAtizer appointment popup — dashboard v17
+   ---------------------------------------------------------------
+   This popup is a SweetAlert container, so it is appended to <body> and
+   sits OUTSIDE .dior-patient-portal-wrap. It therefore inherits none of the
+   portal design tokens; without the bridge below every var() here falls back
+   to a literal and the popup drifts away from the dashboard palette. */
 .dior-hipaatizer-popup-v17 {
+    --dior-color-primary: #1A528E;
+    --dior-color-primary-hover: #00346C;
+    --dior-color-primary-soft: #F0F6FC;
+    --dior-color-surface: #FFFFFF;
+    --dior-color-border: #E2E8F0;
+    --dior-color-text: #0F172A;
+    --dior-color-text-secondary: #334155;
+    --dior-color-text-muted: #64748B;
+    --dior-font-body: "Montserrat", Arial, sans-serif;
+    --dior-font-heading: "Montserrat", Georgia, serif;
+    --dior-radius-panel: 16px;
+
     width: min(1120px, 96vw) !important;
     max-width: 96vw !important;
     height: 92vh;
     max-height: 92vh;
     overflow: hidden !important;
     box-sizing: border-box;
-    border-radius: 18px !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-panel, 16px) !important;
     padding: 22px 26px 26px !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
 }
 
 .dior-hipaatizer-popup-title-v17 {
     margin: 0 0 16px !important;
     padding: 0 10px;
+    font-family: var(--dior-font-heading, 'Montserrat', sans-serif) !important;
     font-size: 26px !important;
+    font-weight: 700 !important;
     line-height: 1.3 !important;
-    color: #102a43 !important;
+    color: var(--dior-color-primary, #1A528E) !important;
 }
 
 .dior-hipaatizer-popup-content-v17 {
@@ -70728,8 +70785,76 @@ a.va-btn-primary:hover {
       strip leftover accent colours from their headers/titles.
    -------------------------------------------------------------------------- */
 .dior-hipaatizer-popup-v17 .dior-hipaatizer-popup-title-v17 {
-    color: #00346C !important;
+    color: var(--dior-color-primary, #1A528E) !important;
     font-weight: 700 !important;
+}
+
+/* The same generic rules also centre and pad the alert body
+   (`.swal2-title` 19px/centred, `.swal2-html-container` centred with a 20px
+   bottom margin). In a form dialog that pushes the whole form into the middle
+   of the card and leaves the title stranded at the top. Restore a normal
+   reading flow: left-aligned block content, title sitting on the content. */
+.dior-hipaatizer-popup-v17 .dior-hipaatizer-popup-title-v17.swal2-title {
+    margin: 0 0 14px !important;
+    padding: 0 4px !important;
+    text-align: left !important;
+    font-size: 22px !important;
+    letter-spacing: 0 !important;
+    line-height: 1.3 !important;
+}
+
+@media (max-width: 767px) {
+    .dior-hipaatizer-popup-v17 .dior-hipaatizer-popup-title-v17.swal2-title {
+        font-size: 20px !important;
+        margin-bottom: 12px !important;
+    }
+}
+
+.dior-hipaatizer-popup-v17 .dior-hipaatizer-popup-content-v17.swal2-html-container {
+    margin: 0 !important;
+    padding: 0 4px 8px !important;
+    text-align: left !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+}
+
+/* The generic SweetAlert rule above (`.swal2-popup`: 92% width, max 440px,
+   28px padding, system font stack) is written for alert cards, but the
+   HIPAAtizer booking popup is a full-bleed form dialog carrying the exact
+   same custom class. Left alone, the whole form was crushed into a 440px
+   card with its header floating far above the fields. Restore the dialog
+   geometry and put it on the portal type scale. */
+.dior-hipaatizer-popup-v17.swal2-popup {
+    width: min(1120px, 96vw) !important;
+    max-width: 96vw !important;
+    height: 92vh !important;
+    max-height: 92vh !important;
+    padding: 22px 26px 26px !important;
+    border-radius: var(--dior-radius-panel, 16px) !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
+    text-align: left !important;
+
+    /* SweetAlert lays the popup out as a grid. With a fixed dialog height and
+       only the title + form in flow, the two auto rows split the height
+       evenly — the title box became ~380px tall, which is why the form
+       appeared to float in the middle of a half-empty card. Pin the title row
+       to its content and give the remaining height to the form. */
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    align-content: start !important;
+    row-gap: 0 !important;
+}
+
+@media (max-width: 767px) {
+    .dior-hipaatizer-popup-v17.swal2-popup {
+        width: 96vw !important;
+        max-width: 96vw !important;
+        height: 94dvh !important;
+        max-height: 94dvh !important;
+        padding: 16px 12px 14px !important;
+        border-radius: 14px !important;
+    }
 }
 
 #dior-docbooker-modal .modal-header,

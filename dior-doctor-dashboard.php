@@ -695,6 +695,9 @@ class Dior_Doctor_Dashboard
 
         if (class_exists('Dior_Medical_Auth')) {
             Dior_Medical_Auth::enqueue_assets();
+            // Mark this request as a dashboard so the footer renders the
+            // appointment modal (see is_portal_dashboard_request()).
+            $GLOBALS['dior_rendering_doctor_dashboard'] = true;
         }
 
         $user_id       = get_current_user_id();
@@ -731,6 +734,7 @@ class Dior_Doctor_Dashboard
 
         ob_start();
         include DIOR_PORTAL_PATH . "templates/doctor-dashboard.php";
+        $GLOBALS['dior_rendering_doctor_dashboard'] = false;
         return ob_get_clean();
     }
 

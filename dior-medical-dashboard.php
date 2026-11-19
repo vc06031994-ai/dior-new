@@ -1219,14 +1219,23 @@ class Dior_Medical_Auth
         );
 
         // ── DocBooker Booking Modal Controller ─────────────────────────────
-        $db_modal_js_ver = file_exists(DIOR_PORTAL_PATH . 'assets/js/dior-docbooker-modal.js') ? filemtime(DIOR_PORTAL_PATH . 'assets/js/dior-docbooker-modal.js') : DIOR_PORTAL_VERSION;
-        wp_enqueue_script(
-            'dior-docbooker-modal-js',
-            DIOR_PORTAL_URL . 'assets/js/dior-docbooker-modal.js',
-            ['jquery', 'sweetalert2'],
-            $db_modal_js_ver,
-            true
-        );
+        // Portal-only. This controller carries a global postMessage listener
+        // and URL/hash auto-open, so loading it on a public page let a guest's
+        // HIPAAtizer submission open the appointment modal. It is only useful
+        // where the modal itself is rendered, so both are gated the same way.
+        if (self::is_portal_dashboard_request()) {
+            $db_modal_js_ver = file_exists(DIOR_PORTAL_PATH . 'assets/js/dior-docbooker-modal.js') ? filemtime(DIOR_PORTAL_PATH . 'assets/js/dior-docbooker-modal.js') : DIOR_PORTAL_VERSION;
+            wp_enqueue_script(
+                'dior-docbooker-modal-js',
+                DIOR_PORTAL_URL . 'assets/js/dior-docbooker-modal.js',
+                // dior_vars is localised onto dior-dashboard-js; the controller
+                // reads dior_vars.is_logged_in to decide whether it may react
+                // to a HIPAAtizer postMessage at all.
+                ['jquery', 'sweetalert2', 'dior-dashboard-js'],
+                $db_modal_js_ver,
+                true
+            );
+        }
 
         // ── FDA Prescription Modal Controller ────────────────────────────────
         $fda_modal_js_ver = file_exists(DIOR_PORTAL_PATH . 'assets/js/dior-fda-prescription-modal.js') ? filemtime(DIOR_PORTAL_PATH . 'assets/js/dior-fda-prescription-modal.js') : DIOR_PORTAL_VERSION;
@@ -2615,6 +2624,19 @@ class Dior_Medical_Auth
     }
 
     /**
+     * The patient dashboard URL, resolved the same way.
+     *
+     * Templates link to the dashboard (e.g. the overview "Book An Appointment"
+     * shortcut) and must not hardcode a domain or slug. Falls back to the
+     * conventional path only when no page carries the shortcode.
+     */
+    public static function portal_dashboard_url()
+    {
+        return self::portal_page_url('dior_patient_dashboard', ['patient-dashboard'])
+            ?: home_url('/patient-dashboard/');
+    }
+
+    /**
      * The registration URL, resolved the same way.
      */
     public static function portal_registration_url()
@@ -2703,6 +2725,12 @@ class Dior_Medical_Auth
         }
 
         self::enqueue_assets();
+
+        // Tell the footer/render helpers that this request really is the
+        // patient portal, so the appointment modal is rendered even though the
+        // post content has already been parsed by the time the footer runs.
+        $GLOBALS['dior_patient_portal_context'] = true;
+        $GLOBALS['dior_rendering_patient_dashboard'] = true;
 
         $logo_url = self::get_logo_url();
         $user_id = get_current_user_id();
@@ -2806,6 +2834,7 @@ class Dior_Medical_Auth
         ?>
 <?php include DIOR_PORTAL_PATH . 'templates/patient-dashboard.php'; ?>
 <?php
+                $GLOBALS['dior_rendering_patient_dashboard'] = false;
                 return ob_get_clean();
     }
     public static function handle_login()
@@ -5661,7 +5690,77 @@ class Dior_Medical_Auth
     }
 
     /**
+     * Is the current request a signed-in portal dashboard screen?
+     *
+     * The appointment modal is a dashboard control: it belongs to a signed-in
+     * user who is looking at their own dashboard, and to nobody else. Two
+     * things must both be true:
+     *
+     *   1. a user is logged in, and
+     *   2. the page actually renders a dashboard — the patient dashboard
+     *      shortcode, the doctor dashboard shortcode, or a page that already
+     *      renders the modal itself.
+     *
+     * A guest landing on a public page (Start Your Visit, the login screen, a
+     * marketing page) therefore fails check 1, and a signed-in user reading a
+     * blog post fails check 2. Both correctly get neither the modal markup nor
+     * the DocBooker controller, whose global postMessage listener is what
+     * opened the popup for guests on Start Your Visit.
+     *
+     * Both dashboards need this: the doctor and patient templates call
+     * diorOpenDocBookerModal() and rely on the footer-rendered modal, so
+     * gating on "patient only" would break Book Visit for doctors.
+     */
+    public static function is_portal_dashboard_request()
+    {
+        if (is_admin()) {
+            return false;
+        }
+
+        if (!get_current_user_id()) {
+            return false;
+        }
+
+        // Explicit marker set by a template that renders the modal itself.
+        if (!empty($GLOBALS['dior_patient_portal_context'])) {
+            return true;
+        }
+
+        // A dashboard shortcode render is in progress, so we are inside the
+        // portal even though the post content has not been parsed yet.
+        if (!empty($GLOBALS['dior_rendering_patient_dashboard']) || !empty($GLOBALS['dior_rendering_doctor_dashboard'])) {
+            return true;
+        }
+
+        global $post;
+        if ($post instanceof WP_Post) {
+            if (
+                has_shortcode($post->post_content, 'dior_patient_dashboard') ||
+                has_shortcode($post->post_content, 'dior_doctor_dashboard') ||
+                in_array($post->post_name, ['patient-dashboard', 'doctor-dashboard'], true)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Backwards-compatible alias for the patient-specific check.
+     */
+    public static function is_patient_portal_request()
+    {
+        return self::is_portal_dashboard_request();
+    }
+
+    /**
      * Render DocBooker booking modal template
+     *
+     * Rendered on signed-in dashboard screens only. The appointment modal has
+     * no meaning for a visitor who is not signed in, and rendering it site-wide
+     * (wp_footer) put the markup on public pages such as Start Your Visit and
+     * the login screen, where a HIPAAtizer postMessage could open it.
      */
     public static function render_docbooker_booking_modal()
     {
@@ -5669,6 +5768,11 @@ class Dior_Medical_Auth
         if ($rendered) {
             return;
         }
+
+        if (!self::is_portal_dashboard_request()) {
+            return;
+        }
+
         $template = DIOR_PORTAL_PATH . 'templates/modal-docbooker-booking.php';
         if (file_exists($template)) {
             $rendered = true;
@@ -5957,9 +6061,31 @@ if (!class_exists('Dior_HIPAAtizer_Appointment_Popup_V17')) {
             add_action('wp_footer', [__CLASS__, 'render_form_source'], 100);
         }
 
+        /**
+         * The hidden appointment form belongs to the dashboards only.
+         *
+         * It exists purely as the markup source that the "Book An Appointment"
+         * button relocates into a SweetAlert popup. On a public page it is dead
+         * weight, and worse, its HIPAAtizer renderer is live: a guest who
+         * submits the page's own intake form sees this second renderer's
+         * messages side by side with the real form. Scoping the markup to the
+         * signed-in dashboards keeps the popup working exactly as before while
+         * leaving public pages with a single, correct HIPAAtizer form.
+         */
+        private static function is_dashboard_request()
+        {
+            if (is_admin() || !is_user_logged_in()) {
+                return false;
+            }
+            if (class_exists('Dior_Medical_Auth') && method_exists('Dior_Medical_Auth', 'is_portal_dashboard_request')) {
+                return Dior_Medical_Auth::is_portal_dashboard_request();
+            }
+            return false;
+        }
+
         public static function enqueue_assets()
         {
-            if (is_admin()) {
+            if (!self::is_dashboard_request()) {
                 return;
             }
 
@@ -5977,7 +6103,7 @@ if (!class_exists('Dior_HIPAAtizer_Appointment_Popup_V17')) {
 
         public static function render_form_source()
         {
-            if (is_admin() || !shortcode_exists('hipaatizer')) {
+            if (!self::is_dashboard_request() || !shortcode_exists('hipaatizer')) {
                 return;
             }
 

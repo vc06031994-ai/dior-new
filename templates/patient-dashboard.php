@@ -1212,5 +1212,14 @@
         </div>
     </div>
 </div>
-<!-- Hidden Intake Form Content for Dashboard Popup -->
-<?php Dior_Medical_Auth::render_docbooker_booking_modal(); ?>
+
+<?php
+// The footer hook (wp_footer, priority 50) renders the appointment modal.
+// It deliberately runs outside the portal wrapper here so that the modal is a
+// sibling of the dashboard rather than a fixed-position descendant of a
+// transformed/filtered container — which is what broke the overlay stacking
+// when it rendered inside #dior-patient-portal-app.
+//
+// Rendering it here would be a no-op duplicate anyway: render_docbooker_booking_modal()
+// is guarded by a static flag and by is_portal_dashboard_request().
+?>

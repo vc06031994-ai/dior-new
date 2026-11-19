@@ -8,6 +8,18 @@ $past_list     = (!empty($past_list) && is_array($past_list)) ? $past_list : [];
 $documents     = (!empty($documents) && is_array($documents)) ? $documents : [];
 $hipaa_intake  = (!empty($hipaa_intake) && is_array($hipaa_intake)) ? $hipaa_intake : Dior_Patient_Portal_Data::get_normalized_hipaa_intake($user_id);
 $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted']) || !empty($hipaa_intake['submitted_at']));
+
+// The Book An Appointment shortcut must stay on whatever domain and page slug
+// this site actually uses. A hardcoded absolute path stopped working as soon
+// as the site moved, so resolve the dashboard page instead.
+$dior_overview_dashboard_url = home_url('/patient-dashboard/');
+if (class_exists('Dior_Medical_Auth') && method_exists('Dior_Medical_Auth', 'portal_dashboard_url')) {
+    $resolved_dashboard = Dior_Medical_Auth::portal_dashboard_url();
+    if (!empty($resolved_dashboard)) {
+        $dior_overview_dashboard_url = $resolved_dashboard;
+    }
+}
+$dior_overview_book_url = trailingslashit($dior_overview_dashboard_url) . '#tab=appointments&subtab=book';
 ?>
 <section class="dior-tab-panel active custom-patient-overview" id="tab-overview">
   <div
@@ -17,7 +29,7 @@ $has_intake    = !empty($hipaa_intake) && (!empty($hipaa_intake['is_submitted'])
       <h1 class="h3 fw-bold text-dark mb-1">Welcome Back, <?php echo esc_html(strtoupper($display_first_name)); ?></h1>
       <p class="text-secondary small mb-0">Manage your telehealth visits, prescriptions, and medical records.</p>
     </div>
-    <a href="https://bagheeraventures.com/diormedical/patient-dashboard/#tab=appointments&subtab=book" data-appt-subtab="book"
+    <a href="<?php echo esc_url($dior_overview_book_url); ?>" data-appt-subtab="book"
       class="btn dior-btn-gold rounded-pill fw-semibold py-2 px-4 shadow-sm d-inline-flex align-items-center gap-2">
       <i class="fas fa-calendar-plus"></i>
       <span>Book An Appointment</span>
