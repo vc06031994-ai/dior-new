@@ -1470,6 +1470,114 @@ let diorBillCurrentPage = 1;
         document.getElementById('diorBillingModal').style.display = 'none';
     }
 
+    /* Build the printable body of a single bill. Shared by download and print so
+       both produce the same document. */
+    function diorBuildBillHtml(inv, doc, date, amt, tax, disc, total) {
+        var logo = (window.dior_vars && window.dior_vars.logo_url) || '';
+        var row = function (label, value) {
+            return '<tr><th>' + label + '</th><td>' + value + '</td></tr>';
+        };
+        var esc = function (v) {
+            return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+        return '<div class="dior-bill-doc">' +
+            '<div class="bill-doc-head">' +
+                (logo ? '<img src="' + esc(logo) + '" alt="Dior Medical">' : '') +
+                '<div><h1>DIOR MEDICAL TELEHEALTH</h1>' +
+                '<p>Billing Statement &middot; Invoice ' + esc(inv) + '</p></div>' +
+            '</div>' +
+            '<table class="bill-doc-table">' +
+                row('Invoice No', esc(inv)) +
+                row('Doctor', esc(doc)) +
+                row('Date', esc(date)) +
+                row('Amount', esc(amt)) +
+                row('Tax', esc(tax)) +
+                row('Discount', esc(disc)) +
+                '<tr class="bill-doc-total"><th>Total</th><td>' + esc(total) + '</td></tr>' +
+            '</table>' +
+            '<p class="bill-doc-foot">This statement was generated from the Dior Medical patient portal. ' +
+            'For billing questions, contact the clinic using the details on our website.</p>' +
+            '</div>';
+    }
+
+    /* Download the bill as a PDF, with a print-window fallback when the PDF
+       library is unavailable. */
+    window.diorDownloadBillPdf = function (inv, doc, date, amt, tax, disc, total) {
+        var html = diorBuildBillHtml(inv, doc, date, amt, tax, disc, total);
+        var fileName = 'Dior-Bill-' + String(inv).replace(/[^a-zA-Z0-9]/g, '-') + '.pdf';
+
+        if (typeof html2pdf === 'undefined' || !html2pdf) {
+            window.diorPrintBill(inv, doc, date, amt, tax, disc, total);
+            return;
+        }
+
+        var holder = document.createElement('div');
+        holder.style.position = 'fixed';
+        holder.style.left = '0';
+        holder.style.top = '0';
+        holder.style.width = '750px';
+        holder.style.background = '#FFFFFF';
+        holder.style.zIndex = '-999999';
+        holder.style.opacity = '1';
+        holder.style.pointerEvents = 'none';
+        holder.innerHTML = html;
+        document.body.appendChild(holder);
+
+        html2pdf().set({
+            margin: [8, 8, 8, 8],
+            filename: fileName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0, scrollX: 0, windowWidth: 794 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(holder.firstElementChild || holder).save()
+            .then(function () {
+                if (holder.parentNode) holder.parentNode.removeChild(holder);
+            })
+            .catch(function (err) {
+                console.error('Bill PDF export failed:', err);
+                if (holder.parentNode) holder.parentNode.removeChild(holder);
+                window.diorPrintBill(inv, doc, date, amt, tax, disc, total);
+            });
+    };
+
+    /* Print the bill in its own window so the dashboard chrome is not printed. */
+    window.diorPrintBill = function (inv, doc, date, amt, tax, disc, total) {
+        var body = diorBuildBillHtml(inv, doc, date, amt, tax, disc, total);
+        var css = (window.dior_patient_dashboard && window.dior_patient_dashboard.refactor_css_url) || '';
+        var styles =
+            '@page{size:A4 portrait;margin:14mm}' +
+            'body{margin:0;background:#fff;color:#0F172A;font-family:Montserrat,Arial,sans-serif;' +
+            '-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+            '.bill-doc-head{display:flex;align-items:center;justify-content:space-between;gap:16px;' +
+            'padding-bottom:14px;margin-bottom:20px;border-bottom:2px solid #1A528E}' +
+            '.bill-doc-head img{max-height:52px;width:auto;object-fit:contain}' +
+            '.bill-doc-head h1{font-size:17px;margin:0;color:#1A528E}' +
+            '.bill-doc-head p{margin:4px 0 0;font-size:12px;color:#64748B}' +
+            '.bill-doc-table{width:100%;border-collapse:collapse}' +
+            '.bill-doc-table th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;' +
+            'color:#64748B;font-weight:700;padding:10px 12px;border-bottom:1px solid #E2E8F0;width:38%}' +
+            '.bill-doc-table td{padding:10px 12px;border-bottom:1px solid #E2E8F0;font-size:13px;font-weight:600}' +
+            '.bill-doc-total th,.bill-doc-total td{border-top:2px solid #1A528E;border-bottom:0;' +
+            'font-size:15px;color:#00346C;font-weight:700}' +
+            '.bill-doc-foot{margin-top:18px;font-size:10px;color:#64748B;line-height:1.5}';
+
+        var win = window.open('', '_blank');
+        if (!win) {
+            window.print();
+            return;
+        }
+        win.document.open();
+        win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice ' +
+            String(inv).replace(/[<>]/g, '') + '</title>' +
+            (css ? '<link rel="stylesheet" href="' + css + '">' : '') +
+            '<style>' + styles + '</style></head><body>' + body + '</body></html>');
+        win.document.close();
+        win.focus();
+        setTimeout(function () { win.print(); }, 350);
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         diorRenderBillPagination();
     });

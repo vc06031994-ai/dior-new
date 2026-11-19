@@ -82,14 +82,36 @@
                             <td><span class="cell-text"><?php echo esc_html($bm[5]); ?></span></td>
                             <td><span class="cell-text"><?php echo esc_html($bm[6]); ?></span></td>
                             <td>
+                                <?php
+                                /*
+                                 * These three icons used to carry no handler at all. The row itself
+                                 * has `onclick="diorOpenBillingModal(...)"`, so every click bubbled
+                                 * up to the row and opened the same modal — download never
+                                 * downloaded and print never printed. Each button now runs its own
+                                 * action and stops the click from reaching the row.
+                                 */
+                                $bm_args = sprintf(
+                                    "'%s','%s','%s','%s','%s','%s','%s'",
+                                    esc_js($bm[0]),
+                                    esc_js($bm[1]),
+                                    esc_js($bm[2]),
+                                    esc_js($bm[3]),
+                                    esc_js($bm[4]),
+                                    esc_js($bm[5]),
+                                    esc_js($bm[6])
+                                );
+                                ?>
                                 <div class="cell-content action-cell" style="gap:8px;">
-                                    <button type="button" class="btn btn-sm btn-success" title="Download Bill">
+                                    <button type="button" class="btn btn-sm btn-success" title="Download Bill"
+                                        onclick="event.stopPropagation(); diorDownloadBillPdf(<?php echo $bm_args; ?>)">
                                         <i class="fas fa-download"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-info" title="View Bill">
+                                    <button type="button" class="btn btn-sm btn-info" title="View Bill"
+                                        onclick="event.stopPropagation(); diorOpenBillingModal(<?php echo $bm_args; ?>)">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-secondary" title="Print Bill">
+                                    <button type="button" class="btn btn-sm btn-secondary" title="Print Bill"
+                                        onclick="event.stopPropagation(); diorPrintBill(<?php echo $bm_args; ?>)">
                                         <i class="fas fa-print"></i>
                                     </button>
                                 </div>
