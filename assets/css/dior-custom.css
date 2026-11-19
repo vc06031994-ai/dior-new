@@ -73378,3 +73378,78 @@ body:has(.dior-doctor-wrap),
         flex-shrink: 0 !important;
     }
 }
+
+/* ============================================================
+   Medical Record — screen vs print
+   ============================================================
+   The patient dashboard only ever shows one tab panel at a time, and the
+   portal shell draws the sidebar, topbar and page padding. Printing the live
+   document therefore produced the whole dashboard with a single visible tab.
+   The print stylesheet below isolates the clinical timeline instead, and is
+   shared by the "Print Care History" button, which opens a dedicated window
+   with this same stylesheet attached. */
+
+@media print {
+    /* Hide the portal chrome and every panel except the visible one. */
+    #dior-patient-portal-app .dior-side,
+    #dior-patient-portal-app .dior-topbar,
+    #dior-patient-portal-app .dior-sidebar-backdrop,
+    #dior-patient-portal-app .dior-mobile-drawer-backdrop,
+    #dior-patient-portal-app .no-print {
+        display: none !important;
+    }
+
+    /* Triple id: the bar also matches the generic
+       `… .dior-tab-panel>.mb-4:first-child { display: flex !important }`
+       rule (it carries mb-4), which is specificity-heavy and would otherwise
+       win over the print hide. */
+    #dior-patient-portal-app#dior-patient-portal-app#dior-patient-portal-app .dior-subtab-nav-bar {
+        display: none !important;
+    }
+
+    #dior-patient-portal-app .dior-main-content,
+    #dior-patient-portal-app .dior-tab-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+
+    #dior-patient-portal-app .dior-tab-panel {
+        display: none !important;
+    }
+
+    #dior-patient-portal-app .dior-tab-panel.active {
+        display: block !important;
+    }
+
+    /* The timeline is a flex row of three columns; flatten it to a plain list
+       so long event text is not squeezed into a narrow column on paper. */
+    body.dior-print-document .mr-print-head,
+    body.dior-print-document .mr-print-foot {
+        display: block;
+    }
+
+    .mr-timeline-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 14px !important;
+    }
+
+    .mr-timeline-content-card {
+        box-shadow: none !important;
+        border-color: #CBD5E1 !important;
+    }
+
+    .mr-timeline-icon-node,
+    .mr-timeline-vertical-line {
+        display: none !important;
+    }
+
+    /* A modal left open (e.g. the add-document form) must not appear on paper. */
+    #dior-patient-portal-app .dior-modal-overlay,
+    #dior-patient-portal-app .modal {
+        display: none !important;
+    }
+}

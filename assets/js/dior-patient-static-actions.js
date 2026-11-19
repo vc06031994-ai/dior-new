@@ -961,4 +961,115 @@
             btn.disabled = false;
         });
     });
+
+    /* Print Care History (Medical Record tab).
+       The print button previously had no handler at all, so nothing happened on
+       click. Printing the live dashboard would also dump the sidebar, topbar and
+       every hidden tab panel, so build a dedicated document: the patient header,
+       the active filter state, and the visible timeline rows only. */
+    window.diorPrintMedicalRecord = function () {
+        var panel = document.getElementById('tab-medical_record');
+        if (!panel) {
+            window.print();
+            return;
+        }
+
+        var timeline = panel.querySelector('.modern-treatment-timeline');
+        if (!timeline) {
+            window.print();
+            return;
+        }
+
+        var rows = Array.prototype.filter.call(
+            timeline.querySelectorAll('.mr-timeline-item'),
+            function (item) { return item.style.display !== 'none'; }
+        );
+
+        if (!rows.length) {
+            if (window.Swal) {
+                Swal.fire({ icon: 'info', title: 'Nothing to Print', text: 'No clinical events are visible under the current filter.' });
+            }
+            return;
+        }
+
+        var titleEl = panel.querySelector('.card-title-text');
+        var docTitle = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim() : 'Patient Treatment & Clinical Timeline Log';
+
+        var patientBadge = panel.querySelector('.patient-id-badge');
+        var patientLine = patientBadge ? patientBadge.textContent.replace(/\s+/g, ' ').trim() : '';
+
+        var logoUrl = (window.dior_vars && window.dior_vars.logo_url) || '';
+        var cssUrl = (window.dior_patient_dashboard && window.dior_patient_dashboard.refactor_css_url)
+            || (window.dior_vars && window.dior_vars.refactor_css_url) || '';
+
+        var body = rows.map(function (item) {
+            var date = item.querySelector('.mr-timeline-time-col');
+            var dateMain = date ? (date.children[0] ? date.children[0].textContent.trim() : '') : '';
+            var dateSub = date ? (date.children[1] ? date.children[1].textContent.trim() : '') : '';
+            var badge = item.querySelector('.mr-timeline-content-card span');
+            var heading = item.querySelector('.mr-timeline-content-card h5');
+            var doctor = item.querySelector('.mr-timeline-content-card .dior-ic-9bbdb950cc');
+            var description = item.querySelector('.dior-ic-972dc92ce3');
+
+            return '<tr>' +
+                '<td class="mr-print-date">' + esc(dateMain) +
+                    (dateSub ? '<span class="mr-print-time">' + esc(dateSub) + '</span>' : '') + '</td>' +
+                '<td class="mr-print-event">' +
+                    (badge ? '<span class="mr-print-badge">' + esc(badge.textContent.trim()) + '</span>' : '') +
+                    (heading ? '<strong>' + esc(heading.textContent.trim()) + '</strong>' : '') +
+                    (description ? '<p>' + esc(description.textContent.trim()) + '</p>' : '') +
+                '</td>' +
+                '<td class="mr-print-doctor">' + esc(doctor ? doctor.textContent.trim() : '') + '</td>' +
+                '</tr>';
+        }).join('');
+
+        var html = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+            '<title>' + esc(docTitle) + '</title>' +
+            (cssUrl ? '<link rel="stylesheet" href="' + esc(cssUrl) + '">' : '') +
+            '<style>' +
+            '@page { size: A4 portrait; margin: 14mm; }' +
+            'body { margin: 0; padding: 0; background: #FFFFFF; color: #0F172A;' +
+            ' font-family: Montserrat, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }' +
+            '.mr-print-head { display: flex; align-items: center; justify-content: space-between; gap: 16px;' +
+            ' padding-bottom: 14px; margin-bottom: 18px; border-bottom: 2px solid #1A528E; }' +
+            '.mr-print-head img { max-height: 52px; width: auto; object-fit: contain; }' +
+            '.mr-print-head h1 { font-size: 17px; margin: 0; color: #1A528E; }' +
+            '.mr-print-head p { margin: 4px 0 0; font-size: 12px; color: #64748B; }' +
+            'table { width: 100%; border-collapse: collapse; }' +
+            'th { text-align: left; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;' +
+            ' color: #64748B; padding: 0 10px 8px; border-bottom: 1px solid #E2E8F0; }' +
+            'td { vertical-align: top; padding: 12px 10px; border-bottom: 1px solid #E2E8F0; font-size: 12px; }' +
+            'tr { page-break-inside: avoid; }' +
+            '.mr-print-date { width: 120px; font-weight: 700; white-space: nowrap; }' +
+            '.mr-print-time { display: block; font-weight: 400; color: #64748B; font-size: 11px; margin-top: 3px; }' +
+            '.mr-print-badge { display: inline-block; background: #F0F6FC; color: #1A528E; font-size: 9px;' +
+            ' font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px;' +
+            ' border-radius: 10px; margin-bottom: 6px; }' +
+            '.mr-print-event strong { display: block; font-size: 13px; color: #0F172A; }' +
+            '.mr-print-event p { margin: 6px 0 0; color: #334155; line-height: 1.55; }' +
+            '.mr-print-doctor { width: 160px; color: #334155; }' +
+            '.mr-print-foot { margin-top: 18px; padding-top: 10px; border-top: 1px solid #E2E8F0;' +
+            ' font-size: 10px; color: #64748B; }' +
+            '</style></head><body>' +
+            '<div class="mr-print-head"><div>' +
+            '<h1>' + esc(docTitle) + '</h1>' +
+            (patientLine ? '<p>' + esc(patientLine) + '</p>' : '') +
+            '</div>' + (logoUrl ? '<img src="' + esc(logoUrl) + '" alt="Dior Medical">' : '') + '</div>' +
+            '<table><thead><tr><th>Date</th><th>Event</th><th>Provider</th></tr></thead>' +
+            '<tbody>' + body + '</tbody></table>' +
+            '<div class="mr-print-foot">Generated ' + esc(new Date().toLocaleString()) +
+            ' · Dior Medical Telehealth · Confidential patient record — handle per HIPAA.</div>' +
+            '</body></html>';
+
+        var win = window.open('', '_blank');
+        if (!win) {
+            window.print();
+            return;
+        }
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+        win.focus();
+        setTimeout(function () { win.print(); }, 350);
+    };
 }());

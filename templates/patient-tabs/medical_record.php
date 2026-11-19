@@ -100,8 +100,15 @@
                                         
                                             <input type="text" placeholder="Search history..." class="form-control border-start-0 ps-0 dior-ic-c87dae7386" style="box-shadow: none;">
                                         </div>
-                                        <button type="button" title="Add Medical Record" class="btn btn-sm btn-primary px-3 rounded-pill shadow-sm" onclick="if(typeof diorDocOpenUploadModal === 'function') diorDocOpenUploadModal(); else Swal.fire({ icon: 'info', title: 'Provider Access Only', text: 'Only authorized providers can upload clinical documents here.' });"><i class="fas fa-plus"></i></button>
-                                        <button type="button" title="Print Care History" class="btn btn-sm btn-outline-secondary px-3 rounded-pill bg-white shadow-sm dior-ic-30bc658af7"><i class="fas fa-print"></i></button>
+                                        <?php
+                                        /* The plus used to call diorDocOpenUploadModal(), which opens the
+                                           provider upload modal (modal-doc-upload). That markup only exists on
+                                           the doctor dashboard, so on the patient portal the click found no
+                                           modal and silently did nothing. Patients upload through their own
+                                           document modal instead, the same one the Documents tab uses. */
+                                        ?>
+                                        <button type="button" title="Add Medical Record" class="btn btn-sm btn-primary px-3 rounded-pill shadow-sm" onclick="if (typeof diorOpenDocumentUploadModal === 'function') { diorOpenDocumentUploadModal(); }"><i class="fas fa-plus"></i></button>
+                                        <button type="button" title="Print Care History" class="btn btn-sm btn-outline-secondary px-3 rounded-pill bg-white shadow-sm dior-ic-30bc658af7" onclick="if (typeof diorPrintMedicalRecord === 'function') { diorPrintMedicalRecord(); } else { window.print(); }"><i class="fas fa-print"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -287,7 +294,13 @@
                                                          class="mr-timeline-doc-avatar"
                                                          width="32" height="32"
                                                          loading="lazy" decoding="async"
-                                                         data-fallback="<?php echo esc_url($avatar_fallback); ?>"
+                                                         <?php
+                                                         /* esc_url() is wrong for a data: URI: it decodes %22 back to a
+                                                            raw quote and rewrites ':' as &#58;, so the attribute ended at
+                                                            xmlns=" and the fallback never loaded. esc_attr() keeps the
+                                                            percent-encoded SVG intact and safe inside the attribute. */
+                                                         ?>
+                                                         data-fallback="<?php echo esc_attr($avatar_fallback); ?>"
                                                          onerror="this.onerror=null;this.src=this.getAttribute('data-fallback');">
                                                     <div>
                                                         <span class="dior-ic-9bbdb950cc"><?php echo esc_html($event['doctor']); ?></span>
