@@ -26,39 +26,33 @@
     <!-- Top Action Cards -->
     <div class="dior-ic-597dc7a00c">
         <!-- Request Ambulance -->
-        <div class="dior-ic-f5e657b8f6">
+        <div class="dior-ic-f5e657b8f6 dior-emerg-card">
             <div class="dior-ic-050317ce29">
                 <i class="fas fa-truck-medical"></i>
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Request Ambulance</h4>
             <p class="dior-ic-b4344ed8fa">Immediate emergency assistance</p>
-            <button type="button" onmouseover="this.style.background='#DC2626'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#DC2626';"
-                class="dior-ic-7f1daa7fb4 btn">Call Now</button>
+            <button type="button" class="dior-ic-7f1daa7fb4 btn">Call Now</button>
         </div>
 
         <!-- Emergency Doctor -->
-        <div class="dior-ic-f5e657b8f6">
+        <div class="dior-ic-f5e657b8f6 dior-emerg-card">
             <div class="dior-ic-d1eca3c91b">
                 <i class="fas fa-user-doctor"></i>
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Emergency Doctor</h4>
             <p class="dior-ic-b4344ed8fa">Connect with available doctors</p>
-            <button type="button" onmouseover="this.style.background='#D97706'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#D97706';"
-                class="dior-ic-a0664572fd btn">Contact</button>
+            <button type="button" class="dior-ic-a0664572fd btn">Contact</button>
         </div>
 
         <!-- Digital Health Card -->
-        <div class="dior-ic-f5e657b8f6">
+        <div class="dior-ic-f5e657b8f6 dior-emerg-card">
             <div class="dior-ic-12cb12d607">
                 <i class="fas fa-id-card"></i>
             </div>
             <h4 class="dior-ic-4f9a9fe05d">Digital Health Card</h4>
             <p class="dior-ic-b4344ed8fa">Access your medical records</p>
-            <button type="button" onmouseover="this.style.background='#059669'; this.style.color='#fff';"
-                onmouseout="this.style.background='transparent'; this.style.color='#059669';"
-                class="dior-ic-6713853875 btn">View Card</button>
+            <button type="button" class="dior-ic-6713853875 btn">View Card</button>
         </div>
     </div>
 

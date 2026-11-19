@@ -73621,3 +73621,553 @@ body:has(.dior-doctor-wrap),
         font-weight: 700 !important;
     }
 }
+
+/* ============================================================
+   Emergency Support — action cards on the portal palette
+   ============================================================
+   The three cards shipped with their own palette: a red ambulance,
+   an amber doctor and a teal health card, each with a pastel circle
+   and an outline button in the same colour. Nothing else in the
+   portal uses those hues, so the row read as a foreign widget.
+
+   They now use the shared theme tokens — navy #1A528E for the
+   primary action, slate #64748B for secondary copy, #E2E8F0 for
+   borders — while keeping the one red flag that genuinely carries
+   meaning: the ambulance is the emergency path. */
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 16px !important;
+    padding: 30px 22px !important;
+    text-align: center !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    transition: border-color .18s ease, box-shadow .18s ease !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card:hover {
+    border-color: #C5A059 !important;
+    box-shadow: 0 6px 18px rgba(26, 82, 142, .10) !important;
+}
+
+/* shared icon disc: soft navy by default */
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card>div:first-child {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 18px auto !important;
+    font-size: 24px !important;
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+}
+
+/* the ambulance keeps red — it is the actual emergency action */
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card.dior-ic-f5e657b8f6:first-child>div:first-child {
+    background: #FEF2F2 !important;
+    color: #DC2626 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card h4 {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin: 0 0 6px 0 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card p {
+    font-size: 13.5px !important;
+    color: #64748B !important;
+    margin: 0 0 20px 0 !important;
+    line-height: 1.5 !important;
+}
+
+/* buttons: one consistent shape across all three cards */
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card .btn {
+    margin-top: auto !important;
+    padding: 9px 26px !important;
+    border-radius: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    border: 1px solid #1A528E !important;
+    background: #FFFFFF !important;
+    color: #1A528E !important;
+    box-shadow: none !important;
+    transition: background .18s ease, color .18s ease, border-color .18s ease !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card .btn:hover {
+    background: #1A528E !important;
+    border-color: #1A528E !important;
+    color: #FFFFFF !important;
+}
+
+/* The ambulance button is the only primary action in the row, so it is
+   filled while the other two stay outlined — that also keeps the red from
+   reading as decoration on all three cards. */
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card:first-child .btn {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card:first-child .btn:hover {
+    background: #B91C1C !important;
+    border-color: #B91C1C !important;
+    color: #FFFFFF !important;
+}
+
+/* stack the cards on small screens instead of squeezing them */
+@media (max-width: 991.98px) {
+    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-ic-597dc7a00c {
+        gap: 14px !important;
+        margin-bottom: 20px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency .dior-emerg-card {
+        flex: 1 1 100% !important;
+        min-width: 0 !important;
+        padding: 24px 18px !important;
+    }
+}
+
+/* ============================================================
+   Patient Notifications — theme palette + responsive layout
+   ============================================================
+   Two problems in one tab.
+
+   Colour: the four stat cards each ran their own hue (indigo, amber,
+   rose, emerald) with a coloured glow, a tinted icon tile and a tinted
+   pill, and the priority badges added orange / blue / red on top. The
+   result did not belong to the portal palette, where #1A528E carries
+   state and everything else is slate on white.
+
+   Layout: below ~768px the feed header, the unread chip and the
+   segmented tabs kept their desktop sizes. The chip broke into three
+   stacked letters, the tabs rendered one character per line, and the
+   240px search box pushed past the card edge.
+
+   Both are fixed here, scoped to #tab-notifications. */
+
+/* ---- stat cards: one card language, navy + gold accents ------------ */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-card {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .05) !important;
+}
+
+/* the coloured blur blob is gone — flat surface keeps the row calm */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-glow {
+    display: none !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-label {
+    color: #64748B !important;
+    font-size: 11px !important;
+    letter-spacing: .04em !important;
+}
+
+/* every figure is navy; the number is the signal, not a colour code */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-value,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .text-indigo,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .text-amber,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .text-rose,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .text-emerald {
+    color: #1A528E !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-icon-wrapper {
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+    border-radius: 12px !important;
+}
+
+/* the one figure that means "needs attention" reads in the gold accent */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-card-amber .stat-value {
+    color: #C5A059 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-card-amber .stat-icon-wrapper {
+    background: #FBF6EC !important;
+    color: #A8823C !important;
+}
+
+/* badges: neutral chip, gold only for pending action */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-badge,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-indigo,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-amber,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-rose,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-emerald {
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+    border: 1px solid #E2E8F0 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-amber {
+    background: #FBF6EC !important;
+    color: #A8823C !important;
+    border-color: #EFE4CD !important;
+}
+
+/* keep the stat pills on one line — "Pending Action" was wrapping and
+   pushing the subtext off the card at 1400px */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-badge {
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+    padding: 4px 9px !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-footer {
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-subtext {
+    color: #94A3B8 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-width: 0 !important;
+}
+
+/* ---- feed card shell ---------------------------------------------- */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .main-feed-card {
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 16px !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .unread-count-chip {
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+    border: 1px solid #E2E8F0 !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+/* filters bar: neutral surface, navy active tab */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .filters-bar {
+    background: #F8FAFC !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-nav {
+    background: #EEF2F7 !important;
+    border-radius: 10px !important;
+    padding: 3px !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-tab {
+    color: #64748B !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+    font-size: 13px !important;
+    padding: 7px 14px !important;
+    width: auto !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-tab.active {
+    background: #1A528E !important;
+    color: #FFFFFF !important;
+    box-shadow: none !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-tab.active .count-pill {
+    background: rgba(255, 255, 255, .22) !important;
+    color: #FFFFFF !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .count-pill {
+    background: #E2E8F0 !important;
+    color: #475569 !important;
+    flex: 0 0 auto !important;
+}
+
+/* header action buttons: quiet outline, navy on hover */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-outline-action {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #475569 !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-outline-action:hover {
+    border-color: #1A528E !important;
+    color: #1A528E !important;
+    background: #F0F6FC !important;
+}
+
+/* ---- feed rows ---------------------------------------------------- */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-item-row {
+    border-bottom: 1px solid #EEF2F6 !important;
+    gap: 0 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-item-row:hover {
+    background: #F8FAFC !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .is-unread-row {
+    background: #F8FAFC !important;
+}
+
+/* type icons: one soft navy disc, so the disc no longer changes hue per
+   notification type while the badge already says what it is */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-user .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-security .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-appointment .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-system .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-billing .type-icon-wrapper,
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-type-update .type-icon-wrapper {
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-title {
+    color: #0F172A !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-text {
+    color: #475569 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .timestamp-tag {
+    color: #94A3B8 !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+/* priority badges: slate chip + navy dot, gold for pending work */
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority {
+    background: #F0F6FC !important;
+    color: #1A528E !important;
+    border: 1px solid #E2E8F0 !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority .status-dot {
+    background: #1A528E !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority-high {
+    background: #FBF6EC !important;
+    color: #A8823C !important;
+    border-color: #EFE4CD !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority-high .status-dot {
+    background: #C5A059 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority-critical {
+    background: #FEF2F2 !important;
+    color: #DC2626 !important;
+    border-color: #FBD5D5 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .badge-priority-critical .status-dot {
+    background: #DC2626 !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-inline-action {
+    background: #FFFFFF !important;
+    color: #1A528E !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-inline-action:hover {
+    background: #F0F6FC !important;
+    border-color: #1A528E !important;
+    color: #00346C !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-icon-action {
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    color: #64748B !important;
+    flex: 0 0 auto !important;
+}
+
+#dior-patient-portal-app#dior-patient-portal-app #tab-notifications .btn-icon-action:hover {
+    background: #F0F6FC !important;
+    border-color: #1A528E !important;
+    color: #1A528E !important;
+}
+
+/* ---- responsive ---------------------------------------------------- */
+@media (max-width: 1199.98px) {
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .dior-notif-stats-row {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .dior-notif-stat-col {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    /* stat cards: single column so the figure and the badge both fit */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .dior-notif-stats-row {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-card {
+        padding: 16px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-value {
+        font-size: 24px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .stat-footer {
+        padding-top: 10px !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    /* feed header: title on its own line, actions wrap underneath */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .main-feed-card>.card-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 16px !important;
+        gap: 10px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .main-feed-card>.card-header>div {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .card-title-text {
+        font-size: 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    /* keep the unread chip on one line beside the title */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .unread-count-chip {
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+
+    /* the four header buttons become a tidy 2x2 grid, not a ragged wrap */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .main-feed-card>.card-header .btn-outline-action {
+        flex: 1 1 calc(50% - 4px) !important;
+        justify-content: center !important;
+        padding: 7px 8px !important;
+        font-size: 11.5px !important;
+    }
+
+    /* filters bar: tabs on one line (scroll if needed), search full width */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .filters-bar {
+        padding: 12px 16px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .filters-bar>.row>div {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-nav {
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-tab {
+        flex: 1 1 auto !important;
+        justify-content: center !important;
+        padding: 8px 10px !important;
+        font-size: 12.5px !important;
+        writing-mode: horizontal-tb !important;
+        min-width: 0 !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .filters-bar .dior-bs-search-group {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* feed rows: icon + body stack, controls sit on the right of the title */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-item-row {
+        padding: 14px 16px !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .type-icon-wrapper {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 13px !important;
+        margin-right: 10px !important;
+    }
+
+    /* the row gap of 10px has to come out of the basis as well, otherwise
+       icon + body exceed 100% and the disc wraps onto its own line */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-body {
+        flex: 1 1 calc(100% - 54px) !important;
+        margin-right: 0 !important;
+        min-width: 0 !important;
+    }
+
+    /* title and timestamp stop fighting for the same line */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-body>.d-flex:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-title {
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-text {
+        font-size: 13px !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .timestamp-tag {
+        font-size: 11px !important;
+    }
+
+    /* controls drop to their own full-width line, right aligned */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .notification-controls {
+        flex: 1 1 100% !important;
+        justify-content: flex-end !important;
+    }
+}
+
+@media (max-width: 419.98px) {
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .segmented-tab .count-pill {
+        display: none !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-notifications .main-feed-card>.card-header .btn-outline-action {
+        flex: 1 1 100% !important;
+    }
+}
