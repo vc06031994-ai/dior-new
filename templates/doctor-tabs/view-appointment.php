@@ -82,6 +82,38 @@ if ($_va_is_admin) {
         ARRAY_A
     );
 } else {
+    // Appointments store doctor_id as a DocBooker CPT id (e.g. 1957) or as the
+    // resolver's central account — only rarely the raw WP user id. Matching on
+    // doctor_id = the logged-in user therefore returned an empty list for real
+    // doctors, which dropped the table into the usermeta fallback below: rows
+    // without a persisted join_url, and with it no "Join Meeting" button.
+    // Resolve every id this doctor owns first, then filter on the full set.
+    $va_allowed_ids = class_exists('Dior_Doctor_Resolver')
+        ? Dior_Doctor_Resolver::get_accessible_doctor_ids($doctor_id)
+        : [$doctor_id];
+
+    $va_linked_post_ids = $wpdb->get_col($wpdb->prepare(
+        "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_wpddb_doctor_user_id' AND meta_value = %s",
+        (string) $doctor_id
+    ));
+
+    $va_allowed_ids = array_values(array_unique(array_filter(array_map(
+        'intval',
+        array_merge((array) $va_allowed_ids, (array) $va_linked_post_ids)
+    ))));
+    if (empty($va_allowed_ids)) {
+        $va_allowed_ids = [(int) $doctor_id];
+    }
+
+    // The central clinic doctor also owns unassigned bookings.
+    $va_default_doc_id = class_exists('Dior_Doctor_Resolver') ? (int) Dior_Doctor_Resolver::get_default_doctor_id() : 0;
+    if ($va_default_doc_id && (int) $doctor_id === $va_default_doc_id) {
+        $va_allowed_ids[] = 0;
+        $va_allowed_ids[] = 1;
+    }
+    $va_allowed_ids = array_values(array_unique(array_map('intval', $va_allowed_ids)));
+
+    $va_placeholders = implode(',', array_fill(0, count($va_allowed_ids), '%d'));
     $appointments = $wpdb->get_results($wpdb->prepare(
         "SELECT a.*, 
                 p.first_name, p.last_name, p.phone, p.gender, p.avatar_url, p.patient_uid, p.user_id as patient_user_id,
@@ -91,36 +123,67 @@ if ($_va_is_admin) {
          LEFT JOIN {$wpdb->prefix}dior_patients p ON (p.user_id = a.patient_id OR p.id = a.patient_id)
          LEFT JOIN {$wpdb->users} u ON u.ID = a.patient_id
          LEFT JOIN {$wpdb->users} doc ON doc.ID = a.doctor_id
-         WHERE a.is_deleted = 0 AND a.doctor_id = %d
+         WHERE a.is_deleted = 0 AND a.doctor_id IN ($va_placeholders)
          ORDER BY a.appt_date DESC, a.created_at DESC
          LIMIT 250",
-        $doctor_id
+        ...$va_allowed_ids
     ), ARRAY_A);
 }
 
-// Fallback: build from usermeta if table is empty
+// Fallback: build from usermeta, but only when the canonical table is empty overall.
+// A doctor who simply has no bookings must see "No appointments found", not a list
+// of every other patient's legacy rows.
 if (empty($appointments)) {
-    $patients = get_users(['role__in' => ['patient', 'subscriber', 'customer'], 'number' => 50]);
-    $appointments = [];
-    foreach ($patients as $u) {
-        $raw = get_user_meta($u->ID, 'dior_appointments', true);
-        $list = is_array($raw) ? $raw : (is_string($raw) ? maybe_unserialize($raw) : []);
-        if (!is_array($list))
-            continue;
-        foreach ($list as $a) {
-            $appointments[] = array_merge($a, [
-                'first_name' => $u->first_name ?: $u->display_name,
-                'last_name' => $u->last_name,
-                'phone' => get_user_meta($u->ID, 'phone', true),
-                'gender' => get_user_meta($u->ID, 'gender', true),
-                'avatar_url' => get_user_meta($u->ID, 'dior_profile_image', true),
-                'patient_uid' => get_user_meta($u->ID, 'patient_id', true) ?: 'DM-' . (10000 + $u->ID),
-                'patient_user_id' => $u->ID,
-                'patient_id' => $u->ID,
-                'doctor_id' => 35,
-                'doctor_name' => 'Dr. Marcus Sterling',
-                'doctor_email' => 'marcus.sterling@diormedical.com'
-            ]);
+    $va_table_rows = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}dior_appointments WHERE is_deleted = 0");
+    $va_use_legacy = $_va_is_admin || $va_table_rows === 0;
+
+    if ($va_use_legacy) {
+        $patients = get_users(['role__in' => ['patient', 'subscriber', 'customer'], 'number' => 50]);
+        $appointments = [];
+        foreach ($patients as $u) {
+            $raw = get_user_meta($u->ID, 'dior_appointments', true);
+            $list = is_array($raw) ? $raw : (is_string($raw) ? maybe_unserialize($raw) : []);
+            if (!is_array($list))
+                continue;
+            foreach ($list as $a) {
+                // Legacy usermeta often predates meeting links. Pull the canonical
+                // join_url back in so video rows keep their "Join Meeting" action.
+                $va_uid = '';
+                foreach (['appt_uid', 'appointment_uid', 'id'] as $va_key) {
+                    if (!empty($a[$va_key]) && is_scalar($a[$va_key])) {
+                        $va_uid = trim((string) $a[$va_key]);
+                        break;
+                    }
+                }
+                if ($va_uid !== '' && empty($a['join_url'])) {
+                    $va_canonical = $wpdb->get_row($wpdb->prepare(
+                        "SELECT join_url, visit_type, status FROM {$wpdb->prefix}dior_appointments WHERE appt_uid = %s AND is_deleted = 0 LIMIT 1",
+                        $va_uid
+                    ), ARRAY_A);
+                    if ($va_canonical) {
+                        if (!empty($va_canonical['join_url'])) {
+                            $a['join_url'] = $va_canonical['join_url'];
+                        }
+                        if (empty($a['type']) && empty($a['visit_type']) && !empty($va_canonical['visit_type'])) {
+                            $a['type'] = $va_canonical['visit_type'];
+                        }
+                    }
+                }
+
+                $appointments[] = array_merge($a, [
+                    'first_name' => $u->first_name ?: $u->display_name,
+                    'last_name' => $u->last_name,
+                    'phone' => get_user_meta($u->ID, 'phone', true),
+                    'gender' => get_user_meta($u->ID, 'gender', true),
+                    'avatar_url' => get_user_meta($u->ID, 'dior_profile_image', true),
+                    'patient_uid' => get_user_meta($u->ID, 'patient_id', true) ?: 'DM-' . (10000 + $u->ID),
+                    'patient_user_id' => $u->ID,
+                    'patient_id' => $u->ID,
+                    'doctor_id' => 35,
+                    'doctor_name' => 'Dr. Marcus Sterling',
+                    'doctor_email' => 'marcus.sterling@diormedical.com'
+                ]);
+            }
         }
     }
 }
