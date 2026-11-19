@@ -1463,12 +1463,81 @@ let diorBillCurrentPage = 1;
         document.getElementById('billModalTax').innerText = tax;
         document.getElementById('billModalDisc').innerText = disc;
         document.getElementById('billModalTotal').innerText = total;
-        document.getElementById('billModalAvatar').src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc) + '&background=random';
+        /* Initials avatar drawn inline. The modal used to request
+           ui-avatars.com, which is an external image call and rendered as a
+           broken-image icon whenever it was blocked or offline. */
+        var initials = String(doc).replace(/^Dr\.?\s*/i, '').trim().split(/\s+/)
+            .slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('') || '?';
+        var avatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">' +
+            '<rect width="80" height="80" rx="40" fill="#F0F6FC"/>' +
+            '<text x="40" y="40" text-anchor="middle" dominant-baseline="central" ' +
+            'font-family="Montserrat,Arial,sans-serif" font-size="30" font-weight="700" fill="#1A528E">' +
+            initials + '</text></svg>';
+        document.getElementById('billModalAvatar').src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(avatarSvg);
         document.getElementById('diorBillingModal').style.display = 'flex';
     }
     function diorCloseBillingModal() {
         document.getElementById('diorBillingModal').style.display = 'none';
     }
+
+    /* Insurance & Claims detail popup. The eye button on that table had no
+       handler at all, so clicking it did nothing. */
+    window.diorOpenInsuranceModal = function (claimId, policyId, date, type, amount, approved, submitted, status) {
+        var set = function (id, value) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = (value === '' || value == null) ? '--' : value;
+        };
+        set('insModalClaimId', claimId);
+        set('insModalPolicyId', policyId);
+        set('insModalDate', date);
+        set('insModalType', type);
+        set('insModalAmount', amount);
+        set('insModalApproved', approved);
+        set('insModalSubmitted', submitted);
+        set('insModalStatus', status);
+
+        // What the patient actually pays out of pocket on an approved claim.
+        var money = function (v) {
+            var n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+            return isNaN(n) ? null : n;
+        };
+        var claimed = money(amount), covered = money(approved);
+        var oop = document.getElementById('insModalOop');
+        if (oop) {
+            if (claimed !== null && covered !== null && covered <= claimed) {
+                oop.textContent = '$' + (claimed - covered).toFixed(2).replace(/\.00$/, '');
+            } else {
+                oop.textContent = '--';
+            }
+        }
+
+        var modal = document.getElementById('diorInsuranceModal');
+        if (modal) {
+            modal.classList.add('open');
+            modal.style.display = 'flex';
+        }
+    };
+
+    window.diorCloseInsuranceModal = function () {
+        var modal = document.getElementById('diorInsuranceModal');
+        if (modal) {
+            modal.classList.remove('open');
+            modal.style.display = 'none';
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var insModal = document.getElementById('diorInsuranceModal');
+        if (!insModal) return;
+        insModal.addEventListener('click', function (e) {
+            if (e.target === insModal) window.diorCloseInsuranceModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && insModal.style.display === 'flex') {
+                window.diorCloseInsuranceModal();
+            }
+        });
+    });
 
     /* Build the printable body of a single bill. Shared by download and print so
        both produce the same document. */

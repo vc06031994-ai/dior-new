@@ -129,7 +129,7 @@
             <div class="modal-header details-modal-header dior-ic-feb0429751">
                 <div class="header-left dior-ic-fbd29a13bb">
                     <div class="header-icon-wrapper dior-ic-01e9887431">
-                        info
+                        <i class="fas fa-file-invoice-dollar"></i>
                     </div>
                     <div class="header-title-wrapper">
                         <h4 class="modal-title dior-ic-515659bf18">Billing Details</h4>
