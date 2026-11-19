@@ -3314,9 +3314,6 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
                 var routingEl = document.getElementById('pat-modal-rx-routing');
                 var statusBadge = document.getElementById('pat-modal-rx-status-badge');
                 var pharmNameEl = document.getElementById('pat-modal-rx-pharm-name');
-                var sigNameEl = document.getElementById('pat-modal-rx-sig-name');
-                var sigDateEl = document.getElementById('pat-modal-rx-sig-date');
-                var barcodeTxt = document.getElementById('pat-modal-rx-barcode-txt');
                 var adviceEl = document.getElementById('pat-modal-rx-advice');
                 var pdfBtn = document.getElementById('pat-modal-rx-pdf-btn');
                 var refillBtn = document.getElementById('pat-modal-rx-refill-btn');
@@ -3330,7 +3327,6 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
                 var actualPharm = found ? (found.pharmacy || 'Preferred Pharmacy on File') : 'Preferred Pharmacy on File';
 
                 if (idEl) idEl.textContent = 'Rx #' + actualId;
-                if (barcodeTxt) barcodeTxt.textContent = '*RX-' + String(actualId).replace(/[^0-9a-zA-Z]/g, '') + '*';
                 if (docEl) docEl.textContent = cleanDoc;
                 if (docHeaderEl) docHeaderEl.innerHTML = '<span>' + escapeHtml(cleanDoc) + ', MD</span>';
                 if (docCellEl) docCellEl.textContent = cleanDoc + ', MD';
@@ -3376,22 +3372,6 @@ window.diorInitTablePagination = function(tableEl, pageSize) {
                 if (routingEl) routingEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#059669;"></i> ' + actualRouting;
                 if (statusBadge) statusBadge.innerHTML = '<i class="fa-solid fa-check"></i> ' + (found.routing_status || (actualRouting === 'Sent to Pharmacy' ? 'Transmission Confirmed' : actualRouting));
                 if (pharmNameEl) pharmNameEl.textContent = actualPharm;
-                if (sigNameEl) sigNameEl.textContent = '/s/ ' + cleanDoc + ', MD';
-                if (sigDateEl) sigDateEl.textContent = 'SHA256 Encrypted \u2022 Issued ' + actualDate;
-
-                var sigImgEl = document.getElementById('pat-modal-rx-sig-img');
-                var docSigUrl = (found && (found.doctor_signature || found.signature_url)) || (window.dior_vars && window.dior_vars.default_doctor_signature ? window.dior_vars.default_doctor_signature : '');
-                if (sigImgEl) {
-                    if (docSigUrl) {
-                        sigImgEl.src = docSigUrl;
-                        sigImgEl.style.display = 'inline-block';
-                        if (sigNameEl) sigNameEl.style.display = 'none';
-                    } else {
-                        sigImgEl.style.display = 'none';
-                        if (sigNameEl) sigNameEl.style.display = 'inline-block';
-                    }
-                }
-
                 function escapeHtml(str) {
                     if (!str) return '';
                     var d = document.createElement('div');

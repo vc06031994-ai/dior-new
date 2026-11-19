@@ -945,19 +945,6 @@
 
                     <!-- Barcode & Issuance Line (Image 3) -->
                     <div class="dior-ic-7b94dc2c83">
-                        <div class="dior-rx-barcode-wrap">
-                            <div class="dior-rx-barcode-lines">
-                                <span class="dior-ic-8c313dc613"></span><span class="dior-ic-5375fe8cf1"></span><span
-                                    class="dior-ic-a4f6c77c37"></span><span class="dior-ic-0399ac9254"></span>
-                                <span class="dior-ic-9dc00e0931"></span><span class="dior-ic-c7fe51ade1"></span><span
-                                    class="dior-ic-8c313dc613"></span><span class="dior-ic-a4f6c77c37"></span>
-                                <span class="dior-ic-0399ac9254"></span><span class="dior-ic-9dc00e0931"></span><span
-                                    class="dior-ic-5375fe8cf1"></span><span class="dior-ic-a4f6c77c37"></span>
-                                <span class="dior-ic-8c313dc613"></span><span class="dior-ic-9dc00e0931"></span><span
-                                    class="dior-ic-0399ac9254"></span><span class="dior-ic-a4f6c77c37"></span>
-                            </div>
-                            <span class="dior-rx-barcode-txt" id="pat-modal-rx-barcode-txt">*RX-000000*</span>
-                        </div>
                         <div class="dior-ic-5fd58752b8">
                             <div>Prescription Date: <span id="pat-modal-rx-date" class="dior-ic-01276c62f3">—</span>
                             </div>
@@ -1066,29 +1053,14 @@
 
 
 
-                    <!-- Physician Digital Signature & Telehealth Legal Notice (Images 2 & 4) -->
-                    <div class="dior-rx-sig-container">
-                        <div class="dior-rx-legal-notice">
-                            <strong class="dior-ic-03cc0d21b0">TELEHEALTH LEGAL CERTIFICATION:</strong><br>
-                            This prescription was electronically reviewed, approved, and digitally signed by an
-                            authorized healthcare provider pursuant to a valid telehealth encounter under DEA 21 CFR
-                            Part 1311 and state medical practice acts.
-                        </div>
-                        <div class="dior-rx-sig-block">
-                            <div class="dior-rx-sig-line">
-                                <img id="pat-modal-rx-sig-img" src="" alt="Doctor Signature" class="dior-ic-3771746c5d">
-                                <span id="pat-modal-rx-sig-name" class="dior-rx-sig-script">
-                                    /s/ Dr. Marcus Sterling, MD
-                                </span>
-                            </div>
-                            <div class="dior-rx-sig-lbl">
-                                Authorized Physician Signature
-                            </div>
-                            <div id="pat-modal-rx-sig-date" class="dior-rx-sig-stamp">
-                                SHA256 Encrypted &bull; Issued Sep 14, 2026
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                    // The telehealth legal-certification paragraph and the
+                    // physician signature block were removed on request: the
+                    // sheet is printed by the patient portal, so boilerplate
+                    // legal text and an "authorized signature" panel there add
+                    // nothing a patient can act on. The document title, Rx UID,
+                    // issue date and clinic footer remain.
+                    ?>
 
                     <!-- Letterhead Bottom Clinic Footer Details (Image 2) -->
                     <div class="dior-rx-footer-line">

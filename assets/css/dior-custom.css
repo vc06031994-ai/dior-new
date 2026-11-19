@@ -19487,39 +19487,6 @@ button.dior-avatar-quick-camera i {
     line-height: 1.35 !important;
 }
 
-/* Barcode Visual */
-.dior-rx-barcode-wrap {
-    display: inline-flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 3px !important;
-}
-
-.dior-rx-barcode-lines {
-    display: flex !important;
-    align-items: stretch !important;
-    height: 24px !important;
-    gap: 2px !important;
-    width: 120px !important;
-    overflow: hidden !important;
-}
-
-.dior-rx-barcode-lines span {
-    background: #00346C !important;
-    display: block !important;
-    height: 100% !important;
-}
-
-.dior-rx-barcode-txt {
-    font-family: 'Courier New',
-        Courier,
-        monospace !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    color: #64748B !important;
-    letter-spacing: 0.12em !important;
-}
-
 /* Patient Demographics: Classical Prescription Pad Underline Layout (Exact Match to User's Image 2) */
 .dior-rx-patient-pad-box {
     margin: 12px 0 16px 0 !important;
@@ -19759,67 +19726,6 @@ button.dior-avatar-quick-camera i {
     flex-wrap: wrap !important;
     gap: 8px !important;
     margin-bottom: 16px !important;
-}
-
-/* Doctor Signature & Legal Notice (Image 2 & 4 Style) */
-.dior-rx-sig-container {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-end !important;
-    flex-wrap: wrap !important;
-    gap: 16px !important;
-    padding-top: 14px !important;
-    border-top: 1.5px solid #CBD5E1 !important;
-    margin-top: 10px !important;
-}
-
-.dior-rx-legal-notice {
-    flex: 1 !important;
-    min-width: 250px !important;
-    font-size: 10px !important;
-    color: #64748B !important;
-    line-height: 1.45 !important;
-}
-
-.dior-rx-sig-block {
-    text-align: right !important;
-    min-width: 210px !important;
-}
-
-.dior-rx-sig-line {
-    border-bottom: 1.5px solid #0F172A !important;
-    min-width: 168px !important;
-    display: inline-block !important;
-    padding-bottom: 2px !important;
-    text-align: center !important;
-}
-
-.dior-rx-sig-script {
-    font-family: 'Brush Script MT',
-        'Dancing Script',
-        'Segoe Script',
-        cursive,
-        serif !important;
-    font-size: 21px !important;
-    color: #00A896 !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-    letter-spacing: 0.04em !important;
-}
-
-.dior-rx-sig-lbl {
-    font-size: 10px !important;
-    font-weight: 800 !important;
-    color: #0F172A !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.06em !important;
-    margin-top: 4px !important;
-}
-
-.dior-rx-sig-stamp {
-    font-size: 9.5px !important;
-    color: #64748B !important;
-    margin-top: 1px !important;
 }
 
 /* Footer Details (Image 2 Style) */
@@ -20971,10 +20877,6 @@ button.dior-page-btn {
     font-size: 13px !important;
 }
 
-.dior-ic-03cc0d21b0 {
-    color: #0F172A !important;
-}
-
 .dior-ic-4d08c3d882 {
     display: inline-flex !important;
     align-items: center !important;
@@ -20997,32 +20899,6 @@ button.dior-page-btn {
     padding: 6px 0 !important;
     border-bottom: 1px dashed #CBD5E1 !important;
     margin-bottom: 12px !important;
-}
-
-.dior-ic-8c313dc613 {
-    width: 2px !important;
-}
-
-.dior-ic-5375fe8cf1 {
-    width: 1px !important;
-    background: transparent !important;
-}
-
-.dior-ic-a4f6c77c37 {
-    width: 3px !important;
-}
-
-.dior-ic-0399ac9254 {
-    width: 1px !important;
-}
-
-.dior-ic-9dc00e0931 {
-    width: 4px !important;
-}
-
-.dior-ic-c7fe51ade1 {
-    width: 2px !important;
-    background: transparent !important;
 }
 
 .dior-ic-5fd58752b8 {
@@ -21213,15 +21089,6 @@ button.dior-page-btn {
     border-radius: 12px !important;
     font-size: 11px !important;
     font-weight: 800 !important;
-}
-
-.dior-ic-3771746c5d {
-    display: none !important;
-    max-height: 48px !important;
-    max-width: 180px !important;
-    object-fit: contain !important;
-    background: transparent !important;
-    vertical-align: middle !important;
 }
 
 .dior-ic-9043ac3683 {
@@ -40699,39 +40566,6 @@ button.dior-avatar-quick-camera i {
     line-height: 1.35 !important;
 }
 
-/* Barcode Visual */
-.dior-rx-barcode-wrap {
-    display: inline-flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 3px !important;
-}
-
-.dior-rx-barcode-lines {
-    display: flex !important;
-    align-items: stretch !important;
-    height: 24px !important;
-    gap: 2px !important;
-    width: 120px !important;
-    overflow: hidden !important;
-}
-
-.dior-rx-barcode-lines span {
-    background: #00346C !important;
-    display: block !important;
-    height: 100% !important;
-}
-
-.dior-rx-barcode-txt {
-    font-family: 'Courier New',
-        Courier,
-        monospace !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    color: #64748B !important;
-    letter-spacing: 0.12em !important;
-}
-
 /* Patient Demographics: Classical Prescription Pad Underline Layout (Exact Match to User's Image 2) */
 .dior-rx-patient-pad-box {
     margin: 12px 0 16px 0 !important;
@@ -40971,67 +40805,6 @@ button.dior-avatar-quick-camera i {
     flex-wrap: wrap !important;
     gap: 8px !important;
     margin-bottom: 16px !important;
-}
-
-/* Doctor Signature & Legal Notice (Image 2 & 4 Style) */
-.dior-rx-sig-container {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-end !important;
-    flex-wrap: wrap !important;
-    gap: 16px !important;
-    padding-top: 14px !important;
-    border-top: 1.5px solid #CBD5E1 !important;
-    margin-top: 10px !important;
-}
-
-.dior-rx-legal-notice {
-    flex: 1 !important;
-    min-width: 250px !important;
-    font-size: 10px !important;
-    color: #64748B !important;
-    line-height: 1.45 !important;
-}
-
-.dior-rx-sig-block {
-    text-align: right !important;
-    min-width: 210px !important;
-}
-
-.dior-rx-sig-line {
-    border-bottom: 1.5px solid #0F172A !important;
-    min-width: 168px !important;
-    display: inline-block !important;
-    padding-bottom: 2px !important;
-    text-align: center !important;
-}
-
-.dior-rx-sig-script {
-    font-family: 'Brush Script MT',
-        'Dancing Script',
-        'Segoe Script',
-        cursive,
-        serif !important;
-    font-size: 21px !important;
-    color: #00A896 !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-    letter-spacing: 0.04em !important;
-}
-
-.dior-rx-sig-lbl {
-    font-size: 10px !important;
-    font-weight: 800 !important;
-    color: #0F172A !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.06em !important;
-    margin-top: 4px !important;
-}
-
-.dior-rx-sig-stamp {
-    font-size: 9.5px !important;
-    color: #64748B !important;
-    margin-top: 1px !important;
 }
 
 /* Footer Details (Image 2 Style) */
@@ -73284,14 +73057,8 @@ body:has(.dior-doctor-wrap),
     color: var(--dior-color-primary, #1A528E) !important;
 }
 
-#modal-view-rx-detail .dior-rx-clinic-sub,
-#modal-view-rx-detail .dior-rx-barcode-txt {
+#modal-view-rx-detail .dior-rx-clinic-sub {
     color: var(--dior-color-text-muted, #64748B) !important;
-}
-
-/* barcode bars read as ink, not as an accent */
-#modal-view-rx-detail .dior-rx-barcode-lines span {
-    background: var(--dior-color-text, #0F172A) !important;
 }
 
 /* patient pad */
@@ -73423,27 +73190,9 @@ body:has(.dior-doctor-wrap),
     color: var(--dior-color-text-secondary, #334155) !important;
 }
 
-/* signature block */
-#modal-view-rx-detail .dior-rx-sig-container {
-    border-top: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
-}
-
-#modal-view-rx-detail .dior-rx-legal-notice,
-#modal-view-rx-detail .dior-rx-sig-stamp,
+/* clinic footer line */
 #modal-view-rx-detail .dior-ic-9043ac3683 {
     color: var(--dior-color-text-muted, #64748B) !important;
-}
-
-#modal-view-rx-detail .dior-rx-sig-line {
-    border-bottom: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
-}
-
-#modal-view-rx-detail .dior-rx-sig-script {
-    color: var(--dior-color-primary, #1A528E) !important;
-}
-
-#modal-view-rx-detail .dior-rx-sig-lbl {
-    color: var(--dior-color-text, #0F172A) !important;
 }
 
 #modal-view-rx-detail .dior-rx-footer-line {
