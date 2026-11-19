@@ -743,7 +743,13 @@ $dior_overview_book_url = trailingslashit($dior_overview_dashboard_url) . '#tab=
   <!-- ============================================================== -->
   <!-- HEALTH GOALS & VITALS MODAL (100% Bootstrap 5 - Simple Clean Standard) -->
   <!-- ============================================================== -->
-  <div class="modal fade" id="diorHealthGoalsModal" tabindex="-1" aria-labelledby="diorHealthGoalsModalLabel"
+  
+
+</section>
+
+<!-- Rendered outside #tab-overview: Bootstrap modals cannot be opened while
+     an ancestor .dior-tab-panel is display:none, which left only the backdrop visible. -->
+<div class="modal fade" id="diorHealthGoalsModal" tabindex="-1" aria-labelledby="diorHealthGoalsModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -869,5 +875,3 @@ $dior_overview_book_url = trailingslashit($dior_overview_dashboard_url) . '#tab=
       </div>
     </div>
   </div>
-
-</section>

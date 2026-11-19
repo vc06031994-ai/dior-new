@@ -68112,29 +68112,29 @@ a.va-btn-primary:hover {
     }
 
     /* ---------- 9b. document upload modal ---------- */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-dialog {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-dialog {
         margin: 12px !important;
         max-width: calc(100% - 24px) !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-header,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-body,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-header,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-body,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer {
         padding: 14px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-body {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-body {
         max-height: 68vh !important;
         overflow-y: auto !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer {
         flex-direction: column-reverse !important;
         align-items: stretch !important;
         gap: 8px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer .btn {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn {
         width: 100% !important;
         min-height: 44px !important;
         margin: 0 !important;
@@ -68148,20 +68148,20 @@ a.va-btn-primary:hover {
         gap: 8px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer .btn-primary {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn-primary {
         background: #1A528E !important;
         border-color: #1A528E !important;
         color: #FFFFFF !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer .btn-outline-secondary {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn-outline-secondary {
         background: #FFFFFF !important;
         border: 1px solid #E2E8F0 !important;
         color: #334155 !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .form-control,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .form-select {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .form-control,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .form-select {
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -68888,20 +68888,20 @@ a.va-btn-primary:hover {
     }
 
     /* ---- 5. upload modal: same key language ----------------------------- */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer .btn {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn {
         border-radius: 13px !important;
         font-weight: 600 !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .modal-footer .btn-primary {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn-primary {
         background-color: #00346C !important;
         border-color: #00346C !important;
         color: #FFFFFF !important;
         box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .16) !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .form-control,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents #dior-document-modal .form-select {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .form-control,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .form-select {
         border-radius: 12px !important;
     }
 }
@@ -69430,46 +69430,46 @@ a.va-btn-primary:hover {
     }
 
     /* ---- 6. contact modal ----------------------------------------------- */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-dialog {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-dialog {
         width: calc(100% - 20px) !important;
         max-width: 520px !important;
         margin: 10px auto !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-content {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-content {
         border-radius: 14px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-header,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-body,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-footer {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-header,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-body,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-footer {
         padding: 14px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-header {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-header {
         align-items: flex-start !important;
         gap: 10px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-title {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-title {
         font-size: 15px !important;
         line-height: 1.35 !important;
         white-space: normal !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-body {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-body {
         max-height: 68vh !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-body .row>div {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-body .row>div {
         flex: 1 1 100% !important;
         max-width: 100% !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .form-control,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .form-select {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .form-control,
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .form-select {
         width: 100% !important;
         max-width: 100% !important;
         min-height: 44px !important;
@@ -69477,13 +69477,13 @@ a.va-btn-primary:hover {
         border-radius: 4px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-footer {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-footer {
         flex-direction: column-reverse !important;
         align-items: stretch !important;
         gap: 8px !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-footer .btn {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-footer .btn {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -69499,14 +69499,14 @@ a.va-btn-primary:hover {
         text-transform: uppercase !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-footer .btn-primary {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-footer .btn-primary {
         border-color: #1A528E !important;
         background-color: #1A528E !important;
         color: #FFFFFF !important;
         box-shadow: 2px 2px 0 rgba(26, 82, 142, .20) !important;
     }
 
-    #dior-patient-portal-app#dior-patient-portal-app #tab-emergency #dior-emergency-contact-modal .modal-footer .btn-outline-secondary {
+    #dior-patient-portal-app#dior-patient-portal-app #dior-emergency-contact-modal .modal-footer .btn-outline-secondary {
         border-width: 1.5px !important;
         border-style: solid !important;
         border-color: #E2E8F0 !important;

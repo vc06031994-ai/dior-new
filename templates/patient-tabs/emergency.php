@@ -179,8 +179,12 @@
         </div>
     </div>
 
-    <!-- Emergency Contact Modal (Strict Bootstrap 5 Standard) -->
-    <div class="modal fade" id="dior-emergency-contact-modal" tabindex="-1" aria-labelledby="diorEmergModalTitle"
+
+</section>
+
+<!-- Rendered outside #tab-emergency: Bootstrap modals cannot be opened while
+     an ancestor .dior-tab-panel is display:none, which left only the backdrop visible. -->
+<div class="modal fade" id="dior-emergency-contact-modal" tabindex="-1" aria-labelledby="diorEmergModalTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -261,5 +265,3 @@
             </div>
         </div>
     </div>
-
-</section>

@@ -130,8 +130,55 @@
         </div>
     </div>
 
-    <!-- Patient document upload/edit modal (Strict Bootstrap 5 Standard) -->
-    <div class="modal fade" id="dior-document-modal" tabindex="-1" aria-labelledby="dior-document-modal-title" aria-hidden="true">
+
+    <script>
+        var activeCategoryFilter = 'all';
+
+        window.diorFilterDocsByCategory = function(cat, btn) {
+            activeCategoryFilter = cat.toLowerCase();
+            document.querySelectorAll('.dior-doc-cat-pill').forEach(function(b) {
+                b.classList.remove('btn-primary', 'active');
+                b.classList.add('btn-outline-primary');
+            });
+            if (btn) {
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-primary', 'active');
+            }
+            diorFilterDocs();
+        };
+
+        window.diorFilterDocs = function() {
+            var searchInput = document.getElementById('dior-docs-search-input');
+            var q = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            var rows = document.querySelectorAll('#dior-docs-tbody tr');
+            rows.forEach(function(r) {
+                if (r.querySelector('.dior-empty-state')) return;
+                var text = r.textContent.toLowerCase();
+                var cat = (r.getAttribute('data-category') || '').toLowerCase();
+                var matchesCat = (activeCategoryFilter === 'all') || 
+                                 (cat.indexOf(activeCategoryFilter) !== -1) || 
+                                 (activeCategoryFilter.indexOf('signed') !== -1 && (cat.indexOf('consent') !== -1 || text.indexOf('consent') !== -1));
+                var matchesQuery = !q || text.indexOf(q) !== -1;
+                r.style.display = (matchesCat && matchesQuery) ? '' : 'none';
+            });
+        };
+
+        window.diorUpdateDocFileName = function (input) {
+            var label = document.getElementById('dior-doc-file-label');
+            if (!label) return;
+            if (input && input.files && input.files[0]) {
+                label.innerHTML = '<i class="fas fa-circle-check text-success me-1"></i> Selected: <strong>' + input.files[0].name + '</strong> (' + Math.round(input.files[0].size / 1024) + ' KB)';
+            } else {
+                label.textContent = '';
+            }
+        };
+    </script>
+
+</section>
+
+<!-- Rendered outside #tab-documents: Bootstrap modals cannot be opened while
+     an ancestor .dior-tab-panel is display:none, which left only the backdrop visible. -->
+<div class="modal fade" id="dior-document-modal" tabindex="-1" aria-labelledby="dior-document-modal-title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="modal-header border-bottom py-3 px-4 bg-white d-flex align-items-center justify-content-between">
@@ -198,48 +245,3 @@
             </div>
         </div>
     </div>
-
-    <script>
-        var activeCategoryFilter = 'all';
-
-        window.diorFilterDocsByCategory = function(cat, btn) {
-            activeCategoryFilter = cat.toLowerCase();
-            document.querySelectorAll('.dior-doc-cat-pill').forEach(function(b) {
-                b.classList.remove('btn-primary', 'active');
-                b.classList.add('btn-outline-primary');
-            });
-            if (btn) {
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-primary', 'active');
-            }
-            diorFilterDocs();
-        };
-
-        window.diorFilterDocs = function() {
-            var searchInput = document.getElementById('dior-docs-search-input');
-            var q = (searchInput ? searchInput.value : '').toLowerCase().trim();
-            var rows = document.querySelectorAll('#dior-docs-tbody tr');
-            rows.forEach(function(r) {
-                if (r.querySelector('.dior-empty-state')) return;
-                var text = r.textContent.toLowerCase();
-                var cat = (r.getAttribute('data-category') || '').toLowerCase();
-                var matchesCat = (activeCategoryFilter === 'all') || 
-                                 (cat.indexOf(activeCategoryFilter) !== -1) || 
-                                 (activeCategoryFilter.indexOf('signed') !== -1 && (cat.indexOf('consent') !== -1 || text.indexOf('consent') !== -1));
-                var matchesQuery = !q || text.indexOf(q) !== -1;
-                r.style.display = (matchesCat && matchesQuery) ? '' : 'none';
-            });
-        };
-
-        window.diorUpdateDocFileName = function (input) {
-            var label = document.getElementById('dior-doc-file-label');
-            if (!label) return;
-            if (input && input.files && input.files[0]) {
-                label.innerHTML = '<i class="fas fa-circle-check text-success me-1"></i> Selected: <strong>' + input.files[0].name + '</strong> (' + Math.round(input.files[0].size / 1024) + ' KB)';
-            } else {
-                label.textContent = '';
-            }
-        };
-    </script>
-
-</section>

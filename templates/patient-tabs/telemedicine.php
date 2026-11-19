@@ -233,8 +233,12 @@
         </div>
     </div>
 
-    <!-- Telemedicine Session Details Modal (Strict Bootstrap 5 Rule 3.F Standard) -->
-    <div class="modal fade" id="diorTelemedicineModal" tabindex="-1" aria-labelledby="diorTelemedicineModalLabel" aria-hidden="true">
+
+</section>
+
+<!-- Rendered outside #tab-telemedicine: Bootstrap modals cannot be opened while
+     an ancestor .dior-tab-panel is display:none, which left only the backdrop visible. -->
+<div class="modal fade" id="diorTelemedicineModal" tabindex="-1" aria-labelledby="diorTelemedicineModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="modal-header border-bottom py-3 px-4 bg-white d-flex align-items-center justify-content-between">
@@ -295,8 +299,6 @@
             </div>
         </div>
     </div>
-
-</section>
 <!-- ============================================================== -->
 <!-- 5. MEDICAL RECORD TAB -->
 <!-- ============================================================== -->
