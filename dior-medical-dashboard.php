@@ -1998,6 +1998,16 @@ class Dior_Medical_Auth
             if ($logo)
                 return $logo;
         }
+
+        // Known-good site logo in the media library. The plugin's own
+        // assets/images has no logo file, so the old fallback 404'd and every
+        // place that printed it (prescription sheet, book-visit header)
+        // showed a broken image.
+        $fallback = site_url('/wp-content/uploads/2026/08/cropped-logo.png');
+        if (!file_exists(DIOR_PORTAL_PATH . 'assets/images/logo-web.png')) {
+            return $fallback;
+        }
+
         return DIOR_AUTH_URL . 'assets/images/logo-web.png';
     }
 

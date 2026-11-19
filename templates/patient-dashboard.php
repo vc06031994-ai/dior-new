@@ -933,9 +933,13 @@
                         <!-- Clinic Logo -->
                         <div class="dior-ic-32c53658c7">
                             <?php
-                            $disp_logo = !empty($logo_url) ? $logo_url : site_url('/wp-content/uploads/2026/08/logo.png');
+                            // /uploads/2026/08/logo.png does not exist on this
+                            // install; cropped-logo.png is the real site mark.
+                            $disp_logo = !empty($logo_url) ? $logo_url : site_url('/wp-content/uploads/2026/08/cropped-logo.png');
                             ?>
-                            <img src="<?php echo esc_url($disp_logo); ?>" alt="Dior Medical" class="dior-ic-ac19460d69">
+                            <img src="<?php echo esc_url($disp_logo); ?>" alt="Dior Medical"
+                                 class="dior-ic-ac19460d69" loading="lazy" decoding="async"
+                                 onerror="this.onerror=null;this.style.display='none';">
                         </div>
                     </div>
 

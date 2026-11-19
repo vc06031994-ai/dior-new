@@ -73214,3 +73214,418 @@ body:has(.dior-doctor-wrap),
 #dior-doctor-app .dior-main-content {
     overflow-x: clip !important;
 }
+
+/* ==========================================================================
+   PATIENT PRESCRIPTION DETAIL MODAL — theme palette
+   --------------------------------------------------------------------------
+   The e-Rx sheet was drawn in its own mint/teal palette (#00A896, #ECFDF5,
+   #F0FDFA, #99F6E4) which appears nowhere else in the portal, so the document
+   looked like a different product. Everything below re-points that sheet and
+   its modal chrome at the shared tokens; the letterhead layout, sizes, weights
+   and spacing are deliberately untouched — this is a colour change only.
+
+   The sheet is a "document" preview, so it keeps a white paper surface and
+   neutral ink, with the theme primary used for the accents that were mint:
+   rule under the clinic header, the Rx symbol, the SIG label, the signature,
+   the advice card and the primary action button.
+   ========================================================================== */
+#modal-view-rx-detail .dior-modal-dialog,
+#modal-view-rx-detail .dior-modal-header,
+#modal-view-rx-detail .dior-modal-footer {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border-color: var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-modal-header {
+    border-bottom: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-modal-footer {
+    border-top: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-modal-body {
+    background: var(--dior-color-page, #F8FAFC) !important;
+}
+
+#modal-view-rx-detail .dior-ic-5993936b7f {
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#modal-view-rx-detail .dior-ic-25f3b27ac7,
+#modal-view-rx-detail .dior-modal-close {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+#modal-view-rx-detail .dior-modal-close:hover {
+    color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+}
+
+/* ---- the sheet ---------------------------------------------------------- */
+#modal-view-rx-detail .dior-rx-letterhead-sheet {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    color: var(--dior-color-text, #0F172A) !important;
+    box-shadow: 0 5px 18px rgba(0, 52, 108, .05) !important;
+    font-family: var(--dior-font-body, 'Montserrat', sans-serif) !important;
+}
+
+/* clinic header rule + name */
+#modal-view-rx-detail .dior-ic-f9030d0190 {
+    border-bottom: 2px solid var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-doc-name {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-doc-creds {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-clinic-sub,
+#modal-view-rx-detail .dior-rx-barcode-txt {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+/* barcode bars read as ink, not as an accent */
+#modal-view-rx-detail .dior-rx-barcode-lines span {
+    background: var(--dior-color-text, #0F172A) !important;
+}
+
+/* patient pad */
+#modal-view-rx-detail .dior-rx-patient-pad-box {
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-rx-pad-label {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-pad-underline {
+    border-bottom: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#modal-view-rx-detail .dior-ic-7b6e16631f {
+    color: var(--dior-color-primary, #1A528E) !important;
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-ic-01276c62f3 {
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+/* Rx symbol + directive bar */
+#modal-view-rx-detail .dior-rx-title-bar {
+    border-bottom: 1.5px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-rx-symbol,
+#modal-view-rx-detail .dior-ic-0a18e0c67b {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-ic-0a18e0c67b {
+    background: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+/* schedule pill */
+#modal-view-rx-detail .dior-ic-9b6818a37f {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+/* medication table */
+#modal-view-rx-detail .dior-rx-med-table {
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+}
+
+#modal-view-rx-detail .dior-rx-med-table thead tr {
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+}
+
+#modal-view-rx-detail .dior-rx-med-table thead th {
+    color: var(--dior-color-text-secondary, #334155) !important;
+    border-bottom: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    border-right: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-rx-med-table tbody tr {
+    border-bottom: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#modal-view-rx-detail .dior-rx-med-table tbody tr:hover {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+}
+
+#modal-view-rx-detail .dior-rx-med-table tbody td {
+    border-right: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-num {
+    color: var(--dior-color-text-muted, #64748B) !important;
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-name {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-sub,
+#modal-view-rx-detail .dior-rx-item-daw {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-qty {
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-refill {
+    color: var(--dior-color-success, #059669) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-sig {
+    color: var(--dior-color-text-secondary, #334155) !important;
+}
+
+#modal-view-rx-detail .dior-rx-item-sig strong {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-fda-badge {
+    background: var(--dior-color-success-soft, #ECFDF5) !important;
+    color: var(--dior-color-success, #059669) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+/* advice / clinical instructions: soft primary card instead of mint */
+#modal-view-rx-detail .dior-rx-advice-card {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-left: 4px solid var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-advice-title {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-advice-body {
+    color: var(--dior-color-text-secondary, #334155) !important;
+}
+
+/* signature block */
+#modal-view-rx-detail .dior-rx-sig-container {
+    border-top: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
+}
+
+#modal-view-rx-detail .dior-rx-legal-notice,
+#modal-view-rx-detail .dior-rx-sig-stamp,
+#modal-view-rx-detail .dior-ic-9043ac3683 {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+#modal-view-rx-detail .dior-rx-sig-line {
+    border-bottom: 1.5px solid var(--dior-color-border-strong, #CBD5E1) !important;
+}
+
+#modal-view-rx-detail .dior-rx-sig-script {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail .dior-rx-sig-lbl {
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#modal-view-rx-detail .dior-rx-footer-line {
+    border-top: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+/* ---- footer actions ----------------------------------------------------- */
+#modal-view-rx-detail #pat-modal-rx-refill-btn,
+#modal-view-rx-detail #pat-modal-rx-refill-btn.btn {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    box-shadow: none !important;
+}
+
+#modal-view-rx-detail #pat-modal-rx-refill-btn:hover,
+#modal-view-rx-detail #pat-modal-rx-refill-btn.btn:hover {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#modal-view-rx-detail #pat-modal-rx-refill-btn .dior-ic-1a809d86ac {
+    color: currentColor !important;
+}
+
+#modal-view-rx-detail #pat-modal-rx-pdf-btn,
+#modal-view-rx-detail #pat-modal-rx-pdf-btn.btn {
+    background: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    box-shadow: 0 2px 6px rgba(26, 82, 142, 0.22) !important;
+}
+
+#modal-view-rx-detail #pat-modal-rx-pdf-btn:hover,
+#modal-view-rx-detail #pat-modal-rx-pdf-btn.btn:hover {
+    background: var(--dior-color-primary-hover, #00346C) !important;
+    border-color: var(--dior-color-primary-hover, #00346C) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+}
+
+#modal-view-rx-detail .dior-ic-a340556f29 {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    box-shadow: none !important;
+}
+
+#modal-view-rx-detail .dior-ic-a340556f29:hover {
+    background: var(--dior-color-surface-muted, #F8FAFC) !important;
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Prescription sheet on phones.
+   The sheet is a fixed-width legal document layout: the 4-column medication
+   table needs ~660px, the patient pad never wrapped, and the modal footer
+   stacked over the scrolling body. Phones therefore showed a table running
+   off the right edge and their first rows hidden behind the buttons.
+   Below 768px the table becomes its own horizontal scroller, the pad rows
+   stack, and the footer stays in flow. Desktop is untouched.
+   -------------------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+    #modal-view-rx-detail .dior-modal-dialog {
+        max-height: calc(100dvh - 16px) !important;
+    }
+
+    #modal-view-rx-detail .dior-modal-header {
+        padding: 12px 14px !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-5993936b7f {
+        font-size: 15px !important;
+        line-height: 1.3 !important;
+    }
+
+    #modal-view-rx-detail .dior-modal-body {
+        padding: 12px !important;
+    }
+
+    #modal-view-rx-detail .dior-rx-letterhead-sheet {
+        padding: 16px 14px !important;
+        overflow: visible !important;
+    }
+
+    /* patient pad: one field per line so the underline keeps a usable width */
+    #modal-view-rx-detail .dior-rx-pad-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    #modal-view-rx-detail .dior-rx-pad-field {
+        width: 100% !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-afcc30d60e,
+    #modal-view-rx-detail .dior-ic-d866ca125a,
+    #modal-view-rx-detail .dior-ic-7ac7cda799,
+    #modal-view-rx-detail .dior-ic-4a82ebc967,
+    #modal-view-rx-detail .dior-ic-395b20a3ba {
+        width: 100% !important;
+        display: flex !important;
+        align-items: flex-end !important;
+        gap: 6px !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-06b21f47ad,
+    #modal-view-rx-detail .dior-ic-d11db2d048 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        display: flex !important;
+    }
+
+    /* medication table scrolls inside the sheet instead of overflowing it */
+    #modal-view-rx-detail .dior-rx-med-table {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    #modal-view-rx-detail .dior-rx-med-table thead,
+    #modal-view-rx-detail .dior-rx-med-table tbody {
+        display: table !important;
+        width: 100% !important;
+        min-width: 620px !important;
+    }
+
+    /* footer: in flow, one button per row, primary first */
+    #modal-view-rx-detail .dior-modal-footer {
+        position: static !important;
+        flex-direction: column-reverse !important;
+        align-items: stretch !important;
+        padding: 12px 14px !important;
+        gap: 8px !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-6c5b3070b0 {
+        flex-direction: column-reverse !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    #modal-view-rx-detail .dior-modal-footer .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    /* Rx directive bar: title gets the full width, schedule pill below it */
+    #modal-view-rx-detail .dior-rx-title-bar {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-f725034276 {
+        flex-wrap: nowrap !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-0a18e0c67b {
+        font-size: 13px !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+    }
+
+    #modal-view-rx-detail .dior-ic-9b6818a37f {
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+        white-space: nowrap !important;
+    }
+
+    /* header + footer stay visible while the body scrolls */
+    #modal-view-rx-detail .dior-modal-header,
+    #modal-view-rx-detail .dior-modal-footer {
+        flex-shrink: 0 !important;
+    }
+}
