@@ -73453,3 +73453,127 @@ body:has(.dior-doctor-wrap),
         display: none !important;
     }
 }
+
+/* ============================================================
+   Billing cards (mobile) — field grid + action row
+   ============================================================
+   The shared ≤991.98px card rules lay the billing fields out as
+   `flex: 1 1 calc(50% - 6px)`, which breaks in two ways at 390px:
+
+   - Doctor / Date / Amount ... are 143px children of a 298px row, so they
+     wrap two-per-row but read in DOM order rather than column order, and the
+     odd field out (Total) is left alone on a half-width row.
+   - The actions cell never got the intended layout: the markup emits
+     `.action-cell`, while the card rules only style `.cell-actions`. The
+     buttons therefore kept their desktop inline shapes and sat left-aligned.
+
+   Below replaces the field layout with an explicit two-column grid and gives
+   the action row a proper right-aligned button group. Scoped to ≤991.98px so
+   the desktop table is untouched. */
+
+@media (max-width: 991.98px) {
+    /* The row becomes a grid: headline row, then a 2-column field grid,
+       then the action row. `display: grid` replaces the flex wrap. */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody tr {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        align-items: start !important;
+        justify-items: stretch !important;
+        column-gap: 14px !important;
+        row-gap: 12px !important;
+    }
+
+    /* checkbox + invoice id share the headline row: put both in column 1 so
+       the id sits right beside its checkbox instead of jumping to column 2 */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(1) {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        justify-self: start !important;
+        width: auto !important;
+        max-width: max-content !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(2) {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        justify-self: start !important;
+        margin-left: 27px !important;
+    }
+
+    /* one field per grid cell, in table order */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(3),
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(4),
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(5),
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(6),
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(7),
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(8) {
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        justify-self: stretch !important;
+        grid-column: auto !important;
+        grid-row: auto !important;
+    }
+
+    /* actions span the full card width, buttons pushed to the right */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        align-items: stretch !important;
+        margin-top: 2px !important;
+    }
+
+    /* the mismatch that left the buttons unstyled: markup uses .action-cell */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .action-cell,
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .cell-actions {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* even, touch-sized icon buttons instead of the desktop inline shapes */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 38px !important;
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 10px !important;
+        background: #FFFFFF !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04) !important;
+        font-size: 13px !important;
+    }
+
+    /* keep the palette: download = primary, view = primary, print = neutral */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .btn-success,
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .btn-info {
+        border-color: #1A528E !important;
+        background: #1A528E !important;
+        color: #FFFFFF !important;
+    }
+
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:last-child .btn-secondary {
+        color: #334155 !important;
+    }
+
+    /* Total is the figure a patient scans for — give it a little weight */
+    #dior-patient-portal-app#dior-patient-portal-app #tab-payments #dior-bill-table tbody td:nth-child(8) .cell-text {
+        color: #00346C !important;
+        font-weight: 700 !important;
+    }
+}
