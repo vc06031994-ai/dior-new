@@ -170,6 +170,45 @@
                                     usort($timeline_events, static function ($a, $b) {
                                         return strtotime((string)$b['date']) <=> strtotime((string)$a['date']);
                                     });
+                                    if (!function_exists('dior_clinical_avatar_fallback')) {
+                                        /**
+                                         * Local initials avatar, inlined as an SVG data URI.
+                                         *
+                                         * The old fallback pointed at a hardcoded upload path
+                                         * that does not exist on every install, so the timeline
+                                         * rendered a broken-image icon. A data URI cannot 404
+                                         * and costs no extra request.
+                                         */
+                                        function dior_clinical_avatar_fallback($name = '', $size = 64)
+                                        {
+                                            $name = trim((string) $name);
+                                            if ($name === '') {
+                                                $name = 'Care Team';
+                                            }
+                                            $parts = preg_split('/\s+/', preg_replace('/^(?:dr\.?\s*)+/i', '', $name));
+                                            $initials = '';
+                                            foreach ($parts as $part) {
+                                                if ($part === '') {
+                                                    continue;
+                                                }
+                                                $initials .= strtoupper(function_exists('mb_substr') ? mb_substr($part, 0, 1) : substr($part, 0, 1));
+                                                if (strlen($initials) >= 2) {
+                                                    break;
+                                                }
+                                            }
+                                            if ($initials === '') {
+                                                $initials = 'DR';
+                                            }
+                                            $initials = esc_html($initials);
+                                            $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' . (int) $size . '" height="' . (int) $size . '" viewBox="0 0 64 64">'
+                                                . '<rect width="64" height="64" rx="32" fill="#F0F6FC"/>'
+                                                . '<text x="32" y="41" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" '
+                                                . 'font-size="24" font-weight="700" fill="#1A528E">' . $initials . '</text>'
+                                                . '</svg>';
+                                            return 'data:image/svg+xml;charset=utf-8,' . rawurlencode($svg);
+                                        }
+                                    }
+
                                     if (!function_exists('dior_get_clinical_doctor_avatar')) {
                                         function dior_get_clinical_doctor_avatar($doctor_name = '') {
                                             static $avatar_cache = [];
@@ -177,7 +216,7 @@
                                             if (isset($avatar_cache[$key])) {
                                                 return $avatar_cache[$key];
                                             }
-                                            $default_avatar = home_url('/wp-content/uploads/2026/10/images-5.jpg');
+                                            $default_avatar = dior_clinical_avatar_fallback($key);
                                             if (empty($key)) {
                                                 return $default_avatar;
                                             }
@@ -209,17 +248,18 @@
                                         $event_type = strtoupper((string)($event['type'] ?? 'APPOINTMENT'));
                                         $doc_avatar = dior_get_clinical_doctor_avatar($event['doctor'] ?? '');
 
+                                        // One palette for every event type. Each kind used to
+                                        // paint its own blue/teal/amber; the label text already
+                                        // says which kind it is, so the colour comes from CSS
+                                        // tokens now and stays on the portal palette.
                                         $node_class = 'node-appointment';
-                                        $badge_style = 'background: #F0F9FF !important; color: #0284c7 !important;';
+                                        $badge_style = '';
                                         if ($event_type === 'CONSULTATION') {
                                             $node_class = 'node-consultation';
-                                            $badge_style = 'background: #F0F6FC !important; color: #1A528E !important;';
                                         } elseif ($event_type === 'PRESCRIPTION') {
                                             $node_class = 'node-prescription';
-                                            $badge_style = 'background: #ECFDF5 !important; color: #059669 !important;';
                                         } elseif ($event_type === 'DOCUMENT') {
                                             $node_class = 'node-document';
-                                            $badge_style = 'background: #fef3c7 !important; color: #b45309 !important;';
                                         }
                                     ?>
                                     <div class="mr-timeline-item" data-record-type="<?php echo esc_attr($event['type']); ?>">
@@ -241,7 +281,14 @@
                                                     <h5 class="dior-ic-fceca4a64a"><?php echo esc_html($event['title']); ?></h5>
                                                 </div>
                                                 <div class="dior-ic-b1d844752a">
-                                                    <img src="<?php echo esc_url($doc_avatar); ?>" alt="<?php echo esc_attr($event['doctor']); ?>" class="dior-ic-2061ceb509 rounded-circle object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 1.5px solid #ffffff;">
+                                                    <?php $avatar_fallback = dior_clinical_avatar_fallback($event['doctor'] ?? ''); ?>
+                                                    <img src="<?php echo esc_url($doc_avatar); ?>"
+                                                         alt="<?php echo esc_attr($event['doctor'] ?? 'Attending Physician'); ?>"
+                                                         class="mr-timeline-doc-avatar"
+                                                         width="32" height="32"
+                                                         loading="lazy" decoding="async"
+                                                         data-fallback="<?php echo esc_url($avatar_fallback); ?>"
+                                                         onerror="this.onerror=null;this.src=this.getAttribute('data-fallback');">
                                                     <div>
                                                         <span class="dior-ic-9bbdb950cc"><?php echo esc_html($event['doctor']); ?></span>
                                                         <small class="dior-ic-3a4133fe41">Clinical Record</small>
