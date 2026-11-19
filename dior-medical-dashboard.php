@@ -1362,11 +1362,17 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Ensure /diro-login/, /diro-registration/, /patient-dashboard/, and /book-visit/ pages exist
+     * Ensure /diro-login/, /diro-registration/, /patient-dashboard/, /book-visit/ etc. exist
+     *
+     * Every logout, and every unauthenticated hit on a dashboard, sends the
+     * visitor to /diro-login/. If that page is missing the visitor lands on a
+     * 404, so the pages this method guarantees are re-checked on every run
+     * rather than trusted to a one-shot flag. The flag is kept only as a hint:
+     * when it is set and all four auth pages still resolve, we skip the work.
      */
     public static function ensure_pages_exist()
     {
-        if (get_option('dior_portal_pages_ensured_v1', false)) {
+        if (get_option('dior_portal_pages_ensured_v1', false) && self::portal_pages_present()) {
             return;
         }
 
@@ -1417,6 +1423,14 @@ class Dior_Medical_Auth
             }
         } else {
             $login_id = $login_page->ID;
+            // A login page that exists but is a draft/private/trashed is just as
+            // broken as a missing one: every logout would 404 on it. Put it back.
+            if ($login_page->post_status !== 'publish') {
+                wp_update_post([
+                    'ID' => $login_id,
+                    'post_status' => 'publish'
+                ]);
+            }
         }
         if (!empty($login_id) && !is_wp_error($login_id)) {
             update_post_meta($login_id, '_wp_page_template', 'elementor_header_footer');
@@ -1559,6 +1573,25 @@ class Dior_Medical_Auth
         }
 
         update_option('dior_portal_pages_ensured_v1', true, false);
+    }
+
+    /**
+     * Are the pages every auth redirect depends on still there?
+     *
+     * A page can be trashed or deleted long after ensure_pages_exist() first
+     * ran, and the old one-shot flag would then hide the problem forever:
+     * every logout redirected to a slug that no longer existed and the visitor
+     * got a 404. Checking the pages themselves makes the guarantee real.
+     */
+    public static function portal_pages_present()
+    {
+        foreach (['patient-dashboard', 'diro-login', 'diro-registration', 'diro-lost-password'] as $slug) {
+            $page = get_page_by_path($slug);
+            if (!$page || $page->post_status !== 'publish') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -2003,7 +2036,7 @@ class Dior_Medical_Auth
             <div class="dior-auth-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <a href="<?php echo esc_url($dash_url); ?>"
                     class="dior-btn-auth-primary"><span><?php echo esc_html($dash_label); ?></span></a>
-                <a href="<?php echo esc_url(wp_logout_url(home_url('/diro-login/'))); ?>"
+                <a href="<?php echo esc_url(wp_logout_url(self::portal_login_url())); ?>"
                     class="dior-btn-auth-secondary"><span>Sign Out</span></a>
             </div>
 
@@ -2098,7 +2131,7 @@ class Dior_Medical_Auth
                 style="text-decoration:none; display:flex; align-items:center; justify-content:center;">
                 <span>Go to Patient Dashboard &rarr;</span>
             </a>
-            <a href="<?php echo esc_url(wp_logout_url(home_url('/diro-registration/'))); ?>" class="dior-btn-google"
+            <a href="<?php echo esc_url(wp_logout_url(self::portal_login_url())); ?>" class="dior-btn-google"
                 style="text-decoration:none; text-align:center;">
                 Sign Out / Switch Account
             </a>
@@ -2515,13 +2548,35 @@ class Dior_Medical_Auth
     /**
      * Redirect unauthenticated users from private patient and doctor dashboard pages to login
      */
+    /**
+     * The login URL every redirect should land on, guaranteed to exist.
+     *
+     * /diro-login/ is the portal login page. If it is ever missing or
+     * unpublished we fall back to /diro-registration/ and finally to the
+     * site root, so a logout can never dump the visitor on a 404.
+     */
+    public static function portal_login_url()
+    {
+        $login = get_page_by_path('diro-login');
+        if ($login && $login->post_status === 'publish') {
+            return home_url('/diro-login/');
+        }
+
+        $reg = get_page_by_path('diro-registration');
+        if ($reg && $reg->post_status === 'publish') {
+            return home_url('/diro-registration/');
+        }
+
+        return home_url('/');
+    }
+
     public static function check_dashboard_access_redirect()
     {
         if (is_user_logged_in()) {
             return;
         }
 
-        $login_url = home_url('/diro-login/');
+        $login_url = self::portal_login_url();
 
         global $post;
         $should_redirect = false;
@@ -3128,7 +3183,7 @@ class Dior_Medical_Auth
     {
         wp_logout();
         wp_send_json_success([
-            'redirect' => home_url('/diro-login/')
+            'redirect' => self::portal_login_url()
         ]);
     }
 
@@ -5541,6 +5596,21 @@ class Dior_Medical_Auth
             include $template;
         }
     }
+}
+
+/**
+ * Global wrapper around Dior_Medical_Auth::portal_login_url().
+ *
+ * The dashboard templates are plain includes and should not have to care
+ * whether the auth class happens to be loaded when they render, so they call
+ * this instead. Logout links use it so they can never point at a missing page.
+ */
+function dior_portal_login_url()
+{
+    if (class_exists('Dior_Medical_Auth') && method_exists('Dior_Medical_Auth', 'portal_login_url')) {
+        return Dior_Medical_Auth::portal_login_url();
+    }
+    return home_url('/diro-login/');
 }
 
 /**

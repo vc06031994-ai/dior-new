@@ -316,7 +316,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <a href="<?php echo esc_url(wp_logout_url(home_url('/diro-login/'))); ?>"
+                                    <a href="<?php echo esc_url(wp_logout_url(dior_portal_login_url())); ?>"
                                         class="dior-logout-text-btn">
                                         <i class="fas fa-arrow-right-from-bracket"></i> Logout
                                     </a>
