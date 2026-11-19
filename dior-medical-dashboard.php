@@ -1362,18 +1362,31 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Ensure /diro-login/, /diro-registration/, /patient-dashboard/, /book-visit/ etc. exist
+     * Create the portal pages once, on a genuinely fresh install.
      *
-     * Every logout, and every unauthenticated hit on a dashboard, sends the
-     * visitor to /diro-login/. If that page is missing the visitor lands on a
-     * 404, so the pages this method guarantees are re-checked on every run
-     * rather than trusted to a one-shot flag. The flag is kept only as a hint:
-     * when it is set and all four auth pages still resolve, we skip the work.
+     * IMPORTANT: this must never create a page on a site that is already set
+     * up. It is NOT a self-healing routine. Making it re-check the pages on
+     * every request meant that renaming a page slug made get_page_by_path()
+     * miss it, so the plugin silently inserted a fresh duplicate on every
+     * single init — the user renamed diro-login to dior-login and ended up
+     * with two "Patient Login" pages.
+     *
+     * Page slugs belong to the site owner. So we bail out if the flag is set
+     * OR if any portal page already exists in any form (published, draft or
+     * trashed). Only a site with none of them gets the one-time setup.
      */
     public static function ensure_pages_exist()
     {
-        if (get_option('dior_portal_pages_ensured_v1', false) && self::portal_pages_present()) {
+        if (get_option('dior_portal_pages_ensured_v1', false)) {
             return;
+        }
+
+        // Sites already running the portal never get pages created for them,
+        // however their slugs have been renamed.
+        foreach (['patient-dashboard', 'patient-portal', 'diro-login', 'dior-login', 'diro-registration', 'diro-lost-password'] as $existing_slug) {
+            if (get_page_by_path($existing_slug, OBJECT, 'page')) {
+                return;
+            }
         }
 
         // Patient Dashboard Page (/patient-dashboard/)
@@ -1423,14 +1436,6 @@ class Dior_Medical_Auth
             }
         } else {
             $login_id = $login_page->ID;
-            // A login page that exists but is a draft/private/trashed is just as
-            // broken as a missing one: every logout would 404 on it. Put it back.
-            if ($login_page->post_status !== 'publish') {
-                wp_update_post([
-                    'ID' => $login_id,
-                    'post_status' => 'publish'
-                ]);
-            }
         }
         if (!empty($login_id) && !is_wp_error($login_id)) {
             update_post_meta($login_id, '_wp_page_template', 'elementor_header_footer');
@@ -1575,24 +1580,6 @@ class Dior_Medical_Auth
         update_option('dior_portal_pages_ensured_v1', true, false);
     }
 
-    /**
-     * Are the pages every auth redirect depends on still there?
-     *
-     * A page can be trashed or deleted long after ensure_pages_exist() first
-     * ran, and the old one-shot flag would then hide the problem forever:
-     * every logout redirected to a slug that no longer existed and the visitor
-     * got a 404. Checking the pages themselves makes the guarantee real.
-     */
-    public static function portal_pages_present()
-    {
-        foreach (['patient-dashboard', 'diro-login', 'diro-registration', 'diro-lost-password'] as $slug) {
-            $page = get_page_by_path($slug);
-            if (!$page || $page->post_status !== 'publish') {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Override Page Template to Elementor Canvas (or built-in full-screen canvas)
@@ -2546,30 +2533,46 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Redirect unauthenticated users from private patient and doctor dashboard pages to login
-     */
-    /**
-     * The login URL every redirect should land on, guaranteed to exist.
+     * The login URL every redirect should land on.
      *
-     * /diro-login/ is the portal login page. If it is ever missing or
-     * unpublished we fall back to /diro-registration/ and finally to the
-     * site root, so a logout can never dump the visitor on a 404.
+     * Resolved by looking for the page that actually renders the login form
+     * rather than assuming a slug, so renaming /diro-login/ in the admin does
+     * not send logouts to a 404 or hand them off to some other page. Slugs are
+     * the site owner's to change; the shortcode is the reliable anchor.
+     *
+     * Order: the known slug, then any published page carrying [dior_login_form],
+     * then the registration page, then the site root.
      */
     public static function portal_login_url()
     {
         $login = get_page_by_path('diro-login');
         if ($login && $login->post_status === 'publish') {
-            return home_url('/diro-login/');
+            return get_permalink($login);
+        }
+
+        $by_shortcode = get_posts([
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            's' => '[dior_login_form]',
+            'no_found_rows' => true,
+        ]);
+        if (!empty($by_shortcode)) {
+            return get_permalink((int) $by_shortcode[0]);
         }
 
         $reg = get_page_by_path('diro-registration');
         if ($reg && $reg->post_status === 'publish') {
-            return home_url('/diro-registration/');
+            return get_permalink($reg);
         }
 
         return home_url('/');
     }
 
+    /**
+     * Redirect unauthenticated users from private patient and doctor dashboard pages to login
+     */
     public static function check_dashboard_access_redirect()
     {
         if (is_user_logged_in()) {

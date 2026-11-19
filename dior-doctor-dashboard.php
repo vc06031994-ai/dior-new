@@ -81,9 +81,27 @@ class Dior_Doctor_Dashboard
         }
 
         global $wpdb;
-        $page = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE '%[dior_doctor_dashboard]%' AND post_status='publish' LIMIT 1");
+
+        // Look for the shortcode in ANY status, not just published. If the page
+        // exists but was moved to draft/private/trash, or its slug was renamed,
+        // adopt it instead of inserting a second Doctor Dashboard page.
+        $page = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE '%[dior_doctor_dashboard]%' AND post_type='page' AND post_status <> 'auto-draft' LIMIT 1");
         if ($page) {
-            update_option("dior_doctor_page_id", (int) $page, false);
+            $page_id = (int) $page;
+            if (get_post_status($page_id) !== 'publish') {
+                wp_update_post([
+                    'ID' => $page_id,
+                    'post_status' => 'publish',
+                ]);
+            }
+            update_option("dior_doctor_page_id", $page_id, false);
+            return;
+        }
+
+        // The site may point at a custom slug instead of /doctor-dashboard/.
+        // Anything carrying the shortcode is already accounted for above, so a
+        // missing known slug is not a reason to create a page here.
+        if (get_option('dior_doctor_page_id', 0)) {
             return;
         }
         $page_id = wp_insert_post([
