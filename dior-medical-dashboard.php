@@ -6102,11 +6102,17 @@ if (!class_exists('Dior_HIPAAtizer_Appointment_Popup_V17')) {
             // Note: dior-hipaatizer-popup.css is already merged into dior-custom.css
 
             // SweetAlert2 is already enqueued by the dashboard; declare dependency.
+            // Version from filemtime, like the other dashboard assets: a hardcoded
+            // DIOR_PORTAL_VERSION kept serving the previous file from browser and
+            // CDN caches after every upload until the constant happened to change.
+            $hipaa_popup_js_ver = file_exists(DIOR_PORTAL_PATH . 'assets/js/dior-hipaatizer-popup.js')
+                ? filemtime(DIOR_PORTAL_PATH . 'assets/js/dior-hipaatizer-popup.js')
+                : DIOR_PORTAL_VERSION;
             wp_enqueue_script(
                 'dior-hipaatizer-popup-v17',
                 DIOR_PORTAL_URL . 'assets/js/dior-hipaatizer-popup.js',
                 ['sweetalert2'],
-                DIOR_PORTAL_VERSION,
+                $hipaa_popup_js_ver,
                 true
             );
         }

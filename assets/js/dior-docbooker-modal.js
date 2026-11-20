@@ -627,8 +627,19 @@
         var name = hipaatizerEventName(d);
         if (name && HIPAATIZER_COMPLETE_EVENTS.indexOf(name) !== -1) return true;
 
-        // Explicit "the whole workflow is done" flags some workflows send.
-        if (d.isComplete === true || d.completed === true || d.isFinal === true) return true;
+        // An explicit terminal NAME above wins even if the payload also carries
+        // a step number: a real final submit may report which step it closed.
+        // Only the weaker flag-based detection below has to reject step payloads,
+        // because a step save can carry `completed: true` ("this step is done")
+        // and that must never read as "the whole workflow is done".
+        if (/step/i.test(name)) return false;
+        if (d.step !== undefined && d.step !== null && d.step !== '') return false;
+
+        // Unambiguous "whole workflow finished" flags only. Bare `completed`
+        // is deliberately NOT accepted: it is exactly the ambiguous word a
+        // step save uses.
+        if (d.isComplete === true || d.isFinal === true ||
+            d.workflowComplete === true || d.isWorkflowComplete === true) return true;
 
         // Final-step redirect url.
         if (typeof d.url === 'string' && HIPAATIZER_COMPLETE_REDIRECT.test(d.url)) return true;
