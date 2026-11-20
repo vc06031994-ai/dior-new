@@ -152,11 +152,7 @@
         tbody.appendChild(tr);
     }
 
-    // Categories that make a document show up under Signed Consent Forms
-    // (documents.php filters that query on category/title LIKE %Consent%).
-    // Builds a Signed Consent row that matches the PHP-rendered markup
-    // (10 cells incl. the checkbox, same data-labels for the card layout).
-    // ── Export helper (shared by the three screens) ──────────────────────────
+    // ── Export helper ────────────────────────────────────────────────────────
     function exportTable(opts) {
         var tbody = document.querySelector(opts.tbody);
         if (!tbody) return;

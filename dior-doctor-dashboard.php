@@ -553,7 +553,8 @@ class Dior_Doctor_Dashboard
                     'id' => 'notif-sys-003',
                     'title' => 'Signed Patient Consent Uploaded',
                     'message' => 'Signed telehealth and treatment consent document has been securely archived.',
-                    'action_url' => '#tab=doc-documents-signed',
+                    /* the Signed Consent tab was removed; land on the documents list */
+                    'action_url' => '#tab=doc-documents-upload',
                     'icon' => 'fa-file-signature',
                     'priority' => 'Medium',
                     'type' => 'document',

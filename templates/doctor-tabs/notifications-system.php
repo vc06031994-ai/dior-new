@@ -324,8 +324,12 @@ foreach ($doctor_notif_rows as $row) {
                                         $icon = 'fa-file-signature';
                                         $priority_badge = 'badge-priority-medium';
                                         $priority_text = 'Signed Document';
-                                        $action_label = 'Signed Consents';
-                                        $action_tab = 'doc-documents-signed';
+                                        $action_label = 'View Documents';
+                                        /* Signed Consent / Consent Templates tabs were
+                                           removed, so this used to link to a tab that no
+                                           longer exists. Point it at Upload Documents,
+                                           which is the only remaining screen. */
+                                        $action_tab = 'doc-documents-upload';
                                     } elseif (strpos($n_type_raw, 'intake') !== false || strpos($n_type_raw, 'questionnaire') !== false || strpos($n_type_raw, 'medical') !== false) {
                                         $type_class = 'notification-type-update';
                                         $icon = 'fa-clipboard-list';
