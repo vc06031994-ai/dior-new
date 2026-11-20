@@ -711,6 +711,8 @@ let diorPastCurrentPage = 1;
 // --- Extracted dashboard script 5 ---
 window.diorSwitchApptSubTab = function(targetSubTab) {
                         if (!targetSubTab) targetSubTab = 'book';
+                        // Redirects using the retired schedule subtab should return to intake.
+                        if (targetSubTab === 'schedule') targetSubTab = 'book';
                         // The calendar subtab was removed — never fall back to a pane that no longer exists.
                         if (targetSubTab === 'calendar' || !document.getElementById('dior-subtab-' + targetSubTab)) {
                             targetSubTab = 'today';
@@ -1111,7 +1113,7 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
             agendaListEl.innerHTML = '<div class="card border-0 bg-light p-4 text-center text-muted rounded-4">' +
                 '<i class="far fa-calendar-xmark fs-2 text-secondary mb-2"></i>' +
                 '<p class="mb-2 fw-medium">No appointments match the selected filters.</p>' +
-                '<div><button type="button" class="btn btn-primary btn-sm rounded-pill" onclick="diorOpenDocBookerModal();"><i class="fas fa-calendar-plus me-1"></i> Book New Consultation</button></div>' +
+                '<div><button type="button" class="btn btn-primary btn-sm rounded-pill" onclick="diorGoToDocBookerPage();"><i class="fas fa-calendar-plus me-1"></i> Book New Consultation</button></div>' +
                 '</div>';
             return;
         }
@@ -1199,7 +1201,7 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
                 '<div class="mb-3" style="font-size: 2.2rem; color: #cbd5e1;"><i class="far fa-calendar-xmark"></i></div>' +
                 '<h6 class="text-dark fw-bold mb-1">No Consultations</h6>' +
                 '<p class="small text-muted mb-3">There are no appointments scheduled for this date.</p>' +
-                '<button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold shadow-sm" onclick="diorOpenDocBookerModal();">' +
+                '<button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold shadow-sm" onclick="diorGoToDocBookerPage();">' +
                 '<i class="fas fa-calendar-plus me-1"></i> Schedule Consultation' +
                 '</button>' +
                 '</div>';

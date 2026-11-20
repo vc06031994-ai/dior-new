@@ -445,7 +445,7 @@
                                 Visit (HD)</strong> or <strong>Phone Consultation</strong>.</p>
                     </div>
                 </div>
-                <button type="button" onclick="diorOpenDocBookerModal();" class="dior-btn-gold-primary btn"
+                <button type="button" onclick="diorGoToDocBookerPage();" class="dior-btn-gold-primary btn"
                     style="background: linear-gradient(135deg, #1A528E 0%, #1A528E 100%); color: #0f172a; border: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35); transition: all 0.2s ease;">
                     <i class="fa-solid fa-calendar-plus"></i> Open Appointment Booking
                 </button>

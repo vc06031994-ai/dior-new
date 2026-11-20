@@ -4,10 +4,10 @@
  */
 
 window.diorOnIntakeSubmitted = function(e) {
-    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    var detector = window.diorHipaatizerCompletion;
+    if (!e || typeof detector !== 'function' || !detector(e)) return;
 
-    // Remove the one-time registration flag after successful intake submission.
-    // This prevents the HIPAAtizer form from opening again on a normal refresh/login.
+    // Remove the one-time registration flag after confirmed intake submission.
     try {
         const cleanUrl = new URL(window.location.href);
         if (cleanUrl.searchParams.has('intake_required')) {
@@ -17,16 +17,19 @@ window.diorOnIntakeSubmitted = function(e) {
     } catch (cleanupError) {}
 
     const hipaaWrap = document.getElementById('dior-hipaa-form-container');
-    const bookingSec = document.getElementById('dior-dashboard-booking-section');
+    const appointmentIntake = document.getElementById('dior-hipaa-tab-form');
+    const bookingSec = document.getElementById('dior-docbooker-after-intake');
     const stepNotice = document.getElementById('dior-intake-step-notice');
     const compNotice = document.getElementById('dior-intake-completed-notice');
 
     if (hipaaWrap) {
         hipaaWrap.style.setProperty('display', 'none', 'important');
     }
+    if (appointmentIntake) {
+        appointmentIntake.style.setProperty('display', 'none', 'important');
+    }
     if (bookingSec) {
         bookingSec.style.setProperty('display', 'block', 'important');
-        bookingSec.scrollIntoView({ behavior: 'smooth' });
     }
     if (stepNotice) {
         stepNotice.style.setProperty('display', 'none', 'important');
@@ -35,25 +38,35 @@ window.diorOnIntakeSubmitted = function(e) {
         compNotice.style.setProperty('display', 'flex', 'important');
     }
 
-    if (typeof window.diorInBookingGoToStep === 'function') {
-        window.diorInBookingGoToStep('doctor');
+    const intakePopup = window.Swal && typeof window.Swal.getPopup === 'function'
+        ? window.Swal.getPopup()
+        : null;
+    if (intakePopup && intakePopup.classList.contains('dior-hipaatizer-popup-v17')) {
+        window.Swal.close();
+    }
+
+    if (document.getElementById('dior-subtab-book') &&
+        typeof window.diorSwitchApptSubTab === 'function') {
+        window.diorSwitchApptSubTab('book');
+    } else {
+        window.location.hash = '#tab=appointments&subtab=book';
+    }
+
+    const mainTitle = document.getElementById('dior-appt-main-title');
+    if (mainTitle) {
+        mainTitle.textContent = 'Schedule Appointment';
+    }
+    if (bookingSec && typeof bookingSec.scrollIntoView === 'function') {
+        bookingSec.scrollIntoView({ behavior: 'smooth' });
     }
 
     if (typeof showToast === 'function') {
-        showToast('Clinical Intake Submitted! Unlocking physician scheduling calendar...', false);
+        showToast('Intake submitted. Choose a date and time to schedule your appointment.', false);
     }
 };
 
-// Automatic HIPAAtizer Embed Message Listener
-//
-// This used to keep its own copy of the completion matcher, with its own list of
-// event names, which drifted out of step with the one in dior-docbooker-modal.js.
-// Both now share a single detector: dior-docbooker-modal.js owns the origin
-// allowlist, the visibility check (hidden duplicate renderer), the terminal-event
-// match and the open-once guard, and simply broadcasts the verdict here.
-//
-// Keeping one detector is what guarantees an intermediate step save can never
-// advance this screen while the booking modal stays closed.
+// Only a confirmed HIPAAtizer workflow completion reveals DocBooker;
+// progress messages are ignored by the shared detector.
 window.addEventListener('message', function (event) {
     if (!event || !event.data) return;
 
@@ -63,7 +76,7 @@ window.addEventListener('message', function (event) {
     if (!detector(event)) return;
 
     if (typeof window.diorOnIntakeSubmitted === 'function') {
-        window.diorOnIntakeSubmitted();
+        window.diorOnIntakeSubmitted(event);
     }
 });
 
@@ -89,51 +102,6 @@ try {
         }, 900);
     }
 } catch (e) {}
-
-// Check URL parameters for direct redirect from HIPAAtizer settings
-try {
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('intake_completed') === '1' || urlParams.get('intake') === 'success' || urlParams.get('submitted') === '1' || window.location.hash.indexOf('booking') !== -1) {
-        setTimeout(function() {
-            if (typeof window.diorOnIntakeSubmitted === 'function') {
-                window.diorOnIntakeSubmitted();
-            }
-        }, 500);
-    }
-} catch(e) {}
-
-// Automatic Background Poller to detect intake webhook completion in real-time
-(function initIntakeWatcher() {
-    var checkTimer = null;
-    function checkStatus() {
-        var hipaaWrap = document.getElementById('dior-hipaa-form-container');
-        if (!hipaaWrap || hipaaWrap.style.display === 'none') {
-            if (checkTimer) clearInterval(checkTimer);
-            return;
-        }
-
-        if (typeof jQuery !== 'undefined' && typeof dior_vars !== 'undefined' && dior_vars.ajax_url) {
-            jQuery.ajax({
-                url: dior_vars.ajax_url,
-                type: 'POST',
-                data: {
-                    action: 'dior_patient_check_intake_status',
-                    nonce: dior_vars.nonce
-                },
-                dataType: 'json',
-                success: function(res) {
-                    if (res && res.success && res.data && res.data.has_intake) {
-                        if (checkTimer) clearInterval(checkTimer);
-                        window.diorOnIntakeSubmitted();
-                    }
-                }
-            });
-        }
-    }
-
-    // Check every 5 seconds while intake form is active
-    checkTimer = setInterval(checkStatus, 5000);
-})();
 
 window.diorToggleIntakeReview = function() {
     const card = document.getElementById('dior-intake-review-card');
