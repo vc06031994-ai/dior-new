@@ -450,7 +450,11 @@ class Dior_Medical_Secure_Files
         $doc_record = self::add_document($patient_id, [
             'id'           => $ltr_uid,
             'title'        => $letter_title,
-            'category'     => 'Excuses & Letters',
+            /* "Clinical Record" rather than "Excuses & Letters": the patient
+               portal's category pills have no letter bucket, and an unknown
+               category was nearly unfilterable there. A letter is still
+               flagged by is_letter for anything that needs to tell it apart. */
+            'category'     => 'Clinical Record',
             'author_id'    => $doc_user_id,
             'file_name'    => sanitize_title($letter_title) . '.pdf',
             'file_type'    => 'PDF',

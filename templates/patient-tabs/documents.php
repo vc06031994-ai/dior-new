@@ -53,6 +53,7 @@
             <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 dior-doc-cat-pill active" onclick="diorFilterDocsByCategory('all', this)">All</button>
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Signed Consent', this)"><i class="fas fa-file-signature me-1"></i>Signed Consent Forms</button>
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Clinical Record', this)">Clinical Records</button>
+            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Letter', this)"><i class="fas fa-pen-nib me-1"></i>Medical Letters</button>
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Laboratory', this)">Lab &amp; Diagnostics</button>
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Prescription', this)">Prescriptions</button>
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill" onclick="diorFilterDocsByCategory('Other', this)">Other</button>
@@ -79,6 +80,7 @@
                         <?php foreach ($documents as $doc): ?>
                             <tr data-doc-id="<?php echo esc_attr($doc['id'] ?? ''); ?>"
                                 data-category="<?php echo esc_attr($doc['category'] ?? 'Clinical Record'); ?>"
+                                data-is-letter="<?php echo esc_attr(!empty($doc['is_letter']) ? '1' : '0'); ?>"
                                 data-doc-author-id="<?php echo esc_attr($doc['author_id'] ?? 0); ?>">
                                 <td><input type="checkbox" class="dior-ic-52ff4d551f form-check-input"></td>
                                 <td><span
@@ -155,9 +157,13 @@
                 if (r.querySelector('.dior-empty-state')) return;
                 var text = r.textContent.toLowerCase();
                 var cat = (r.getAttribute('data-category') || '').toLowerCase();
-                var matchesCat = (activeCategoryFilter === 'all') || 
-                                 (cat.indexOf(activeCategoryFilter) !== -1) || 
-                                 (activeCategoryFilter.indexOf('signed') !== -1 && (cat.indexOf('consent') !== -1 || text.indexOf('consent') !== -1));
+                var matchesCat = (activeCategoryFilter === 'all') ||
+                                 (cat.indexOf(activeCategoryFilter) !== -1) ||
+                                 (activeCategoryFilter.indexOf('signed') !== -1 && (cat.indexOf('consent') !== -1 || text.indexOf('consent') !== -1)) ||
+                                 /* "Medical Letters" bucket: letters are stored as
+                                    Clinical Record, so match the letter flag marker
+                                    the row carries in its title. */
+                                 (activeCategoryFilter === 'letter' && r.getAttribute('data-is-letter') === '1');
                 var matchesQuery = !q || text.indexOf(q) !== -1;
                 r.style.display = (matchesCat && matchesQuery) ? '' : 'none';
             });

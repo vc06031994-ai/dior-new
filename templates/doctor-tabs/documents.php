@@ -29,22 +29,6 @@ $doc_records = $wpdb->get_results("
     LIMIT 300
 ", ARRAY_A);
 
-// 1b. Fetch signed consent forms from database
-$signed_consents_records = $wpdb->get_results("
-    SELECT d.*,
-           COALESCE(p.patient_uid, CONCAT('DM-', (10000 + d.patient_id))) AS patient_code,
-           COALESCE(NULLIF(CONCAT(p.first_name, ' ', p.last_name), ' '), u.display_name, 'Patient') AS patient_name,
-           p.avatar_url AS patient_avatar,
-           u.user_email AS patient_email
-    FROM $doc_table d
-    LEFT JOIN $patients_table p ON p.user_id = d.patient_id
-    LEFT JOIN $users_table u ON u.ID = d.patient_id
-    WHERE d.is_deleted = 0 
-      AND (d.category LIKE '%Consent%' OR d.title LIKE '%Consent%')
-    ORDER BY d.created_at DESC
-    LIMIT 200
-", ARRAY_A);
-
 // 2. Fetch all registered patients for the upload modal dropdown
 $dp_map = [];
 $dp_list = $wpdb->get_results("SELECT user_id, patient_uid, first_name, last_name, email FROM $patients_table WHERE status <> 'deleted'", ARRAY_A);
@@ -91,10 +75,6 @@ if (!empty($dp_list)) {
     }
 }
 
-// Consent templates have no table of their own historically - they now live in
-// wp_dior_consent_templates and are seeded once per doctor.
-$consent_templates = class_exists('Dior_Doctor_Dynamic') ? Dior_Doctor_Dynamic::render_consent_templates() : [];
-
 if (!function_exists('dior_docs_format_date')) {
     function dior_docs_format_date($value)
     {
@@ -129,12 +109,6 @@ if (!function_exists('dior_docs_format_date')) {
         <button type="button" class="dior-subtab-pill btn active" data-doc-tab="doc-documents-upload" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-upload');">
             <i class="fas fa-file-arrow-up"></i> Upload Documents
         </button>
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-templates" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-templates');">
-            <i class="fas fa-file-lines"></i> Manage Templates
-        </button>
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-signed" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-signed');">
-            <i class="fas fa-file-signature"></i> Consent Forms
-        </button>
     </div>
 
     <div class="docs-card">
@@ -149,6 +123,11 @@ if (!function_exists('dior_docs_format_date')) {
                     <input type="text" id="doc-upload-search-input" class="form-control border-start-0 ps-0" placeholder="Search records..." onkeyup="diorFilterDoctorUploadDocs(this.value)">
                 </div>
                 <div class="docs-actions-group">
+                    <button type="button" class="docs-btn-letter btn" id="dior-doc-letter-btn"
+                        aria-label="Write a letter for a patient" title="Write Patient Letter"
+                        onclick="diorOpenLetterModal()">
+                        <i class="fas fa-pen-nib"></i><span>Write Letter</span>
+                    </button>
                     <button type="button" class="docs-icon-btn docs-btn-primary btn" id="dior-doc-upload-btn"
                         aria-label="Upload patient document" title="Upload Patient Document"
                         onclick="diorOpenDoctorDocUploadModal()">
@@ -274,6 +253,152 @@ if (!function_exists('dior_docs_format_date')) {
             modalEl.style.display = 'block';
         }
     };
+
+    /* ── Write Patient Letter ────────────────────────────────────────────────
+       Replaces the removed Consent Templates / Signed Consent screens with a
+       single action: the doctor writes a letter, and it lands in the patient's
+       Documents & Reports tab. Publishing reuses the existing
+       dior_doctor_save_letter endpoint (wp_dior_documents, is_letter = 1). */
+    window.diorLetterSyncTitle = function () {
+        var typeEl = document.getElementById('dior-letter-type');
+        var titleEl = document.getElementById('dior-letter-title');
+        if (!typeEl || !titleEl) return;
+        if (titleEl.dataset.diorTouched === '1' && titleEl.value.trim() !== '') return;
+        titleEl.value = typeEl.value;
+    };
+
+    window.diorOpenLetterModal = function () {
+        var modalEl = document.getElementById('diorDoctorLetterModal');
+        if (!modalEl) return;
+        if (modalEl.closest('.dior-tab-panel')) {
+            document.body.appendChild(modalEl);
+        }
+        var form = document.getElementById('dior-doctor-letter-form');
+        if (form) {
+            form.reset();
+            // reset() empties the date inputs, so re-apply sensible defaults
+            // (today, and three days out) instead of posting empty strings.
+            var today = new Date();
+            var iso = function (d) { return d.toISOString().slice(0, 10); };
+            var plus3 = new Date(today.getTime() + 3 * 86400000);
+            var fromEl = document.getElementById('dior-letter-from');
+            var retEl = document.getElementById('dior-letter-return');
+            if (fromEl) fromEl.value = iso(today);
+            if (retEl) retEl.value = iso(plus3);
+            var titleEl = document.getElementById('dior-letter-title');
+            if (titleEl) {
+                titleEl.dataset.diorTouched = '';
+                titleEl.value = (document.getElementById('dior-letter-type') || {}).value || 'Work Absence Note';
+            }
+        }
+        var submit = document.getElementById('dior-letter-submit-btn');
+        if (submit) {
+            submit.disabled = false;
+            submit.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Publish to Patient';
+        }
+        if (window.bootstrap && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        } else {
+            modalEl.classList.add('show');
+            modalEl.style.display = 'block';
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var titleEl = document.getElementById('dior-letter-title');
+        if (titleEl) {
+            titleEl.addEventListener('input', function () { titleEl.dataset.diorTouched = '1'; });
+        }
+
+        var form = document.getElementById('dior-doctor-letter-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var patientId = (document.getElementById('dior-letter-patient') || {}).value || '';
+            var letterType = (document.getElementById('dior-letter-type') || {}).value || 'Work Absence Note';
+            var letterTitle = ((document.getElementById('dior-letter-title') || {}).value || '').trim();
+            var body = ((document.getElementById('dior-letter-body') || {}).value || '').trim();
+
+            if (!patientId) {
+                if (window.Swal) Swal.fire({icon: 'warning', title: 'Select a patient', text: 'Choose the patient this letter is for.'});
+                return;
+            }
+            if (!letterTitle) {
+                if (window.Swal) Swal.fire({icon: 'warning', title: 'Title required', text: 'Give the letter a title.'});
+                return;
+            }
+            if (!body) {
+                if (window.Swal) Swal.fire({icon: 'warning', title: 'Letter is empty', text: 'Write the letter body before publishing.'});
+                return;
+            }
+
+            var submit = document.getElementById('dior-letter-submit-btn');
+            if (submit) {
+                submit.disabled = true;
+                submit.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Publishing…';
+            }
+
+            var paragraphs = body.split(/\n\s*\n/).map(function (block) {
+                var text = block.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return '<p>' + text.split(/\n/).join('<br>') + '</p>';
+            }).join('');
+
+            var fd = new FormData();
+            fd.append('action', 'dior_doctor_save_letter');
+            fd.append('nonce', (window.dior_doctor_vars && window.dior_doctor_vars.nonce) ||
+                               (window.dior_vars && window.dior_vars.nonce) || '');
+            fd.append('patient_id', patientId);
+            fd.append('letter_type', letterType);
+            fd.append('letter_title', letterTitle);
+            fd.append('content_html', paragraphs);
+            fd.append('excused_from', (document.getElementById('dior-letter-from') || {}).value || '');
+            fd.append('return_date', (document.getElementById('dior-letter-return') || {}).value || '');
+            fd.append('restrictions', '');
+            fd.append('remarks', '');
+
+            var ajaxUrl = (window.dior_doctor_vars && window.dior_doctor_vars.ajax_url) ||
+                          (window.dior_vars && window.dior_vars.ajax_url) ||
+                          '<?php echo esc_js(admin_url('admin-ajax.php')); ?>';
+
+            fetch(ajaxUrl, { method: 'POST', credentials: 'same-origin', body: fd })
+                .then(function (res) { return res.json(); })
+                .then(function (res) {
+                    if (!res || !res.success) {
+                        throw new Error((res && res.data && res.data.message) || 'The letter could not be published.');
+                    }
+                    var modalEl = document.getElementById('diorDoctorLetterModal');
+                    if (window.bootstrap && bootstrap.Modal && modalEl) {
+                        bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                    } else if (modalEl) {
+                        modalEl.classList.remove('show');
+                        modalEl.style.display = 'none';
+                    }
+                    form.reset();
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Letter Published',
+                            text: (res.data && res.data.message) || 'The patient can now see this letter in their portal.'
+                        });
+                    }
+                })
+                .catch(function (err) {
+                    if (window.Swal) {
+                        Swal.fire({icon: 'error', title: 'Publish Failed', text: err.message});
+                    } else {
+                        alert('Publish failed: ' + err.message);
+                    }
+                })
+                .then(function () {
+                    if (submit) {
+                        submit.disabled = false;
+                        submit.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Publish to Patient';
+                    }
+                });
+        });
+    });
 
     window.diorFilterDoctorUploadDocs = function(val) {
         var q = (val || '').toLowerCase().trim();
@@ -531,288 +656,9 @@ if (!function_exists('dior_docs_format_date')) {
 <!-- ==============================================
      2) CONSENT TEMPLATES PANE
      ============================================== -->
-<section class="dior-tab-panel" id="tab-doc-documents-templates" style="display: none;">
-    <!-- Breadcrumb Header -->
-    <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700;">Consent Templates</h4>
-        </div>
-        <div>
-            <ul class="va-breadcrumb-list"
-                style="display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; align-items: center;">
-                <li><a href="#"><i class="fas fa-house" style="font-size: 14px; color: #1A528E;"></i></a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li><a href="javascript:void(0)"
-                        style="color: #64748B; text-decoration: none; font-size: 14px;">Documents & Consent</a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li class="active"><span style="color: #1E293B; font-weight: 700; font-size: 14px;">Consent
-                        Templates</span></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Subtab Navigation Bar -->
-    <div class="dior-subtab-nav-bar px-1 mb-4">
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-upload" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-upload');">
-            <i class="fas fa-file-arrow-up"></i> Upload Documents
-        </button>
-        <button type="button" class="dior-subtab-pill btn active" data-doc-tab="doc-documents-templates" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-templates');">
-            <i class="fas fa-file-lines"></i> Manage Templates
-        </button>
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-signed" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-signed');">
-            <i class="fas fa-file-signature"></i> Consent Forms
-        </button>
-    </div>
-
-    <div class="docs-card">
-        <div class="docs-header-container">
-            <div class="docs-title-box">
-                <h2>Consent Templates</h2>
-                <div class="docs-title-line"></div>
-            </div>
-
-            <div class="docs-actions-wrapper">
-                <div class="input-group input-group-sm dior-bs-search-group">
-                    <input type="text" id="dior-template-search-input" class="form-control border-start-0 ps-0"
-                        placeholder="Search templates..." aria-label="Search consent templates"
-                        onkeyup="diorFilterConsentRows(this.value, 'dior-consent-templates-tbody')">
-                </div>
-                <div class="docs-actions-group">
-                    <button type="button" class="docs-icon-btn docs-btn-primary btn"
-                        aria-label="Add consent template" title="Add Consent Template"><i
-                            class="fas fa-plus"></i></button>
-                    <button type="button" class="docs-icon-btn docs-btn-success btn"
-                        aria-label="Export consent templates to CSV" title="Export to CSV"><i
-                            class="fas fa-file-arrow-down"></i></button>
-                    <button type="button" class="docs-icon-btn docs-btn-info btn"
-                        aria-label="Refresh consent templates" title="Refresh"><i
-                            class="fas fa-rotate-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="docs-table-wrapper">
-            <table class="docs-table table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;" class="text-center"><input type="checkbox"
-                                class="docs-checkbox form-check-input"></th>
-                        <th>TEMPLATE ID <i class="fas fa-sort"></i></th>
-                        <th>TEMPLATE NAME <i class="fas fa-sort"></i></th>
-                        <th>CATEGORY <i class="fas fa-sort"></i></th>
-                        <th>DEPARTMENT <i class="fas fa-sort"></i></th>
-                        <th>VERSION <i class="fas fa-sort"></i></th>
-                        <th>CREATED DATE <i class="fas fa-sort"></i></th>
-                        <th>STATUS <i class="fas fa-sort"></i></th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody id="dior-consent-templates-tbody">
-                    <?php if (!empty($consent_templates)): ?>
-                        <?php foreach ($consent_templates as $tpl): ?>
-                            <?php
-                            $tpl_status = $tpl['status'] ?: 'Active';
-                            $tpl_status_class = $tpl_status === 'Active' ? 'is-active'
-                                : ($tpl_status === 'Draft' ? 'is-draft' : 'is-archived');
-                            $tpl_created = dior_docs_format_date($tpl['created_at'] ?? '');
-                            ?>
-                            <tr data-template-id="<?php echo esc_attr($tpl['id']); ?>">
-                                <td class="text-center">
-                                    <input type="checkbox" class="docs-checkbox form-check-input"
-                                        aria-label="<?php echo esc_attr('Select ' . $tpl['template_name']); ?>">
-                                </td>
-                                <td data-label="Template ID"><span class="dior-docs-id"><?php echo esc_html($tpl['template_uid']); ?></span></td>
-                                <td data-label="Template Name">
-                                    <div class="fw-semibold dior-docs-name"><?php echo esc_html($tpl['template_name']); ?></div>
-                                </td>
-                                <td data-label="Category"><?php echo esc_html($tpl['template_category'] ?: '—'); ?></td>
-                                <td data-label="Department"><?php echo esc_html($tpl['department'] ?: '—'); ?></td>
-                                <td data-label="Version"><?php echo esc_html($tpl['version'] ?: '—'); ?></td>
-                                <td data-label="Created Date">
-                                    <i class="far fa-calendar docs-icon-blue me-1"></i> <?php echo esc_html($tpl_created ?: '—'); ?>
-                                </td>
-                                <td data-label="Status">
-                                    <span class="dior-docs-badge <?php echo esc_attr($tpl_status_class); ?>"><?php echo esc_html($tpl_status); ?></span>
-                                </td>
-                                <td data-label="Actions">
-                                    <div class="docs-row-actions">
-                                        <button type="button" class="docs-action-btn-sm docs-btn-edit btn"
-                                            title="Edit template"
-                                            aria-label="<?php echo esc_attr('Edit ' . $tpl['template_name']); ?>"><i class="fas fa-pen"></i></button>
-                                        <button type="button" class="docs-action-btn-sm docs-btn-delete btn"
-                                            title="Delete template"
-                                            aria-label="<?php echo esc_attr('Delete ' . $tpl['template_name']); ?>"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr class="dior-docs-empty-row">
-                            <td colspan="9" class="dior-docs-empty">
-                                <i class="fas fa-file-lines"></i>
-                                <strong>No consent templates yet</strong>
-                                <span>Use <em>Add Template</em> to create the first one.</span>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="va-footer dior-docs-footer">
-            <div class="va-pagination-text docs-pagination-text">
-                <strong>0</strong> templates total
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- ==============================================
      3) SIGNED CONSENT PANE 
      ============================================== -->
-<section class="dior-tab-panel documents-tab-panel" id="tab-doc-documents-signed" style="display: none;">
-    <!-- Breadcrumb Header -->
-    <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h4 class="mb-0 text-dark" style="font-size: 20px; font-weight: 700;">Signed Consent Forms</h4>
-        </div>
-        <div>
-            <ul class="va-breadcrumb-list"
-                style="display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; align-items: center;">
-                <li><a href="#"><i class="fas fa-house" style="font-size: 14px; color: #1A528E;"></i></a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li><a href="javascript:void(0)"
-                        style="color: #64748B; text-decoration: none; font-size: 14px;">Documents & Consent</a></li>
-                <li><span style="color: #94A3B8;">/</span></li>
-                <li class="active"><span style="color: #1E293B; font-weight: 700; font-size: 14px;">Signed
-                        Consent</span></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Subtab Navigation Bar -->
-    <div class="dior-subtab-nav-bar px-1 mb-4">
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-upload" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-upload');">
-            <i class="fas fa-file-arrow-up"></i> Upload Documents
-        </button>
-        <button type="button" class="dior-subtab-pill btn" data-doc-tab="doc-documents-templates" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-templates');">
-            <i class="fas fa-file-lines"></i> Manage Templates
-        </button>
-        <button type="button" class="dior-subtab-pill btn active" data-doc-tab="doc-documents-signed" onclick="if(typeof diorDocSwitchTab==='function') diorDocSwitchTab('doc-documents-signed');">
-            <i class="fas fa-file-signature"></i> Consent Forms
-        </button>
-    </div>
-
-    <div class="docs-card">
-        <div class="docs-header-container">
-            <div class="docs-title-box">
-                <h2>Signed Consent Forms</h2>
-                <div class="docs-title-line"></div>
-            </div>
-
-            <div class="docs-actions-wrapper">
-                <div class="input-group input-group-sm dior-bs-search-group">
-                    <input type="text" id="dior-signed-search-input" class="form-control border-start-0 ps-0"
-                        placeholder="Search consents..." aria-label="Search signed consents"
-                        onkeyup="diorFilterConsentRows(this.value, 'doc-signed-consents-tbody')">
-                </div>
-                <div class="docs-actions-group">
-                    <button type="button" class="docs-icon-btn docs-btn-primary btn"
-                        aria-label="Upload a signed consent form" title="Upload Signed Consent"><i
-                            class="fas fa-plus"></i></button>
-                    <button type="button" class="docs-icon-btn docs-btn-success btn"
-                        aria-label="Export signed consents to CSV" title="Export to CSV"><i
-                            class="fas fa-file-arrow-down"></i></button>
-                    <button type="button" class="docs-icon-btn docs-btn-info btn"
-                        aria-label="Refresh signed consents" title="Refresh"><i
-                            class="fas fa-rotate-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="docs-table-wrapper">
-            <table class="docs-table table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;" class="text-center"><input type="checkbox"
-                                class="docs-checkbox form-check-input"></th>
-                        <th>CONSENT ID <i class="fas fa-sort"></i></th>
-                        <th>PATIENT <i class="fas fa-sort"></i></th>
-                        <th>CONSENT TYPE <i class="fas fa-sort"></i></th>
-                        <th>PROCEDURE <i class="fas fa-sort"></i></th>
-                        <th>SIGNED DATE <i class="fas fa-sort"></i></th>
-                        <th>SIGNED BY <i class="fas fa-sort"></i></th>
-                        <th>WITNESS <i class="fas fa-sort"></i></th>
-                        <th>STATUS <i class="fas fa-sort"></i></th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
-                <tbody id="doc-signed-consents-tbody">
-                    <?php if (!empty($signed_consents_records)): ?>
-                        <?php foreach ($signed_consents_records as $sc): ?>
-                            <?php
-                            $sc_uid = $sc['doc_uid'] ?: ('CON-' . $sc['id']);
-                            $p_id = (int)$sc['patient_id'];
-                            $p_name = $sc['patient_name'] ?: 'Patient';
-                            $p_avatar = $sc['patient_avatar'] ?: ('https://ui-avatars.com/api/?name=' . urlencode($p_name) . '&background=random');
-                            $signed_date = date('M j, Y', strtotime($sc['created_at']));
-                            $download_url = add_query_arg([
-                                'dior_action' => 'download_doc',
-                                'doc_id'      => $sc_uid,
-                                'patient_id'  => $p_id
-                            ], home_url('/'));
-                            // The signed-consent query selects d.* from the documents table,
-                            // so the real column names are title / category (not doc_title).
-                            $doc_title = !empty($sc['title']) ? $sc['title'] : 'Consent Form';
-                            $doc_cat = !empty($sc['category']) ? $sc['category'] : 'Surgery Consent';
-                            ?>
-                            <tr id="doc-sc-row-<?php echo esc_attr($sc_uid); ?>" data-patient-id="<?php echo esc_attr($p_id); ?>" data-doc-uid="<?php echo esc_attr($sc_uid); ?>">
-                                <td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input" value="<?php echo esc_attr($sc_uid); ?>"></td>
-                                <td data-label="Consent ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small"><?php echo esc_html($sc_uid); ?></span></td>
-                                <td data-label="Patient">
-                                    <div class="docs-user-profile d-flex align-items-center gap-2">
-                                        <img src="<?php echo esc_url($p_avatar); ?>" class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="<?php echo esc_attr($p_name); ?>" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($p_name); ?>&background=random'">
-                                        <div>
-                                            <span class="docs-user-name fw-semibold text-dark d-block"><?php echo esc_html($p_name); ?></span>
-                                            <small class="text-muted"><?php echo esc_html($sc['patient_code']); ?></small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td data-label="Consent Type"><?php echo esc_html($doc_cat); ?></td>
-                                <td data-label="Procedure"><div class="fw-semibold text-dark"><?php echo esc_html($doc_title); ?></div></td>
-                                <td data-label="Signed Date"><i class="far fa-calendar docs-icon-blue me-1"></i> <?php echo esc_html($signed_date); ?></td>
-                                <td data-label="Signed By"><?php echo esc_html($p_name); ?></td>
-                                <td data-label="Witness">Clinical Staff</td>
-                                <td data-label="Status"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small"><i class="fas fa-check-circle me-1"></i> Signed</span></td>
-                                <td data-label="Actions">
-                                    <div class="docs-row-actions d-flex gap-1">
-                                        <a href="<?php echo esc_url($download_url); ?>" target="_blank" class="docs-action-btn-sm docs-btn-edit btn" title="Download Consent" download><i class="fas fa-file-arrow-down"></i></a>
-                                        <button type="button" class="docs-action-btn-sm docs-btn-delete btn" title="Delete Consent" onclick="diorDoctorDeleteDoc(this, '<?php echo esc_js($sc_uid); ?>', <?php echo (int)$p_id; ?>)"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr id="dior-sc-empty-row">
-                            <td colspan="10" class="text-center py-5 text-secondary">
-                                <i class="fas fa-file-signature fs-2 text-muted mb-2 d-block"></i>
-                                <span class="fw-semibold d-block">No signed consent forms uploaded yet.</span>
-                                <small class="text-muted">Uploaded consent forms will appear here in real-time.</small>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="va-footer dior-docs-footer">
-            <div class="va-pagination-text docs-pagination-text">
-                <strong>0</strong> consent forms total
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- ══════════════════════════════════════════════════════════════════════════
      Doctor Document Upload Modal
 
@@ -895,3 +741,100 @@ if (!function_exists('dior_docs_format_date')) {
             </div>
         </div>
     </div>
+
+<!-- Write Patient Letter — rendered outside #tab-doc-documents-upload so it is
+     never hidden behind an inactive tab panel. -->
+<div class="modal fade" id="diorDoctorLetterModal" tabindex="-1" aria-labelledby="diorDoctorLetterModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-bottom py-3 px-4 bg-white d-flex align-items-center justify-content-between">
+                <h5 class="modal-title fw-bold text-dark fs-5 mb-0" id="diorDoctorLetterModalLabel">
+                    <i class="fas fa-pen-nib text-primary me-2"></i> Write Patient Letter
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="dior-doctor-letter-form">
+                <div class="modal-body p-4 bg-white">
+                    <p class="text-secondary small mb-3">
+                        The letter is published to the patient's Documents &amp; Reports tab the moment you submit it.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="dior-letter-patient" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Patient <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select rounded-3 py-2" id="dior-letter-patient" name="patient_id" required>
+                                <option value="">Select a patient…</option>
+                                <?php foreach ($doctor_patient_dropdown as $dp): ?>
+                                    <option value="<?php echo esc_attr($dp['user_id']); ?>">
+                                        <?php echo esc_html($dp['name']); ?> (<?php echo esc_html($dp['code']); ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dior-letter-type" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Letter Type <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select rounded-3 py-2" id="dior-letter-type" name="letter_type" required
+                                onchange="diorLetterSyncTitle()">
+                                <option value="Work Absence Note">Work Absence Note</option>
+                                <option value="School Excuse Note">School Excuse Note</option>
+                                <option value="Return to Work Clearance">Return to Work Clearance</option>
+                                <option value="Fit to Travel Letter">Fit to Travel Letter</option>
+                                <option value="Medical Attestation">Medical Attestation</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="dior-letter-title" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Letter Title <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control rounded-3 py-2" id="dior-letter-title" name="letter_title"
+                                placeholder="e.g. Work Absence Note - Acute Bronchitis" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dior-letter-from" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Excused From
+                            </label>
+                            <input type="date" class="form-control rounded-3 py-2" id="dior-letter-from" name="excused_from"
+                                value="<?php echo esc_attr(date('Y-m-d')); ?>">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dior-letter-return" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Return Date
+                            </label>
+                            <input type="date" class="form-control rounded-3 py-2" id="dior-letter-return" name="return_date"
+                                value="<?php echo esc_attr(date('Y-m-d', strtotime('+3 days'))); ?>">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="dior-letter-body" class="form-label small text-uppercase text-secondary fw-semibold mb-1">
+                                Letter Body <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control rounded-3 py-2" id="dior-letter-body" name="letter_body" rows="8"
+                                placeholder="Write the letter the patient will receive…" required></textarea>
+                            <div class="form-text text-muted small mt-1">
+                                <i class="fas fa-circle-info text-primary"></i>
+                                The patient header, clinic letterhead, signature and verification token are added automatically.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top py-3 px-4 bg-white d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-secondary rounded-3 px-4 fw-semibold"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4 fw-semibold shadow-sm"
+                        id="dior-letter-submit-btn">
+                        <i class="fas fa-paper-plane me-1"></i> Publish to Patient
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

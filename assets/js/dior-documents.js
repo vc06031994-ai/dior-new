@@ -1,46 +1,21 @@
 /**
  * DIOR Medical — Documents & Consent
  *
- * Fixes the actions that were previously dead on all three sub-tabs:
- *   - Upload Documents : "Add new record" (was an undefined global), export,
- *                        refresh, bulk delete, row edit (title/category),
- *                        single-row selection sync
- *   - Consent Templates: entire screen was hardcoded markup - now real CRUD
- *                        against wp_dior_consent_templates
- *   - Signed Consent   : export, refresh, bulk delete, selection sync
+ * Handles the actions on the Upload Documents screen: "Add new record",
+ * export, refresh, bulk delete, row edit (title/category) and single-row
+ * selection sync.
  *
- * Shared helpers keep the three screens consistent with the pharmacy module
- * (same toast language, same AJAX/nonce handling, no silent fake saves).
+ * The Consent Templates and Signed Consent screens were removed together with
+ * their toolbars, panels, sidebar rows and JS. Documents uploaded here still
+ * reach the patient portal as before.
+ *
+ * Helpers keep this screen consistent with the pharmacy module (same toast
+ * language, same AJAX/nonce handling, no silent fake saves).
  */
 (function () {
     'use strict';
 
     var UPLOAD_TAB = 'doc-documents-upload';
-    var TEMPLATE_TAB = 'doc-documents-templates';
-    var SIGNED_TAB = 'doc-documents-signed';
-
-    var STATUS_OPTIONS = ['Active', 'Draft', 'Archived'];
-    var CATEGORY_OPTIONS = [
-        'Surgery Consent',
-        'Anesthesia Consent',
-        'Blood Transfusion',
-        'Discharge AMA',
-        'Research Participation',
-        'Photography',
-        'Procedure Consent',
-        'Other'
-    ];
-    var DEPARTMENT_OPTIONS = [
-        'All Departments',
-        'General Surgery',
-        'Orthopedics',
-        'Cardiology',
-        'Neurology',
-        'Oncology',
-        'Pediatrics',
-        'Dermatology',
-        'Obstetrics & Gynecology'
-    ];
 
     function vars() {
         return window.dior_doctor_vars || {};
@@ -179,40 +154,8 @@
 
     // Categories that make a document show up under Signed Consent Forms
     // (documents.php filters that query on category/title LIKE %Consent%).
-    function isConsentCategory(category) {
-        return /consent/i.test(String(category || ''));
-    }
-
     // Builds a Signed Consent row that matches the PHP-rendered markup
     // (10 cells incl. the checkbox, same data-labels for the card layout).
-    function buildSignedConsentRow(doc, patientId, pName, pCode, pAvatar, docCat, docTitle, docDate, downloadUrl) {
-        var uid = doc.id || '';
-        var tr = document.createElement('tr');
-        tr.id = 'doc-sc-row-' + uid;
-        tr.setAttribute('data-patient-id', patientId);
-        tr.setAttribute('data-doc-uid', uid);
-        tr.innerHTML =
-            '<td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input" value="' + escapeHtml(uid) + '"></td>' +
-            '<td data-label="Consent ID"><span class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">' + escapeHtml(uid) + '</span></td>' +
-            '<td data-label="Patient"><div class="docs-user-profile d-flex align-items-center gap-2">' +
-            '<img src="' + escapeHtml(pAvatar) + '" class="docs-user-avatar rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="' + escapeHtml(pName) + '">' +
-            '<div><span class="docs-user-name fw-semibold text-dark d-block">' + escapeHtml(pName) + '</span>' +
-            '<small class="text-muted">' + escapeHtml(pCode) + '</small></div></div></td>' +
-            '<td data-label="Consent Type">' + escapeHtml(docCat) + '</td>' +
-            '<td data-label="Procedure"><div class="fw-semibold text-dark">' + escapeHtml(docTitle) + '</div></td>' +
-            '<td data-label="Signed Date"><i class="far fa-calendar docs-icon-blue me-1"></i> ' + escapeHtml(docDate) + '</td>' +
-            '<td data-label="Signed By">' + escapeHtml(pName) + '</td>' +
-            '<td data-label="Witness">Clinical Staff</td>' +
-            '<td data-label="Status"><span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small"><i class="fas fa-check-circle me-1"></i> Signed</span></td>' +
-            '<td data-label="Actions"><div class="docs-row-actions d-flex gap-1">' +
-            '<a href="' + escapeHtml(downloadUrl) + '" target="_blank" class="docs-action-btn-sm docs-btn-edit btn" title="Download Consent" download><i class="fas fa-file-arrow-down"></i></a>' +
-            '<button type="button" class="docs-action-btn-sm docs-btn-delete btn" title="Delete Consent"' +
-            ' onclick="if(window.diorDoctorDeleteDoc){diorDoctorDeleteDoc(this, \'' + escapeHtml(uid) + '\', ' + parseInt(patientId, 10) + ');}">' +
-            '<i class="fas fa-trash"></i></button>' +
-            '</div></td>';
-        return tr;
-    }
-
     // ── Export helper (shared by the three screens) ──────────────────────────
     function exportTable(opts) {
         var tbody = document.querySelector(opts.tbody);
@@ -580,363 +523,10 @@
         }, 'Save Changes');
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // CONSENT TEMPLATES (full CRUD)
-    // ═══════════════════════════════════════════════════════════════════════
-    function templateRowHtml(row) {
-        var statusClass = row.status === 'Active' ? 'is-active' :
-            (row.status === 'Draft' ? 'is-draft' : 'is-archived');
-        var created = row.created_at ? formatDate(row.created_at) : '—';
-        return '<td class="text-center"><input type="checkbox" class="docs-checkbox form-check-input" ' +
-            'aria-label="Select ' + escapeHtml(row.template_name) + '"></td>' +
-            '<td data-label="Template ID"><span class="dior-docs-id">' + escapeHtml(row.template_uid || '—') + '</span></td>' +
-            '<td data-label="Template Name"><div class="fw-semibold dior-docs-name">' + escapeHtml(row.template_name) + '</div></td>' +
-            '<td data-label="Category">' + escapeHtml(row.template_category || '—') + '</td>' +
-            '<td data-label="Department">' + escapeHtml(row.department || '—') + '</td>' +
-            '<td data-label="Version">' + escapeHtml(row.version || '—') + '</td>' +
-            '<td data-label="Created Date"><i class="far fa-calendar docs-icon-blue me-1"></i> ' + escapeHtml(created) + '</td>' +
-            '<td data-label="Status"><span class="dior-docs-badge ' + statusClass + '">' + escapeHtml(row.status || 'Active') + '</span></td>' +
-            '<td data-label="Actions"><div class="docs-row-actions">' +
-            '<button type="button" class="docs-action-btn-sm docs-btn-edit btn" title="Edit template" aria-label="Edit ' + escapeHtml(row.template_name) + '"><i class="fas fa-pen"></i></button>' +
-            '<button type="button" class="docs-action-btn-sm docs-btn-delete btn" title="Delete template" aria-label="Delete ' + escapeHtml(row.template_name) + '"><i class="fas fa-trash"></i></button>' +
-            '</div></td>';
-    }
-
-    function formatDate(value) {
-        var raw = String(value).trim();
-        var parsed = new Date(raw.replace(' ', 'T'));
-        if (isNaN(parsed.getTime())) return raw;
-        try {
-            return parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-        } catch (e) {
-            return raw;
-        }
-    }
-
-    function templateFormBody(row) {
-        row = row || {};
-        return '<div class="dior-docs-grid">' +
-            fieldHtml('dior-tpl-name', 'Template Name',
-                '<input class="dior-docs-input" id="dior-tpl-name" name="template_name" type="text" value="' +
-                escapeHtml(row.template_name || '') + '" placeholder="e.g. General Surgery Consent Form" required>', true) +
-            fieldHtml('dior-tpl-category', 'Consent Category',
-                '<select class="dior-docs-input" id="dior-tpl-category" name="template_category">' +
-                optionsHtml(CATEGORY_OPTIONS, row.template_category) + '</select>', true) +
-            fieldHtml('dior-tpl-department', 'Department',
-                '<select class="dior-docs-input" id="dior-tpl-department" name="department">' +
-                optionsHtml(DEPARTMENT_OPTIONS, row.department || 'All Departments') + '</select>') +
-            fieldHtml('dior-tpl-version', 'Version',
-                '<input class="dior-docs-input" id="dior-tpl-version" name="version" type="text" value="' +
-                escapeHtml(row.version || 'v1.0') + '" placeholder="v1.0">') +
-            fieldHtml('dior-tpl-status', 'Status',
-                '<select class="dior-docs-input" id="dior-tpl-status" name="status">' +
-                optionsHtml(STATUS_OPTIONS, row.status || 'Active') + '</select>') +
-            '</div>';
-    }
-
-    function bindTemplates() {
-        var root = panel(TEMPLATE_TAB);
-        if (!root || root.dataset.diorBound === '1') return;
-        root.dataset.diorBound = '1';
-
-        var tbody = root.querySelector('tbody');
-        var table = tbody ? tbody.closest('table') : null;
-
-        root.addEventListener('click', function (event) {
-            var plus = event.target.closest('.docs-actions-group .docs-btn-primary');
-            if (plus && !plus.getAttribute('onclick')) {
-                event.preventDefault();
-                openTemplateEditor(null, tbody);
-                return;
-            }
-
-            var exportBtn = event.target.closest('.docs-actions-group .docs-btn-success');
-            if (exportBtn) {
-                event.preventDefault();
-                exportTable({
-                    tbody: '#tab-doc-documents-templates tbody',
-                    headers: ['Template ID', 'Template Name', 'Category', 'Department', 'Version', 'Created Date', 'Status'],
-                    skipFrom: 1,
-                    skipTo: 7,
-                    filename: 'consent-templates',
-                    doneMessage: 'Consent templates exported.'
-                });
-                return;
-            }
-
-            var refreshBtn = event.target.closest('.docs-actions-group .docs-btn-info');
-            if (refreshBtn) {
-                event.preventDefault();
-                reloadPanel(TEMPLATE_TAB, refreshBtn);
-                return;
-            }
-
-            var editBtn = event.target.closest('.docs-btn-edit');
-            if (editBtn) {
-                var tr = editBtn.closest('tr');
-                if (!tr) return;
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                openTemplateEditor(tr, tbody);
-                return;
-            }
-
-            var delBtn = event.target.closest('.docs-btn-delete');
-            if (delBtn) {
-                var row = delBtn.closest('tr');
-                if (!row) return;
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                confirmDeleteTemplates([row], tbody, table);
-            }
-        }, true);
-
-        // Bulk delete (toolbar trash is injected by the static-table layer).
-        var card = root.querySelector('.docs-card');
-        if (card) {
-            card.addEventListener('click', function (event) {
-                var bulk = event.target.closest('.docs-actions-group .docs-btn-danger, .docs-actions-group button[title*="Delete"]');
-                if (!bulk) return;
-                var picked = checkedOf(tbody);
-                if (!picked.length) {
-                    toast('Please select at least one template to delete.', 'error');
-                    return;
-                }
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                confirmDeleteTemplates(picked, tbody, table);
-            }, true);
-        }
-    }
-
-    function confirmDeleteTemplates(rows, tbody, table) {
-        if (!window.Swal) return;
-        var count = rows.length;
-        window.Swal.fire({
-            title: 'Delete ' + count + ' template' + (count === 1 ? '' : 's') + '?',
-            text: 'Signed consent forms already on file are not affected.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#EF4444',
-            cancelButtonColor: '#64748B',
-            confirmButtonText: 'Yes, delete'
-        }).then(function (result) {
-            if (!result.isConfirmed) return;
-            var ids = rows.map(function (tr) {
-                return tr.getAttribute('data-template-id');
-            }).filter(function (id) { return !!id; });
-
-            request('consent_template_bulk_delete', { ids: ids }).then(function (data) {
-                rows.forEach(function (tr) { tr.remove(); });
-                refreshChrome(table);
-                ensureEmptyRow(tbody,
-                    '<i class="fas fa-file-lines"></i><strong>No consent templates yet</strong>' +
-                    '<span>Use <em>Add Template</em> to create the first one.</span>',
-                    9);
-                toast(data.message || 'Template deleted.');
-            }).catch(function (error) {
-                toast(error.message, 'error');
-            });
-        });
-    }
-
-    function openTemplateEditor(tr, tbody) {
-        var data = null;
-        if (tr) {
-            var cells = tr.querySelectorAll('td');
-            var nameEl = cells[2].querySelector('.dior-docs-name') || cells[2];
-            data = {
-                id: tr.getAttribute('data-template-id'),
-                template_name: nameEl.textContent.trim(),
-                template_category: cells[3].textContent.trim(),
-                department: cells[4].textContent.trim(),
-                version: cells[5].textContent.trim(),
-                status: cells[7].textContent.trim()
-            };
-        }
-
-        openOverlay(tr ? 'Edit Consent Template' : 'Add Consent Template', templateFormBody(data), function (form, close) {
-            var submit = form.querySelector('[type="submit"]');
-            var payload = {
-                id: data ? data.id : '',
-                template_name: form.template_name.value.trim(),
-                template_category: form.template_category.value,
-                department: form.department.value,
-                version: form.version.value.trim() || 'v1.0',
-                status: form.status.value
-            };
-            if (!payload.template_name) {
-                toast('Template name is required.', 'error');
-                form.template_name.focus();
-                return;
-            }
-
-            submit.disabled = true;
-            submit.textContent = 'Saving...';
-
-            request('consent_template_save', payload).then(function (res) {
-                var row = res.row || payload;
-                if (data) {
-                    tr.innerHTML = templateRowHtml({
-                        template_uid: tr.querySelector('.dior-docs-id') ? tr.querySelector('.dior-docs-id').textContent : '',
-                        template_name: row.template_name,
-                        template_category: row.template_category,
-                        department: row.department,
-                        version: row.version,
-                        status: row.status,
-                        created_at: tr.querySelectorAll('td')[6].textContent.trim()
-                    });
-                } else {
-                    var newRow = document.createElement('tr');
-                    newRow.setAttribute('data-template-id', res.id || '');
-                    newRow.innerHTML = templateRowHtml({
-                        template_uid: row.template_uid || (res.id ? 'TPL-' + res.id : '—'),
-                        template_name: row.template_name,
-                        template_category: row.template_category,
-                        department: row.department,
-                        version: row.version,
-                        status: row.status,
-                        created_at: new Date().toISOString()
-                    });
-                    tbody.appendChild(newRow);
-                }
-                close();
-                refreshChrome(tr ? tr.closest('table') : tableOf(tbody));
-                ensureEmptyRow(tbody,
-                    '<i class="fas fa-file-lines"></i><strong>No consent templates yet</strong>' +
-                    '<span>Use <em>Add Template</em> to create the first one.</span>',
-                    9);
-                toast(data ? 'Template updated.' : 'Template added.');
-            }).catch(function (error) {
-                submit.disabled = false;
-                submit.textContent = data ? 'Save Changes' : 'Create Template';
-                toast(error.message, 'error');
-            });
-        }, data ? 'Save Changes' : 'Create Template');
-    }
-
-    function tableOf(tbody) {
-        return tbody ? tbody.closest('table') : null;
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // SIGNED CONSENT
-    // ═══════════════════════════════════════════════════════════════════════
-    function bindSigned() {
-        var root = panel(SIGNED_TAB);
-        if (!root || root.dataset.diorBound === '1') return;
-        root.dataset.diorBound = '1';
-
-        var tbody = root.querySelector('tbody');
-        var table = tbody ? tbody.closest('table') : null;
-
-        // "Add new record" on this screen makes no sense (forms arrive by being
-        // signed) - repoint it at the upload flow with the Consent category.
-        root.querySelectorAll('.docs-actions-group .docs-btn-primary').forEach(function (btn) {
-            btn.setAttribute('title', 'Upload a signed consent form');
-            btn.setAttribute('aria-label', 'Upload a signed consent form');
-            btn.addEventListener('click', function (event) {
-                event.preventDefault();
-                var modalEl = ensureUploadModalAtBodyLevel();
-                if (!modalEl) return;
-                var category = document.getElementById('doctor-doc-upload-category');
-                if (category) category.value = 'Consent Form';
-                if (window.bootstrap) {
-                    window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
-                } else if (typeof window.diorOpenDoctorDocUploadModal === 'function') {
-                    window.diorOpenDoctorDocUploadModal();
-                }
-            });
-        });
-
-        root.querySelectorAll('.docs-actions-group .docs-btn-success').forEach(function (btn) {
-            btn.setAttribute('title', 'Export to CSV');
-            btn.addEventListener('click', function (event) {
-                event.preventDefault();
-                exportTable({
-                    tbody: '#doc-signed-consents-tbody',
-                    headers: ['Consent ID', 'Patient', 'Consent Type', 'Procedure', 'Signed Date', 'Signed By', 'Witness', 'Status'],
-                    skipFrom: 1,
-                    skipTo: 8,
-                    value: function (tr, index) {
-                        if (index === 1) {
-                            var name = tr.querySelector('.docs-user-name');
-                            return name ? name.textContent : '';
-                        }
-                        return tr.querySelectorAll('td')[index].textContent;
-                    },
-                    filename: 'signed-consents',
-                    doneMessage: 'Signed consents exported.'
-                });
-            });
-        });
-
-        root.querySelectorAll('.docs-actions-group .docs-btn-info').forEach(function (btn) {
-            btn.setAttribute('title', 'Refresh');
-            btn.addEventListener('click', function (event) {
-                event.preventDefault();
-                reloadPanel(SIGNED_TAB, btn);
-            });
-        });
-
-        // Bulk delete reuses the document delete endpoint (consents live in the
-        // same wp_dior_documents table).
-        root.querySelectorAll('.docs-actions-group .docs-btn-danger').forEach(function (btn) {
-            btn.addEventListener('click', function (event) {
-                event.preventDefault();
-                var picked = checkedOf(tbody);
-                if (!picked.length) {
-                    toast('Please select at least one consent form to delete.', 'error');
-                    return;
-                }
-                if (!window.Swal) return;
-                window.Swal.fire({
-                    title: 'Delete ' + picked.length + ' signed consent(s)?',
-                    text: 'The patient will no longer see these forms in their portal.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#EF4444',
-                    cancelButtonColor: '#64748B',
-                    confirmButtonText: 'Yes, delete'
-                }).then(function (result) {
-                    if (!result.isConfirmed) return;
-                    var calls = picked.map(function (tr) {
-                        var body = new FormData();
-                        body.append('action', 'dior_delete_document');
-                        body.append('nonce', nonce());
-                        body.append('doc_id', tr.getAttribute('data-doc-uid') || '');
-                        body.append('patient_id', tr.getAttribute('data-patient-id') || '0');
-                        return fetch(ajaxUrl(), { method: 'POST', credentials: 'same-origin', body: body })
-                            .then(function (r) { return r.json(); })
-                            .then(function (json) {
-                                if (json && json.success) { tr.remove(); return true; }
-                                return false;
-                            })
-                            .catch(function () { return false; });
-                    });
-                    Promise.all(calls).then(function (results) {
-                        var ok = results.filter(Boolean).length;
-                        refreshChrome(table);
-                        ensureEmptyRow(tbody,
-                            '<i class="fas fa-file-signature"></i><strong>No signed consent forms yet</strong>' +
-                            '<span>Signed forms appear here automatically once a patient signs.</span>',
-                            10);
-                        toast(ok === results.length
-                            ? ok + ' consent form(s) deleted.'
-                            : ok + ' deleted, ' + (results.length - ok) + ' could not be removed.',
-                            ok === results.length ? 'success' : 'error');
-                    });
-                });
-            });
-        });
-    }
-
     // ── Counters + boot ──────────────────────────────────────────────────────
     function syncCounters() {
         [
-            { tab: UPLOAD_TAB, tbody: '#doc-uploaded-tbody', label: 'document' },
-            { tab: TEMPLATE_TAB, tbody: '#tab-doc-documents-templates tbody', label: 'template' },
-            { tab: SIGNED_TAB, tbody: '#doc-signed-consents-tbody', label: 'consent form' }
+            { tab: UPLOAD_TAB, tbody: '#doc-uploaded-tbody', label: 'document' }
         ].forEach(function (item) {
             var root = panel(item.tab);
             if (!root) return;
@@ -953,22 +543,10 @@
 
     function bindPanel(tabId) {
         if (tabId === UPLOAD_TAB) bindUpload();
-        if (tabId === TEMPLATE_TAB) {
-            var root = panel(TEMPLATE_TAB);
-            if (root && root.dataset.diorBound === '1') return;
-            bindTemplates();
-        }
-        if (tabId === SIGNED_TAB) {
-            var signed = panel(SIGNED_TAB);
-            if (signed && signed.dataset.diorBound === '1') return;
-            bindSigned();
-        }
     }
 
     function boot() {
         bindUpload();
-        bindTemplates();
-        bindSigned();
         syncCounters();
     }
 
@@ -981,10 +559,6 @@
     if (window.MutationObserver) {
         var observer = new MutationObserver(function () {
             bindUpload();
-            var tpl = panel(TEMPLATE_TAB);
-            if (tpl && tpl.dataset.diorBound !== '1') bindTemplates();
-            var sig = panel(SIGNED_TAB);
-            if (sig && sig.dataset.diorBound !== '1') bindSigned();
         });
         observer.observe(document.body, { childList: true, subtree: true });
     }
@@ -1005,8 +579,6 @@
     window.DiorDocuments = {
         reloadPanel: reloadPanel,
         closeOverlay: closeOverlay,
-        syncCounters: syncCounters,
-        buildSignedConsentRow: buildSignedConsentRow,
-        isConsentCategory: isConsentCategory
+        syncCounters: syncCounters
     };
 })();

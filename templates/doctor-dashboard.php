@@ -140,12 +140,6 @@
                                 data-tab="doc-documents-upload">
                                 <i class="fas fa-file-arrow-up"></i><span class="nav-label">Upload Documents</span>
                             </button>
-                            <button type="button" class="dior-nav-btn submenu-btn btn" data-tab="doc-documents-templates">
-                                <i class="fas fa-file-lines"></i><span class="nav-label">Consent Templates</span>
-                            </button>
-                            <button type="button" class="dior-nav-btn submenu-btn btn" data-tab="doc-documents-signed">
-                                <i class="fas fa-file-signature"></i><span class="nav-label">Signed Consent</span>
-                            </button>
                         </div>
                     </div>
                     <div class="dior-nav-item has-submenu" id="telemedicine-menu-item">
