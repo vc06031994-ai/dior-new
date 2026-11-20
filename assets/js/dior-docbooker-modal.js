@@ -524,6 +524,83 @@
     };
 
     /**
+     * HIPAAtizer completion detection.
+     *
+     * The intake form is a multi-step workflow. While the patient walks through
+     * it, HIPAAtizer posts progress messages (`submitted`, `form_submitted`,
+     * `stepCompleted`, plain strings) for every step that is saved. The booking
+     * modal may only appear once the WHOLE intake is finished, so progress
+     * messages must never count as a completion.
+     *
+     * Matching is therefore an allowlist of terminal events only — never a
+     * substring search, and never a bare `submitted`, which a single step also
+     * emits.
+     */
+    var HIPAATIZER_ORIGINS = [
+        'https://app.hipaatizer.com',
+        'https://www.hipaatizer.com',
+        'https://hipaatizer.com'
+    ];
+
+    var HIPAATIZER_COMPLETE_EVENTS = [
+        'submitSuccess',
+        'workflowSubmitted',
+        'formCompleted',
+        'submissionSuccess'
+    ];
+
+    // A completion redirect is the url the workflow sends the browser to after
+    // the final step; a step save never carries one.
+    var HIPAATIZER_COMPLETE_REDIRECT = /(intake_completed|intake=success|submitted=1|booking=1)/i;
+
+    // One completion may arrive two or three times: the page renders two copies
+    // of the form (the tab form and the hidden footer source), and each renderer
+    // can post the same message. Open the modal for the first one only.
+    var hipaatizerCompletionHandled = false;
+
+    function isHipaatizerOrigin(event) {
+        // Same-origin posts (some renderers proxy through the parent page).
+        try {
+            if (event.origin === window.location.origin) return true;
+        } catch (e) { /* ignore */ }
+        return HIPAATIZER_ORIGINS.indexOf(event.origin) !== -1;
+    }
+
+    function hipaatizerEventName(d) {
+        if (!d) return '';
+        if (typeof d === 'string') return d.trim();
+        if (typeof d === 'object') {
+            return String(d.type || d.event || d.action || d.name || d.message || '').trim();
+        }
+        return '';
+    }
+
+    function isHipaatizerCompletion(d) {
+        if (!d) return false;
+
+        // A plain string is only ever a step/progress message ("submitted",
+        // "form_submitted"). It is never treated as a completion.
+        if (typeof d === 'string') {
+            try { d = JSON.parse(d); } catch (e) { return false; }
+            if (typeof d === 'string') return false;
+        }
+
+        if (typeof d !== 'object') return false;
+
+        var name = hipaatizerEventName(d);
+        if (name && HIPAATIZER_COMPLETE_EVENTS.indexOf(name) !== -1) return true;
+
+        // Explicit "the whole workflow is done" flags some workflows send.
+        if (d.isComplete === true || d.completed === true || d.isFinal === true) return true;
+
+        // Final-step redirect url.
+        if (typeof d.url === 'string' && HIPAATIZER_COMPLETE_REDIRECT.test(d.url)) return true;
+        if (typeof d.redirect === 'string' && HIPAATIZER_COMPLETE_REDIRECT.test(d.redirect)) return true;
+
+        return false;
+    }
+
+    /**
      * Automatic HIPAAtizer Listener
      * Listens to cross-origin iframe postMessage events from HIPAAtizer renderer
      */
@@ -534,45 +611,39 @@
         if (!isPortalBookingContext()) return;
 
         if (!event || !event.data) return;
+
+        // Only HIPAAtizer's own renderer may drive our booking modal. Without
+        // this check any frame on the page could open it.
+        if (!isHipaatizerOrigin(event)) return;
+
         var d = event.data;
 
-        // Catch stringified JSON if passed as string
-        if (typeof d === 'string') {
-            try { d = JSON.parse(d); } catch (e) {}
+        // Step saves and other progress messages are logged and ignored: the
+        // patient is still filling the form and must not be interrupted.
+        if (!isHipaatizerCompletion(d)) return;
+
+        if (hipaatizerCompletionHandled) return;
+        hipaatizerCompletionHandled = true;
+
+        console.log('[Dior Medical] ✨ HIPAAtizer Intake Completion detected:', d);
+
+        // 1. Close any open intake popup / modal first
+        if (typeof window.diorCloseHipaaModal === 'function') {
+            window.diorCloseHipaaModal();
+        }
+        if (typeof window.diorCloseModal === 'function') {
+            window.diorCloseModal('modal-book-appointment');
+        }
+        if (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible()) {
+            Swal.close();
         }
 
-        // HIPAAtizer triggers 'submitSuccess', 'redirect', or similar on intake completion
-        var isHipaatizerSubmit = false;
-        if (d) {
-            if (d.type === 'submitSuccess' || d.type === 'submitted' || d.type === 'redirect' || d.type === 'workflowSubmitted') {
-                isHipaatizerSubmit = true;
-            } else if (typeof d === 'string' && (d.indexOf('submitSuccess') !== -1 || d.indexOf('submitted') !== -1)) {
-                isHipaatizerSubmit = true;
-            } else if (d.event === 'submitSuccess' || d.action === 'submitSuccess') {
-                isHipaatizerSubmit = true;
-            }
-        }
-
-        if (isHipaatizerSubmit) {
-            console.log('[Dior Medical] ✨ HIPAAtizer Intake Completion detected:', d);
-            // 1. Close any open intake popup / modal first
-            if (typeof window.diorCloseHipaaModal === 'function') {
-                window.diorCloseHipaaModal();
-            }
-            if (typeof window.diorCloseModal === 'function') {
-                window.diorCloseModal('modal-book-appointment');
-            }
-            if (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible()) {
-                Swal.close();
-            }
-
-            // 2. Open DocBooker Appointment Booking Modal
-            setTimeout(function() {
-                window.diorOpenDocBookerModal({
-                    reason: 'Telehealth Intake Completed'
-                });
-            }, 450);
-        }
+        // 2. Open DocBooker Appointment Booking Modal
+        setTimeout(function() {
+            window.diorOpenDocBookerModal({
+                reason: 'Telehealth Intake Completed'
+            });
+        }, 450);
     });
 
     /**

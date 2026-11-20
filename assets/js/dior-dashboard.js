@@ -45,36 +45,59 @@ window.diorOnIntakeSubmitted = function(e) {
 };
 
 // Automatic HIPAAtizer Embed Message Listener
-window.addEventListener('message', function(event) {
-    if (!event || !event.data) return;
-    var data = event.data;
-    var isSubmitted = false;
+//
+// Same rules as the booking-modal listener: only HIPAAtizer's own renderer may
+// drive the dashboard, and only a TERMINAL event counts. A step save emits
+// `submitted` / `form_submitted`, which must not move the patient past the
+// intake or open the booking modal while they are still filling the form.
+(function () {
+    var ORIGINS = [
+        'https://app.hipaatizer.com',
+        'https://www.hipaatizer.com',
+        'https://hipaatizer.com'
+    ];
+    var COMPLETE_EVENTS = [
+        'hipaatizer-form-submitted',
+        'submitSuccess',
+        'workflowSubmitted',
+        'formCompleted',
+        'submissionSuccess'
+    ];
+    var handled = false;
 
-    if (typeof data === 'string') {
+    function fromHipaatizer(event) {
         try {
-            data = JSON.parse(data);
-        } catch(e) {}
+            if (event.origin === window.location.origin) return true;
+        } catch (e) { /* ignore */ }
+        return ORIGINS.indexOf(event.origin) !== -1;
     }
 
-    if (data && typeof data === 'object') {
-        if (data.type === 'hipaatizer-form-submitted' ||
-            data.action === 'form_submitted' ||
-            data.event === 'form_submitted' ||
-            (data.source && String(data.source).indexOf('hipaatizer') !== -1 &&
-                (data.action === 'submit' || data.event === 'submit'))
-        ) {
-            isSubmitted = true;
+    window.addEventListener('message', function (event) {
+        if (!event || !event.data) return;
+        if (!fromHipaatizer(event)) return;
+        if (handled) return;
+
+        var data = event.data;
+        if (typeof data === 'string') {
+            try { data = JSON.parse(data); } catch (e) { return; }
+            if (typeof data === 'string') return;   // plain progress string
         }
-    } else if (typeof data === 'string' && (data.indexOf('hipaatizer') !== -1 && (data.indexOf('submitted') !== -1 || data.indexOf('completed') !== -1))) {
-        isSubmitted = true;
-    }
+        if (!data || typeof data !== 'object') return;
 
-    if (isSubmitted) {
+        var name = String(data.type || data.event || data.action || '').trim();
+        var isComplete = COMPLETE_EVENTS.indexOf(name) !== -1 ||
+            data.isComplete === true || data.completed === true || data.isFinal === true;
+
+        // `form_submitted` is per step; it only counts when the payload also
+        // says the whole workflow is finished.
+        if (!isComplete) return;
+
+        handled = true;
         if (typeof window.diorOnIntakeSubmitted === 'function') {
             window.diorOnIntakeSubmitted();
         }
-    }
-});
+    });
+})();
 
 // After new patient registration, the dashboard must load first and then open HIPAAtizer.
 // This is intentionally tied to the one-time registration query flag so normal logins
