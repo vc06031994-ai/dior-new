@@ -248,7 +248,7 @@ $status_badges = [
                 <i class="fas fa-file-export"></i> Export CSV
             </button>
             <button type="button"
-                onclick="if (typeof diorOpenDocBookerModal === 'function') { diorOpenDocBookerModal(); } else if (typeof diorDocSwitchTab === 'function') { diorDocSwitchTab('doc-appointments-book'); } else if (typeof diorAdminSwitchTab === 'function') { diorAdminSwitchTab('doc-appointments-book'); } else if (typeof diorSwitchTab === 'function') { diorSwitchTab('doc-appointments-book'); }"
+                onclick="if (typeof diorGoToDocBookerPage === 'function') { diorGoToDocBookerPage(); } else if (typeof diorDocSwitchTab === 'function') { diorDocSwitchTab('doc-appointments-book'); } else if (typeof diorAdminSwitchTab === 'function') { diorAdminSwitchTab('doc-appointments-book'); } else if (typeof diorSwitchTab === 'function') { diorSwitchTab('doc-appointments-book'); }"
                 class="btn btn-primary rounded-3 px-3 py-2 fw-semibold shadow-sm d-inline-flex align-items-center gap-2">
                 <i class="fas fa-plus"></i> Book Appointment
             </button>

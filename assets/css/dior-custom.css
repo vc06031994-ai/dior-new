@@ -2981,6 +2981,22 @@ body .dior-auth-wrap .dior-btn-auth-secondary:hover {
     box-sizing: border-box !important;
 }
 
+.dior-db-inline {
+    width: 100%;
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+.dior-db-inline .dior-db-modal-dialog {
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+}
+
 .dior-db-modal.is-open .dior-db-modal-dialog {
     transform: translateY(0) scale(1) !important;
 }

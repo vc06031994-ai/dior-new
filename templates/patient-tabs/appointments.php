@@ -129,6 +129,9 @@
                     </div>
                 </div>
             </div>
+            <div id="dior-docbooker-after-intake" style="display:none;">
+                <?php echo do_shortcode('[dior_docbooker_booking]'); ?>
+            </div>
         </div>
 
         <!-- 2. Today Appointments -->

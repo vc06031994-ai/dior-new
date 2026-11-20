@@ -1,7 +1,6 @@
 /**
- * Dior Medical - DocBooker Interactive Appointment Booking Modal Controller
- * Automatically detects HIPAAtizer form completions, manages service selection
- * (Video Visit / Phone Consultation), live slot availability, and dual-dashboard synchronization.
+ * Dior Medical - DocBooker Interactive Appointment Booking Controller
+ * Manages inline booking, service selection, and live slot availability.
  */
 (function() {
     'use strict';
@@ -17,109 +16,20 @@
         cachedAvailability: {}
     };
 
-    /**
-     * The appointment modal only exists on a signed-in portal dashboard.
-     *
-     * The controller is enqueued only there, but the check is repeated here as
-     * a second line of defence: if the markup is missing, or the visitor has no
-     * portal session, nothing may auto-open. This is what previously let a
-     * guest on Start Your Visit have the modal pop up after submitting the
-     * HIPAAtizer form — the listener fired and diorOpenDocBookerModal() had a
-     * site-wide modal to open.
-     */
-    function isPortalBookingContext() {
-        if (!document.getElementById('dior-docbooker-modal')) {
-            return false;
-        }
-        if (typeof dior_vars === 'undefined' || !dior_vars) {
-            return false;
-        }
-        return parseInt(dior_vars.is_logged_in, 10) === 1;
-    }
-
-    /**
-     * Open the DocBooker Booking Modal
-     */
-    window.diorOpenDocBookerModal = function(options) {
-        options = options || {};
-        var modal = document.getElementById('dior-docbooker-modal');
-        if (!modal) {
-            console.warn('[Dior Medical] Booking modal DOM not found.');
+    window.diorGoToDocBookerPage = function() {
+        var bookingPageUrl = window.dior_booking_vars && window.dior_booking_vars.booking_page_url;
+        if (!bookingPageUrl) {
+            console.error('[Dior Medical] Booking page URL is not configured.');
             return;
         }
-
-        // Hard gate: no portal session, no modal. Everything else in this file
-        // is already scoped to the dashboard, so this only ever blocks the
-        // accidental case (a stray caller on a public page).
-        if (!isPortalBookingContext()) {
-            console.warn('[Dior Medical] Booking modal is portal-only; ignored.');
+        if (document.getElementById('dior-subtab-book') &&
+            typeof window.diorSwitchApptSubTab === 'function') {
+            window.diorSwitchApptSubTab('book');
             return;
         }
-
-        // Reset views
-        var body = document.getElementById('dior-db-modal-body');
-        var success = document.getElementById('dior-db-modal-success');
-        var statusBox = document.getElementById('dior-db-status-box');
-        if (body) body.style.display = 'block';
-        if (success) success.style.display = 'none';
-        if (statusBox) statusBox.style.display = 'none';
-
-        // Pre-fill / update date
-        var dateInput = document.getElementById('dior-db-date-input');
-        var today = new Date().toISOString().split('T')[0];
-        if (dateInput) {
-            dateInput.min = today;
-            if (!dateInput.value) {
-                dateInput.value = today;
-            }
-            window.diorDocBookerState.date = dateInput.value;
-        }
-
-        // Pre-fill reason if passed or from options
-        if (options.reason) {
-            var notesInput = document.getElementById('dior-db-patient-notes');
-            if (notesInput && !notesInput.value) {
-                notesInput.value = options.reason;
-            }
-        }
-
-        // Pre-fill patient details from global vars if available
-        if (typeof dior_vars !== 'undefined' && dior_vars.patient_profile) {
-            var p = dior_vars.patient_profile;
-            var nameInput = document.getElementById('dior-db-patient-name');
-            var emailInput = document.getElementById('dior-db-patient-email');
-            var phoneInput = document.getElementById('dior-db-patient-phone');
-            if (nameInput && !nameInput.value && p.full_name) nameInput.value = p.full_name;
-            if (emailInput && !emailInput.value && p.email) emailInput.value = p.email;
-            if (phoneInput && !phoneInput.value && p.phone) phoneInput.value = p.phone;
-        }
-
-        // Fetch live availability for current date
-        if (window.diorDocBookerState.date) {
-            window.diorFetchDocBookerAvailability(window.diorDocBookerState.date);
-        }
-
-        modal.style.display = 'flex';
-        // Trigger reflow for CSS transition
-        void modal.offsetHeight;
-        modal.classList.add('is-open');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        window.location.assign(bookingPageUrl);
     };
-
-    /**
-     * Close the DocBooker Booking Modal
-     */
-    window.diorCloseDocBookerModal = function() {
-        var modal = document.getElementById('dior-docbooker-modal');
-        if (!modal) return;
-        modal.classList.remove('is-open');
-        modal.setAttribute('aria-hidden', 'true');
-        setTimeout(function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 300);
-    };
+    window.diorOpenDocBookerModal = window.diorGoToDocBookerPage;
 
     /**
      * Service selection: Video Visit vs Phone Consultation
@@ -172,8 +82,8 @@
         var grid = document.getElementById('dior-db-slots-grid');
         if (spinner) spinner.style.display = 'inline-block';
 
-        var restUrl = (typeof dior_vars !== 'undefined' && dior_vars.rest_url) || '/wp-json/';
-        var restNonce = (typeof dior_vars !== 'undefined' && dior_vars.rest_nonce) || '';
+        var restUrl = (window.dior_booking_vars && window.dior_booking_vars.rest_url) || '/wp-json/';
+        var restNonce = (window.dior_booking_vars && window.dior_booking_vars.rest_nonce) || '';
         var apiUrl = restUrl + 'doctor-details-booking/v1/doctors/' + window.diorDocBookerState.doctorId + '/availability?date=' + encodeURIComponent(dateStr);
 
         fetch(apiUrl, {
@@ -301,7 +211,7 @@
         formData.set('provider', window.diorDocBookerState.doctorName);
         formData.set('doctor_name', window.diorDocBookerState.doctorName);
 
-        var ajaxUrl = (typeof dior_vars !== 'undefined' && dior_vars.ajax_url) || '/wp-admin/admin-ajax.php';
+        var ajaxUrl = (window.dior_booking_vars && window.dior_booking_vars.ajax_url) || '/wp-admin/admin-ajax.php';
 
         fetch(ajaxUrl, {
             method: 'POST',
@@ -509,33 +419,16 @@
      * Called when user clicks "View in Appointments Tab" from success screen
      */
     window.diorOnBookingSuccessDone = function() {
-        window.diorCloseDocBookerModal();
+        var dashboardUrl = window.dior_booking_vars && window.dior_booking_vars.patient_dashboard_url;
+        if (!dashboardUrl) {
+            console.error('[Dior Medical] Patient dashboard URL is not configured.');
+            return;
+        }
         var todayYmd = new Date().toISOString().split('T')[0];
         var targetSub = (window.diorDocBookerState && window.diorDocBookerState.lastBookedDate === todayYmd) ? 'today' : 'upcoming';
-        if (typeof diorSwitchTab === 'function') {
-            diorSwitchTab('appointments');
-            if (typeof diorSwitchApptSubTab === 'function') {
-                diorSwitchApptSubTab(targetSub);
-            }
-        } else {
-            window.location.hash = '#tab=appointments';
-            window.location.reload();
-        }
+        window.location.assign(dashboardUrl + '#tab=appointments&subtab=' + targetSub);
     };
 
-    /**
-     * HIPAAtizer completion detection.
-     *
-     * The intake form is a multi-step workflow. While the patient walks through
-     * it, HIPAAtizer posts progress messages (`submitted`, `form_submitted`,
-     * `stepCompleted`, plain strings) for every step that is saved. The booking
-     * modal may only appear once the WHOLE intake is finished, so progress
-     * messages must never count as a completion.
-     *
-     * Matching is therefore an allowlist of terminal events only — never a
-     * substring search, and never a bare `submitted`, which a single step also
-     * emits.
-     */
     var HIPAATIZER_ORIGINS = [
         'https://app.hipaatizer.com',
         'https://www.hipaatizer.com',
@@ -549,257 +442,94 @@
         'submissionSuccess'
     ];
 
-    // A completion redirect is the url the workflow sends the browser to after
-    // the final step; a step save never carries one.
-    var HIPAATIZER_COMPLETE_REDIRECT = /(intake_completed|intake=success|submitted=1|booking=1)/i;
-
-    // One completion may arrive two or three times: the page renders two copies
-    // of the form (the tab form and the hidden footer source), and each renderer
-    // can post the same message. Open the modal for the first one only.
-    var hipaatizerCompletionHandled = false;
-
-    /**
-     * Which form instance sent this message?
-     *
-     * The dashboard renders the SAME workflow twice: the real form on the Book
-     * Appointment tab (#dior-hipaa-tab-form) and a hidden copy in the footer
-     * (#dior-hipaatizer-form-source-v17) that exists only as the markup source
-     * for the intake popup. Both renderers are live, so both post messages.
-     *
-     * Only the instance the patient is actually looking at may drive the UI:
-     * the visible tab form, or the footer form after it has been relocated into
-     * the popup slot (the popup MOVES that node, so it leaves the footer and
-     * loses its id — the depth check is what identifies it there).
-     *
-     * A chatty hidden renderer can therefore never open the booking modal.
-     */
-    function isVisibleHipaatizerForm(event) {
-        var frame = null;
-        try {
-            frame = event.source && event.source.frameElement ? event.source.frameElement : null;
-        } catch (e) {
-            return true;    // cross-origin frameElement access → fall through
-        }
-        if (!frame || !frame.closest) {
-            return true;    // not posted from a framed renderer
-        }
-
-        // Inside the real tab form.
-        if (frame.closest('#dior-hipaa-tab-form')) return true;
-
-        // Inside the hidden footer copy: depth 1 means it is still the footer
-        // source and the patient is not looking at it.
-        var inSource = frame.closest('#dior-hipaatizer-form-source-v17');
-        if (inSource) return inSource.parentElement === document.body;
-
-        return true;
-    }
-
-    function isHipaatizerOrigin(event) {
-        // Same-origin posts (some renderers proxy through the parent page).
-        try {
-            if (event.origin === window.location.origin) return true;
-        } catch (e) { /* ignore */ }
-        return HIPAATIZER_ORIGINS.indexOf(event.origin) !== -1;
-    }
-
-    function hipaatizerEventName(d) {
-        if (!d) return '';
-        if (typeof d === 'string') return d.trim();
-        if (typeof d === 'object') {
-            return String(d.type || d.event || d.action || d.name || d.message || '').trim();
-        }
-        return '';
-    }
-
-    function isHipaatizerCompletion(d) {
-        if (!d) return false;
-
-        // A plain string is only ever a step/progress message ("submitted",
-        // "form_submitted"). It is never treated as a completion.
-        if (typeof d === 'string') {
-            try { d = JSON.parse(d); } catch (e) { return false; }
-            if (typeof d === 'string') return false;
-        }
-
-        if (typeof d !== 'object') return false;
-
-        var name = hipaatizerEventName(d);
-        if (name && HIPAATIZER_COMPLETE_EVENTS.indexOf(name) !== -1) return true;
-
-        // An explicit terminal NAME above wins even if the payload also carries
-        // a step number: a real final submit may report which step it closed.
-        // Only the weaker flag-based detection below has to reject step payloads,
-        // because a step save can carry `completed: true` ("this step is done")
-        // and that must never read as "the whole workflow is done".
-        if (/step/i.test(name)) return false;
-        if (d.step !== undefined && d.step !== null && d.step !== '') return false;
-
-        // Unambiguous "whole workflow finished" flags only. Bare `completed`
-        // is deliberately NOT accepted: it is exactly the ambiguous word a
-        // step save uses.
-        if (d.isComplete === true || d.isFinal === true ||
-            d.workflowComplete === true || d.isWorkflowComplete === true) return true;
-
-        // Final-step redirect url.
-        if (typeof d.url === 'string' && HIPAATIZER_COMPLETE_REDIRECT.test(d.url)) return true;
-        if (typeof d.redirect === 'string' && HIPAATIZER_COMPLETE_REDIRECT.test(d.redirect)) return true;
-
-        return false;
-    }
-
-    /**
-     * Shared completion detector — the single source of truth.
-     *
-     * Answers "is this postMessage a FINISHED intake?" using the origin
-     * allowlist, the visible-instance check and the terminal-event match, and
-     * latches so one completion is reported exactly once. Other dashboard
-     * scripts (dior-dashboard.js) call this instead of keeping their own copy
-     * of the rules, so the screens can never disagree about what counts as
-     * finished.
-     */
-    // The latched event OBJECT, not a boolean: several listeners receive the
-    // very same MessageEvent, and each of them still has to act on it once. A
-    // second, later event — the duplicate renderer's copy, or a retry — is
-    // rejected because it is a different object.
     var hipaatizerCompletionEvent = null;
 
-    window.diorHipaatizerCompletion = function (event) {
-        if (!event || !event.data) return false;
+    function isVisibleHipaatizerForm(event) {
+        var frame = null;
+        var frames = document.querySelectorAll(
+            '#dior-hipaa-tab-form iframe, #dior-hipaatizer-form-source-v17 iframe'
+        );
+        for (var i = 0; i < frames.length; i++) {
+            if (frames[i].contentWindow === event.source) {
+                frame = frames[i];
+                break;
+            }
+        }
 
-        // Already accepted this exact event: let the remaining listeners run.
+        try {
+            if (!frame && event.source && event.source.frameElement) {
+                frame = event.source.frameElement;
+            }
+        } catch (e) {
+            return false;
+        }
+        if (!frame || !frame.closest) return false;
+
+        var appointmentForm = frame.closest('#dior-hipaa-tab-form');
+        if (appointmentForm) {
+            return !!(appointmentForm.getClientRects && appointmentForm.getClientRects().length);
+        }
+
+        var inSource = frame.closest('#dior-hipaatizer-form-source-v17');
+        if (!inSource || inSource.hidden) return false;
+
+        var popup = inSource.closest('.swal2-popup');
+        return !!(popup && popup.getClientRects && popup.getClientRects().length);
+    }
+
+    function isHipaatizerCompletion(data) {
+        if (!data) return false;
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                return false;
+            }
+            if (typeof data !== 'object' || data === null) return false;
+        }
+        if (typeof data !== 'object') return false;
+
+        var name = String(data.type || data.event || data.action || data.name || data.message || '').trim();
+        if (/step/i.test(name)) return false;
+
+        // Multi-step forms emit step-level success messages; only workflow-level signals are terminal.
+        var hasStep = data.step !== undefined && data.step !== null && data.step !== '';
+        if (data.workflowComplete === true || data.isWorkflowComplete === true) {
+            return true;
+        }
+        if (hasStep) return false;
+
+        return HIPAATIZER_COMPLETE_EVENTS.indexOf(name) !== -1;
+    }
+
+    window.diorHipaatizerCompletion = function(event) {
+        if (!event || !event.data) return false;
         if (event === hipaatizerCompletionEvent) return true;
 
-        if (!isHipaatizerOrigin(event)) return false;
-        if (!isVisibleHipaatizerForm(event)) return false;
-        if (!isHipaatizerCompletion(event.data)) return false;
-
-        // A completion was already accepted; this is a duplicate. Drop it.
+        var isAllowedOrigin = event.origin === window.location.origin || HIPAATIZER_ORIGINS.indexOf(event.origin) !== -1;
+        if (!isAllowedOrigin || !isVisibleHipaatizerForm(event) || !isHipaatizerCompletion(event.data)) return false;
         if (hipaatizerCompletionEvent !== null) return false;
 
         hipaatizerCompletionEvent = event;
         return true;
     };
 
-    /**
-     * Automatic HIPAAtizer Listener
-     * Listens to cross-origin iframe postMessage events from HIPAAtizer renderer
-     */
-    window.addEventListener('message', function(event) {
-        // Guests, and any page without the dashboard modal, must never react to
-        // a HIPAAtizer postMessage — the guest intake form is submitted on the
-        // public Start Your Visit page and nothing may open there.
-        if (!isPortalBookingContext()) return;
+    function initializeBookingForm() {
+        var form = document.getElementById('dior-docbooker-form');
+        var dateInput = document.getElementById('dior-db-date-input');
+        if (!form || !dateInput) return;
 
-        if (!event || !event.data) return;
-
-        // ------------------------------------------------------------------
-        // TEMPORARY DIAGNOSTIC — remove once the live payload is confirmed.
-        //
-        // The terminal event name of the configured workflow cannot be verified
-        // from source code. Run the intake with ?dior_hipaa_debug=1 in the url
-        // and every postMessage HIPAAtizer sends is logged with its origin, the
-        // step the patient is on, and whether our matcher would treat it as a
-        // completion. Only the intended final Submit may read "completion=YES".
-        // Silent unless the query flag is present.
-        // ------------------------------------------------------------------
-        try {
-            if (/(^|[?&])dior_hipaa_debug=1/.test(window.location.search || '')) {
-                var probeOrigin = event.origin;
-                var probeData = event.data;
-                console.log(
-                    '%c[HIPAAtizer probe] origin=' + probeOrigin +
-                    ' data=' + (function () {
-                        try { return typeof probeData === 'string' ? probeData : JSON.stringify(probeData); }
-                        catch (e) { return String(probeData); }
-                    })(),
-                    'color:#0a7;font-weight:600'
-                );
-                console.log('[HIPAAtizer probe] completion=' +
-                    (isHipaatizerCompletion(probeData) ? 'YES' : 'no') +
-                    ' | name=' + hipaatizerEventName(probeData));
-            }
-        } catch (probeErr) {}
-
-
-        // Origin, visible instance, terminal event and the open-once latch are
-        // all decided in one place so every screen agrees on what "finished"
-        // means. Step saves fail this check and are ignored.
-        if (!window.diorHipaatizerCompletion(event)) return;
-
-        var d = event.data;
-        console.log('[Dior Medical] ✨ HIPAAtizer Intake Completion detected:', d);
-
-        // 1. Close any open intake popup / modal first
-        if (typeof window.diorCloseHipaaModal === 'function') {
-            window.diorCloseHipaaModal();
+        if (!dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
         }
-        if (typeof window.diorCloseModal === 'function') {
-            window.diorCloseModal('modal-book-appointment');
-        }
-        if (typeof Swal !== 'undefined' && Swal.isVisible && Swal.isVisible()) {
-            Swal.close();
-        }
-
-        // 2. Open DocBooker Appointment Booking Modal
-        setTimeout(function() {
-            window.diorOpenDocBookerModal({
-                reason: 'Telehealth Intake Completed'
-            });
-        }, 450);
-    });
-
-    /**
-     * Check if current URL/hash indicates the modal should auto-open (e.g. from HIPAAtizer redirection)
-     */
-    function shouldAutoOpenBookingModal() {
-        var s = (window.location.search || '').toLowerCase();
-        var h = (window.location.hash || '').toLowerCase();
-        var combined = s + '&' + h;
-        return (
-            combined.indexOf('open_booking=1') !== -1 ||
-            combined.indexOf('book=1') !== -1 ||
-            combined.indexOf('booking=1') !== -1 ||
-            combined.indexOf('open_docbooker=1') !== -1 ||
-            combined.indexOf('docbooker=1') !== -1 ||
-            h.indexOf('book-appointment') !== -1 ||
-            h.indexOf('open-booking') !== -1 ||
-            h.indexOf('book-visit-modal') !== -1
-        );
+        window.diorDocBookerState.date = dateInput.value;
+        window.diorFetchDocBookerAvailability(dateInput.value);
     }
 
-    function checkAndAutoOpenModal() {
-        // Never auto-open for a guest or on a page without the dashboard modal.
-        if (!isPortalBookingContext()) return;
-
-        if (shouldAutoOpenBookingModal()) {
-            if (typeof diorSwitchTab === 'function') {
-                try { diorSwitchTab('appointments'); } catch (e) {}
-            }
-            setTimeout(function() {
-                window.diorOpenDocBookerModal({
-                    reason: 'HIPAAtizer Intake Completed'
-                });
-            }, 400);
-        }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeBookingForm);
+    } else {
+        initializeBookingForm();
     }
-
-    // Initialize auto-listeners on DOM ready and on hashchange
-    document.addEventListener('DOMContentLoaded', function() {
-        checkAndAutoOpenModal();
-
-        // Delegate clicks for any button with data-action="open-docbooker" or .dior-open-docbooker-btn
-        document.body.addEventListener('click', function(e) {
-            var btn = e.target.closest('[data-action="open-docbooker"], .dior-open-docbooker-btn');
-            if (btn) {
-                e.preventDefault();
-                window.diorOpenDocBookerModal();
-            }
-        });
-    });
-
-    window.addEventListener('hashchange', function() {
-        checkAndAutoOpenModal();
-    });
 
 })();

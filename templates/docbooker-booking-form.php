@@ -1,6 +1,6 @@
 <?php
 /**
- * Dior Medical - DocBooker Interactive Appointment Booking Modal
+ * Dior Medical - Inline DocBooker Appointment Booking Form
  * Clean, modern registration-style UI matching Dior Patient Portal design standards.
  * Supports Telehealth Video Visit & Phone Consultation scheduling
  * with live doctor availability and real-time dashboard updates.
@@ -41,21 +41,14 @@ $doctor_avatar = get_avatar_url($doctor_user_id, ['size' => 120]) ?: (DIOR_PORTA
 $today_ymd = current_time('Y-m-d');
 ?>
 
-<!-- ── DIOR MEDICAL CLEAN REGISTRATION-STYLE APPOINTMENT MODAL ── -->
-<div id="dior-docbooker-modal" class="dior-db-modal" aria-hidden="true" style="display: none;">
-    <div class="dior-db-modal-overlay" onclick="diorCloseDocBookerModal()"></div>
-    
-    <div class="dior-db-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="dior-db-modal-title">
+<section id="dior-docbooker-booking" class="dior-db-inline" aria-labelledby="dior-db-modal-title">
+    <div class="dior-db-modal-dialog dior-db-inline-card">
         
-        <!-- Modal Header (Clean Registration Header) -->
         <div class="dior-db-modal-header">
             <div class="dior-db-header-left">
                 <h3 id="dior-db-modal-title" class="dior-db-title">Schedule Telehealth Appointment</h3>
                 <p class="dior-db-subtitle">Complete your booking details below to schedule your consultation.</p>
             </div>
-            <button type="button" class="dior-db-close-btn btn" onclick="diorCloseDocBookerModal()" aria-label="Close dialog">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <!-- Attending Physician Bar (Compact & Clean) -->
@@ -187,20 +180,18 @@ $today_ymd = current_time('Y-m-d');
                 <!-- Status Feedback Message -->
                 <div id="dior-db-status-box" class="dior-db-alert" style="display: none;"></div>
 
-                <!-- Modal Actions (Clean Registration Action Button) -->
                 <div class="dior-reg-submit-wrap">
                     <button type="submit" id="dior-db-submit-btn" class="dior-btn-reg-submit btn">
                         <span class="dior-db-btn-text"><i class="fa-solid fa-calendar-check me-2"></i> Confirm &amp; Book Appointment</span>
                         <span class="dior-db-btn-spinner" style="display: none;"><i class="fa-solid fa-circle-notch fa-spin me-2"></i> Scheduling Appointment...</span>
                     </button>
-                    <button type="button" class="dior-db-cancel-link btn" onclick="diorCloseDocBookerModal()">
+                    <a class="dior-db-cancel-link btn" href="<?php echo esc_url(home_url('/patient-dashboard/')); ?>">
                         Cancel
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>
 
-        <!-- Success Screen (Shown after booking completes) -->
         <div class="dior-db-modal-success" id="dior-db-modal-success" style="display: none;">
             <div class="dior-db-success-icon-wrap">
                 <i class="fa-solid fa-circle-check"></i>
@@ -239,4 +230,4 @@ $today_ymd = current_time('Y-m-d');
         </div>
 
     </div>
-</div>
+</section>

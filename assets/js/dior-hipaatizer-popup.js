@@ -60,13 +60,7 @@
         });
     }
 
-    // The popup is opened only by a genuine HIPAAtizer completion, handled in
-    // dior-docbooker-modal.js (the single completion handler). The previous
-    // capture-phase click listener on any button, link or submit input is gone:
-    // it could never have worked as intended because the intake form lives in a
-    // cross-origin iframe, so its Next/Submit buttons never reach this document.
-    //
-    // It is still exposed because the post-registration flow opens it directly:
-    // see dior-dashboard.js (diorOpenHipaaPopup on the ?intake_required=1 path).
+    // This popup remains available to the post-registration intake flow.
+    // Booking completion reveals the DocBooker form in the Book Appointment panel.
     window.diorOpenHipaatizerFormPopup = openPopup;
 })();

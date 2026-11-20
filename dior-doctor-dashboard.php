@@ -696,8 +696,7 @@ class Dior_Doctor_Dashboard
 
         if (class_exists('Dior_Medical_Auth')) {
             Dior_Medical_Auth::enqueue_assets();
-            // Mark this request as a dashboard so the footer renders the
-            // appointment modal (see is_portal_dashboard_request()).
+            // Mark this request so dashboard-specific booking assets are enqueued.
             $GLOBALS['dior_rendering_doctor_dashboard'] = true;
         }
 
