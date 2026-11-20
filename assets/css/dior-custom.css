@@ -67002,71 +67002,7 @@ a.va-btn-primary:hover {
         width: auto !important;
         margin: 0 0 0 auto !important;
         padding: 0 !important;
-    }
-
-    /* ---------- 4. documents: category filter pills ---------- */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .docs-card>.d-flex.border-bottom {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        gap: 8px !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 12px 14px !important;
-        border-bottom: 1px solid #EEF2F6 !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .docs-card>.d-flex.border-bottom>span.small {
-        flex: 1 1 100% !important;
-        margin: 0 0 2px 0 !important;
-        font-size: 10px !important;
-        font-weight: 700 !important;
-        letter-spacing: .055em !important;
-        text-transform: uppercase !important;
-        color: #64748B !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill {
-        flex: 0 0 auto !important;
-        width: auto !important;
-        min-width: 0 !important;
-        min-height: 32px !important;
-        height: 32px !important;
-        margin: 0 !important;
-        padding: 0 12px !important;
-        border: 1px solid #E2E8F0 !important;
-        border-radius: 999px !important;
-        background: #FFFFFF !important;
-        color: #334155 !important;
-        font-size: 11.5px !important;
-        font-weight: 600 !important;
-        line-height: 1 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        white-space: nowrap !important;
-        box-shadow: none !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill i {
-        font-size: 10px !important;
-        margin-right: 4px !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.btn-primary,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.active {
-        background: #1A528E !important;
-        border-color: #1A528E !important;
-        color: #FFFFFF !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.btn-outline-primary {
-        background: #FFFFFF !important;
-        border-color: #E2E8F0 !important;
-        color: #334155 !important;
-    }
-
-    /* ---------- 5. tables → record cards ---------- */
+    }    /* ---------- 5. tables → record cards ---------- */
     #dior-patient-portal-app#dior-patient-portal-app #tab-insurance .table-content,
     #dior-patient-portal-app#dior-patient-portal-app #tab-payments .docs-table-wrapper,
     #dior-patient-portal-app#dior-patient-portal-app #tab-documents .docs-table-wrapper {
@@ -68052,12 +67988,6 @@ a.va-btn-primary:hover {
         flex: 1 1 100% !important;
         max-width: 100% !important;
     }
-
-    /* documents: pills get a slightly tighter rhythm */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill {
-        padding: 0 10px !important;
-        font-size: 11px !important;
-    }
 }
 
 /* ==================================================================
@@ -68553,9 +68483,9 @@ a.va-btn-primary:hover {
 
    Layout pass for <=767.98px plus a control language that belongs to this page
    only: soft "key" buttons (13px radius, pale #F0F6FC surface, hairline
-   #D7E3F0 border and a 2px inset shelf) for the toolbar and the row actions,
-   and underline tabs for the category filter. It is deliberately different
-   from the doctor dashboard pills and from the Medical Record chips.
+   #D7E3F0 border and a 2px inset shelf) for the toolbar and the row actions.
+   It is deliberately different from the doctor dashboard pills and from the
+   Medical Record chips.
    Desktop and tablet keep their current design.
    ========================================================================== */
 @media (max-width: 767.98px) {
@@ -68640,79 +68570,7 @@ a.va-btn-primary:hover {
         color: #FFFFFF !important;
     }
 
-    /* ---- 3. category filter: underline tabs ------------------------------ */
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .docs-card>.d-flex.border-bottom {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: stretch !important;
-        column-gap: 16px !important;
-        row-gap: 0 !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 10px 12px 0 !important;
-        border-bottom: 1px solid #EEF2F6 !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .docs-card>.d-flex.border-bottom>span.small {
-        flex: 1 1 100% !important;
-        margin: 0 0 4px 0 !important;
-        font-size: 10px !important;
-        font-weight: 700 !important;
-        letter-spacing: .055em !important;
-        text-transform: uppercase !important;
-        color: #64748B !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill {
-        flex: 0 0 auto !important;
-        width: auto !important;
-        min-width: 0 !important;
-        height: 40px !important;
-        min-height: 40px !important;
-        margin: 0 !important;
-        padding: 0 2px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        white-space: nowrap !important;
-        border-width: 0 0 2.5px 0 !important;
-        border-style: solid !important;
-        border-color: transparent !important;
-        border-bottom-color: transparent !important;
-        border-radius: 0 !important;
-        background-color: transparent !important;
-        background-image: none !important;
-        color: #64748B !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        line-height: 1 !important;
-        box-shadow: none !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill i {
-        margin-right: 5px !important;
-        font-size: 10px !important;
-        color: inherit !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.btn-outline-primary {
-        background-color: transparent !important;
-        border-color: transparent !important;
-        border-bottom-color: transparent !important;
-        color: #64748B !important;
-    }
-
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.active,
-    #dior-patient-portal-app#dior-patient-portal-app #tab-documents .dior-doc-cat-pill.btn-primary {
-        background-color: transparent !important;
-        border-color: transparent !important;
-        border-bottom-color: #00346C !important;
-        color: #00346C !important;
-        font-weight: 700 !important;
-        box-shadow: none !important;
-    }
-
-    /* ---- 4. record row actions: white keys ------------------------------- */
+    /* ---- 3. record row actions: white keys ------------------------------- */
     #dior-patient-portal-app#dior-patient-portal-app #tab-documents table.docs-table .action-icon-btn {
         flex: 0 0 auto !important;
         width: 38px !important;
@@ -68765,7 +68623,7 @@ a.va-btn-primary:hover {
         background-color: #FEF2F2 !important;
     }
 
-    /* ---- 5. upload modal: same key language ----------------------------- */
+    /* ---- 4. upload modal: same key language ----------------------------- */
     #dior-patient-portal-app#dior-patient-portal-app #dior-document-modal .modal-footer .btn {
         border-radius: 13px !important;
         font-weight: 600 !important;

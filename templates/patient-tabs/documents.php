@@ -24,8 +24,7 @@
                 <div class="input-group input-group-sm dior-bs-search-group" style="width: 240px;">
 
                     <input type="text" id="dior-docs-search-input" class="form-control border-start-0 ps-0"
-                        placeholder="Search records..." aria-label="Search box"
-                        oninput="diorFilterDocs()">
+                        placeholder="Search records..." aria-label="Search box">
                 </div>
                 <div class="docs-actions-group">
                     <button type="button" aria-label="Delete selected items" class="docs-icon-btn docs-btn-danger btn"
@@ -48,29 +47,6 @@
                 </div>
             </div>
         </div>
-        <!-- Category Filter Pills -->
-        <div class="px-3 pt-3 pb-2 border-bottom d-flex flex-wrap gap-2 align-items-center">
-            <span class="small fw-bold text-secondary text-uppercase me-2"><i class="fas fa-filter text-primary me-1"></i> Filter:</span>
-            <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 dior-doc-cat-pill active"
-                data-doc-filter="all" onclick="diorFilterDocsByCategory('all', this)">All</button>
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill"
-                data-doc-filter="letter" onclick="diorFilterDocsByCategory('letter', this)"><i
-                    class="fas fa-pen-nib me-1"></i>Medical Letters</button>
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill"
-                data-doc-filter="Clinical Record|Consent Form|Signed Consent Form|Signed Consent"
-                onclick="diorFilterDocsByCategory('clinical', this)"><i
-                    class="fas fa-file-medical me-1"></i>Clinical Records</button>
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill"
-                data-doc-filter="Laboratory|Lab Report|Diagnostic &amp; Scans"
-                onclick="diorFilterDocsByCategory('lab', this)"><i class="fas fa-flask me-1"></i>Lab &amp; Scans</button>
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill"
-                data-doc-filter="Prescription" onclick="diorFilterDocsByCategory('prescription', this)"><i
-                    class="fas fa-prescription-bottle-medical me-1"></i>Prescriptions</button>
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 dior-doc-cat-pill"
-                data-doc-filter="Procedure|ID Proof|Other"
-                onclick="diorFilterDocsByCategory('other', this)">Other</button>
-        </div>
-
         <div class="docs-table-wrapper">
             <table class="docs-table table table-hover" id="dior-docs-table">
                 <thead>
@@ -91,8 +67,6 @@
                     <?php if (!empty($documents)): ?>
                         <?php foreach ($documents as $doc): ?>
                             <tr data-doc-id="<?php echo esc_attr($doc['id'] ?? ''); ?>"
-                                data-category="<?php echo esc_attr($doc['category'] ?? 'Clinical Record'); ?>"
-                                data-is-letter="<?php echo esc_attr(!empty($doc['is_letter']) ? '1' : '0'); ?>"
                                 data-doc-author-id="<?php echo esc_attr($doc['author_id'] ?? 0); ?>">
                                 <td><input type="checkbox" class="dior-ic-52ff4d551f form-check-input"></td>
                                 <td><span
@@ -146,107 +120,11 @@
 
 
     <script>
-        var activeDocFilter = 'all';
-
-        window.diorFilterDocsByCategory = function (key, btn) {
-            activeDocFilter = key || 'all';
-
-            document.querySelectorAll('.dior-doc-cat-pill').forEach(function (b) {
-                b.classList.remove('btn-primary', 'active');
-                b.classList.add('btn-outline-primary');
-            });
-            if (btn) {
-                btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-primary', 'active');
-            }
-
-            diorFilterDocs();
-        };
-
-        /* Matches the row against the active pill's data-doc-filter list.
-           The old version compared the stored category against the pill's own
-           label text, so "Clinical Records" (plural, human label) never matched
-           the stored "Clinical Record" and the screen went blank. */
-        window.diorDocRowMatchesFilter = function (row) {
-            if (!row) return false;
-            var spec = '';
-            var pill = document.querySelector('.dior-doc-cat-pill.active');
-            if (pill) spec = pill.getAttribute('data-doc-filter') || '';
-
-            if (activeDocFilter === 'all' || !spec || spec === 'all') return true;
-
-            // Letters are flagged separately because they are filed as
-            // Clinical Record but belong in their own bucket.
-            var isLetter = row.getAttribute('data-is-letter') === '1';
-            if (activeDocFilter === 'letter') return isLetter;
-
-            // every other bucket excludes letters, so a letter cannot show up
-            // under both Medical Letters and Clinical Records
-            if (isLetter) return false;
-
-            var cat = (row.getAttribute('data-category') || '').toLowerCase().trim();
-            if (!cat) return false;
-
-            return spec.split('|').some(function (token) {
-                return token.trim().toLowerCase() === cat;
-            });
-        };
-
-        window.diorFilterDocs = function () {
-            var table = document.getElementById('dior-docs-table');
-
-            // The shared pagination layer owns row visibility, so the filter
-            // just asks it to re-render with the new predicate result.
-            if (table && typeof window.diorRefreshStaticTable === 'function') {
-                table._diorStaticPagination = { page: 1 };
-                window.diorRefreshStaticTable(table);
-            } else {
-                // Fallback for when that layer is absent.
-                document.querySelectorAll('#dior-docs-tbody tr').forEach(function (r) {
-                    if (r.querySelector('.dior-empty-state')) return;
-                    r.style.display = diorDocRowMatchesFilter(r) ? '' : 'none';
-                });
-            }
-            diorUpdateDocsEmptyState();
-        };
-
-        /* The shared table layer consults this before paginating. Registered
-           only for our table so no other screen changes behaviour. */
-        window.diorStaticRowPredicate = function (table, row) {
-            if (!table || table.id !== 'dior-docs-table') return true;
-            if (row.querySelector('.dior-empty-state')) return true;
-            if (row.id === 'dior-doc-filter-empty') return false;
-            return diorDocRowMatchesFilter(row);
-        };
-
-        /* Shows a "no documents in this filter" row so a bucket that happens to
-           be empty does not look like the screen failed to load. */
-        window.diorUpdateDocsEmptyState = function () {
-            var tbody = document.getElementById('dior-docs-tbody');
-            if (!tbody) return;
-            var existing = document.getElementById('dior-doc-filter-empty');
-            var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr')).filter(function (r) {
-                return r.id !== 'dior-doc-filter-empty' && !r.querySelector('.dior-empty-state');
-            });
-            var anyVisible = rows.some(function (r) {
-                return r.style.display !== 'none' && getComputedStyle(r).display !== 'none';
-            });
-
-            if (anyVisible || !rows.length) {
-                if (existing) existing.remove();
-                return;
-            }
-            if (existing) return;
-
-            var pill = document.querySelector('.dior-doc-cat-pill.active');
-            var label = pill ? pill.textContent.trim() : 'this filter';
-            var tr = document.createElement('tr');
-            tr.id = 'dior-doc-filter-empty';
-            tr.innerHTML = '<td colspan="8" class="text-center py-4">' +
-                '<i class="fas fa-folder-open fs-4 d-block mb-2 text-secondary opacity-50"></i>' +
-                '<span class="text-secondary small">No documents under <strong>' + label + '</strong>.</span></td>';
-            tbody.appendChild(tr);
-        };
+        /* Document search is handled by the shared static-table layer
+           (assets/js/dior-static-table-interactions.js), which listens for
+           input events on the search box and re-renders row visibility
+           itself. The old per-category pill filter and its helpers were
+           removed: every document is now listed together. */
 
         window.diorUpdateDocFileName = function (input) {
             var label = document.getElementById('dior-doc-file-label');

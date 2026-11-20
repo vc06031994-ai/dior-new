@@ -61,14 +61,6 @@
         var query = input ? input.value.trim().toLowerCase() : '';
 
         return getRows(table).filter(function (row) {
-            // A page may supply its own row predicate (the patient Documents
-            // tab filters by category pill). Without this hook the filter set
-            // row visibility first and renderTable immediately overwrote it,
-            // so every pill appeared dead.
-            if (typeof window.diorStaticRowPredicate === 'function' &&
-                window.diorStaticRowPredicate(table, row) === false) {
-                return false;
-            }
             if (!query) return true;
             return row.innerText.toLowerCase().indexOf(query) !== -1;
         });

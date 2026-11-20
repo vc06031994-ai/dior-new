@@ -1935,64 +1935,13 @@ let diorTeleCurrentPage = 1;
     }
 
 // --- Extracted dashboard script 10 ---
-let diorDocsCurrentPage = 1;
-    const diorDocsRowsPerPage = 6;
+/* Document pagination and search are owned by the shared static-table layer
+   (assets/js/dior-static-table-interactions.js). The old local paginator and
+   the per-category pill filter were removed with the filter bar. */
 
-    function diorGetDocsActiveRows() {
-        const input = document.getElementById('dior-docs-search-input');
-        const filter = input ? input.value.toLowerCase() : '';
-        const allRows = Array.from(document.querySelectorAll('#dior-docs-tbody tr'));
-        
-        return allRows.filter(function(row) {
-            const text = row.innerText.toLowerCase();
-            return text.includes(filter);
-        });
-    }
-
-    function diorRenderDocsPagination() {
-        const activeRows = diorGetDocsActiveRows();
-        const allRows = Array.from(document.querySelectorAll('#dior-docs-tbody tr'));
-        const totalPages = Math.ceil(activeRows.length / diorDocsRowsPerPage) || 1;
-
-        if (diorDocsCurrentPage > totalPages) {
-            diorDocsCurrentPage = totalPages;
-        }
-        if (diorDocsCurrentPage < 1) {
-            diorDocsCurrentPage = 1;
-        }
-
-        allRows.forEach(row => row.style.display = 'none');
-
-        const startIndex = (diorDocsCurrentPage - 1) * diorDocsRowsPerPage;
-        const endIndex = startIndex + diorDocsRowsPerPage;
-        const pageRows = activeRows.slice(startIndex, endIndex);
-
-        pageRows.forEach(row => row.style.display = '');
-
-        const pagContainer = document.getElementById('dior-docs-pagination');
-        if (pagContainer) {
-            pagContainer.innerHTML = diorBuildPagerHtml(diorDocsCurrentPage, totalPages, 'diorGoDocsPage');
-        }
-
-        const pageCountEl = document.getElementById('dior-docs-page-count');
-        if (pageCountEl) {
-            pageCountEl.innerText = `0 selected / ${activeRows.length} total`;
-        }
-    }
-
-    function diorGoDocsPage(page) {
-        diorDocsCurrentPage = page;
-        diorRenderDocsPagination();
-    }
-
-    function diorFilterDocs() {
-        diorDocsCurrentPage = 1;
-        diorRenderDocsPagination();
-    }
-    
     function diorDownloadDocsCSV() {
         let csvContent = "data:text/csv;charset=utf-8,Document Title,Category,Type,Upload Date,Size,Status\n";
-        const activeRows = diorGetDocsActiveRows();
+        const activeRows = Array.from(document.querySelectorAll('#dior-docs-tbody tr'));
         activeRows.forEach(function(row) {
             let cols = row.querySelectorAll('td');
             if(cols.length >= 8) {
@@ -2012,13 +1961,6 @@ let diorDocsCurrentPage = 1;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        diorRenderDocsPagination();
-    });
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        diorRenderDocsPagination();
     }
 
 // Medical Record tab filters: the buttons filter the existing clinical timeline without reloading.
