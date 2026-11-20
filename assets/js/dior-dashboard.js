@@ -46,58 +46,26 @@ window.diorOnIntakeSubmitted = function(e) {
 
 // Automatic HIPAAtizer Embed Message Listener
 //
-// Same rules as the booking-modal listener: only HIPAAtizer's own renderer may
-// drive the dashboard, and only a TERMINAL event counts. A step save emits
-// `submitted` / `form_submitted`, which must not move the patient past the
-// intake or open the booking modal while they are still filling the form.
-(function () {
-    var ORIGINS = [
-        'https://app.hipaatizer.com',
-        'https://www.hipaatizer.com',
-        'https://hipaatizer.com'
-    ];
-    var COMPLETE_EVENTS = [
-        'hipaatizer-form-submitted',
-        'submitSuccess',
-        'workflowSubmitted',
-        'formCompleted',
-        'submissionSuccess'
-    ];
-    var handled = false;
+// This used to keep its own copy of the completion matcher, with its own list of
+// event names, which drifted out of step with the one in dior-docbooker-modal.js.
+// Both now share a single detector: dior-docbooker-modal.js owns the origin
+// allowlist, the visibility check (hidden duplicate renderer), the terminal-event
+// match and the open-once guard, and simply broadcasts the verdict here.
+//
+// Keeping one detector is what guarantees an intermediate step save can never
+// advance this screen while the booking modal stays closed.
+window.addEventListener('message', function (event) {
+    if (!event || !event.data) return;
 
-    function fromHipaatizer(event) {
-        try {
-            if (event.origin === window.location.origin) return true;
-        } catch (e) { /* ignore */ }
-        return ORIGINS.indexOf(event.origin) !== -1;
+    var detector = window.diorHipaatizerCompletion;
+    if (typeof detector !== 'function') return;
+
+    if (!detector(event)) return;
+
+    if (typeof window.diorOnIntakeSubmitted === 'function') {
+        window.diorOnIntakeSubmitted();
     }
-
-    window.addEventListener('message', function (event) {
-        if (!event || !event.data) return;
-        if (!fromHipaatizer(event)) return;
-        if (handled) return;
-
-        var data = event.data;
-        if (typeof data === 'string') {
-            try { data = JSON.parse(data); } catch (e) { return; }
-            if (typeof data === 'string') return;   // plain progress string
-        }
-        if (!data || typeof data !== 'object') return;
-
-        var name = String(data.type || data.event || data.action || '').trim();
-        var isComplete = COMPLETE_EVENTS.indexOf(name) !== -1 ||
-            data.isComplete === true || data.completed === true || data.isFinal === true;
-
-        // `form_submitted` is per step; it only counts when the payload also
-        // says the whole workflow is finished.
-        if (!isComplete) return;
-
-        handled = true;
-        if (typeof window.diorOnIntakeSubmitted === 'function') {
-            window.diorOnIntakeSubmitted();
-        }
-    });
-})();
+});
 
 // After new patient registration, the dashboard must load first and then open HIPAAtizer.
 // This is intentionally tied to the one-time registration query flag so normal logins

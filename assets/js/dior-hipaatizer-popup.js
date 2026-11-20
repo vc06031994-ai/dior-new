@@ -6,20 +6,6 @@
     let originalParent = null;
     let originalNextSibling = null;
 
-    function isAppointmentButton(element) {
-        if (element.closest('#dior-docbooker-modal') ||
-            element.closest('.dior-booking-banner-card') ||
-            element.closest('#dior-patient-portal-app') ||
-            element.closest('.custom-patient-overview') ||
-            element.closest('#tab-overview') ||
-            (element.getAttribute('href') && element.getAttribute('href').includes('appointments'))) {
-            return false;
-        }
-        const text = (element.innerText || element.textContent || element.value || '')
-            .replace(/\s+/g, ' ').trim().toLowerCase();
-        return text.includes('book an appointment') && !text.includes('docbooker');
-    }
-
     function openPopup() {
         if (!window.Swal) {
             return;
@@ -74,13 +60,13 @@
         });
     }
 
-    document.addEventListener('click', function (event) {
-        const button = event.target.closest('button, a, [role="button"], input[type="button"], input[type="submit"]');
-        if (!button || !isAppointmentButton(button)) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
-        openPopup();
-    }, true);
+    // The popup is opened only by a genuine HIPAAtizer completion, handled in
+    // dior-docbooker-modal.js (the single completion handler). The previous
+    // capture-phase click listener on any button, link or submit input is gone:
+    // it could never have worked as intended because the intake form lives in a
+    // cross-origin iframe, so its Next/Submit buttons never reach this document.
+    //
+    // It is still exposed because the post-registration flow opens it directly:
+    // see dior-dashboard.js (diorOpenHipaaPopup on the ?intake_required=1 path).
+    window.diorOpenHipaatizerFormPopup = openPopup;
 })();

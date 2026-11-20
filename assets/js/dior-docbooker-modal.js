@@ -558,6 +558,43 @@
     // can post the same message. Open the modal for the first one only.
     var hipaatizerCompletionHandled = false;
 
+    /**
+     * Which form instance sent this message?
+     *
+     * The dashboard renders the SAME workflow twice: the real form on the Book
+     * Appointment tab (#dior-hipaa-tab-form) and a hidden copy in the footer
+     * (#dior-hipaatizer-form-source-v17) that exists only as the markup source
+     * for the intake popup. Both renderers are live, so both post messages.
+     *
+     * Only the instance the patient is actually looking at may drive the UI:
+     * the visible tab form, or the footer form after it has been relocated into
+     * the popup slot (the popup MOVES that node, so it leaves the footer and
+     * loses its id — the depth check is what identifies it there).
+     *
+     * A chatty hidden renderer can therefore never open the booking modal.
+     */
+    function isVisibleHipaatizerForm(event) {
+        var frame = null;
+        try {
+            frame = event.source && event.source.frameElement ? event.source.frameElement : null;
+        } catch (e) {
+            return true;    // cross-origin frameElement access → fall through
+        }
+        if (!frame || !frame.closest) {
+            return true;    // not posted from a framed renderer
+        }
+
+        // Inside the real tab form.
+        if (frame.closest('#dior-hipaa-tab-form')) return true;
+
+        // Inside the hidden footer copy: depth 1 means it is still the footer
+        // source and the patient is not looking at it.
+        var inSource = frame.closest('#dior-hipaatizer-form-source-v17');
+        if (inSource) return inSource.parentElement === document.body;
+
+        return true;
+    }
+
     function isHipaatizerOrigin(event) {
         // Same-origin posts (some renderers proxy through the parent page).
         try {
@@ -601,6 +638,39 @@
     }
 
     /**
+     * Shared completion detector — the single source of truth.
+     *
+     * Answers "is this postMessage a FINISHED intake?" using the origin
+     * allowlist, the visible-instance check and the terminal-event match, and
+     * latches so one completion is reported exactly once. Other dashboard
+     * scripts (dior-dashboard.js) call this instead of keeping their own copy
+     * of the rules, so the screens can never disagree about what counts as
+     * finished.
+     */
+    // The latched event OBJECT, not a boolean: several listeners receive the
+    // very same MessageEvent, and each of them still has to act on it once. A
+    // second, later event — the duplicate renderer's copy, or a retry — is
+    // rejected because it is a different object.
+    var hipaatizerCompletionEvent = null;
+
+    window.diorHipaatizerCompletion = function (event) {
+        if (!event || !event.data) return false;
+
+        // Already accepted this exact event: let the remaining listeners run.
+        if (event === hipaatizerCompletionEvent) return true;
+
+        if (!isHipaatizerOrigin(event)) return false;
+        if (!isVisibleHipaatizerForm(event)) return false;
+        if (!isHipaatizerCompletion(event.data)) return false;
+
+        // A completion was already accepted; this is a duplicate. Drop it.
+        if (hipaatizerCompletionEvent !== null) return false;
+
+        hipaatizerCompletionEvent = event;
+        return true;
+    };
+
+    /**
      * Automatic HIPAAtizer Listener
      * Listens to cross-origin iframe postMessage events from HIPAAtizer renderer
      */
@@ -612,19 +682,41 @@
 
         if (!event || !event.data) return;
 
-        // Only HIPAAtizer's own renderer may drive our booking modal. Without
-        // this check any frame on the page could open it.
-        if (!isHipaatizerOrigin(event)) return;
+        // ------------------------------------------------------------------
+        // TEMPORARY DIAGNOSTIC — remove once the live payload is confirmed.
+        //
+        // The terminal event name of the configured workflow cannot be verified
+        // from source code. Run the intake with ?dior_hipaa_debug=1 in the url
+        // and every postMessage HIPAAtizer sends is logged with its origin, the
+        // step the patient is on, and whether our matcher would treat it as a
+        // completion. Only the intended final Submit may read "completion=YES".
+        // Silent unless the query flag is present.
+        // ------------------------------------------------------------------
+        try {
+            if (/(^|[?&])dior_hipaa_debug=1/.test(window.location.search || '')) {
+                var probeOrigin = event.origin;
+                var probeData = event.data;
+                console.log(
+                    '%c[HIPAAtizer probe] origin=' + probeOrigin +
+                    ' data=' + (function () {
+                        try { return typeof probeData === 'string' ? probeData : JSON.stringify(probeData); }
+                        catch (e) { return String(probeData); }
+                    })(),
+                    'color:#0a7;font-weight:600'
+                );
+                console.log('[HIPAAtizer probe] completion=' +
+                    (isHipaatizerCompletion(probeData) ? 'YES' : 'no') +
+                    ' | name=' + hipaatizerEventName(probeData));
+            }
+        } catch (probeErr) {}
+
+
+        // Origin, visible instance, terminal event and the open-once latch are
+        // all decided in one place so every screen agrees on what "finished"
+        // means. Step saves fail this check and are ignored.
+        if (!window.diorHipaatizerCompletion(event)) return;
 
         var d = event.data;
-
-        // Step saves and other progress messages are logged and ignored: the
-        // patient is still filling the form and must not be interrupted.
-        if (!isHipaatizerCompletion(d)) return;
-
-        if (hipaatizerCompletionHandled) return;
-        hipaatizerCompletionHandled = true;
-
         console.log('[Dior Medical] ✨ HIPAAtizer Intake Completion detected:', d);
 
         // 1. Close any open intake popup / modal first

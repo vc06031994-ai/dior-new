@@ -116,7 +116,7 @@
         <div class="dior-subtab-panel" id="dior-subtab-book" style="display: block;">
             <div class="medidash-card border-0 shadow-none bg-transparent p-0 m-0 w-100">
                 <div class="medidash-card-body p-0 m-0 w-100">
-                    <div class="dior-hipaa-embed-container w-100 p-0 m-0">
+                    <div class="dior-hipaa-embed-container w-100 p-0 m-0" id="dior-hipaa-tab-form">
                         <?php if (shortcode_exists('hipaatizer')): ?>
                             <?php echo do_shortcode('[hipaatizer id="01a12050-38e5-74ba-967b-60dacc2bd7f7"]'); ?>
                         <?php else: ?>
