@@ -17,20 +17,15 @@ window.diorOnIntakeSubmitted = function(e) {
     } catch (cleanupError) {}
 
     const hipaaWrap = document.getElementById('dior-hipaa-form-container');
-    const appointmentIntake = document.getElementById('dior-hipaa-tab-form');
-    const bookingSec = document.getElementById('dior-docbooker-after-intake');
     const stepNotice = document.getElementById('dior-intake-step-notice');
     const compNotice = document.getElementById('dior-intake-completed-notice');
 
     if (hipaaWrap) {
         hipaaWrap.style.setProperty('display', 'none', 'important');
     }
-    if (appointmentIntake) {
-        appointmentIntake.style.setProperty('display', 'none', 'important');
-    }
-    if (bookingSec) {
-        bookingSec.style.setProperty('display', 'block', 'important');
-    }
+    // Nothing is revealed after a successful intake any more. The schedule form
+    // that used to appear here is removed; HIPAAtizer's own success message is
+    // what the patient sees, and the intake form stays on screen, completed.
     if (stepNotice) {
         stepNotice.style.setProperty('display', 'none', 'important');
     }
@@ -51,22 +46,12 @@ window.diorOnIntakeSubmitted = function(e) {
     } else {
         window.location.hash = '#tab=appointments&subtab=book';
     }
-
-    const mainTitle = document.getElementById('dior-appt-main-title');
-    if (mainTitle) {
-        mainTitle.textContent = 'Schedule Appointment';
-    }
-    if (bookingSec && typeof bookingSec.scrollIntoView === 'function') {
-        bookingSec.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    if (typeof showToast === 'function') {
-        showToast('Intake submitted. Choose a date and time to schedule your appointment.', false);
-    }
 };
 
-// Only a confirmed HIPAAtizer workflow completion reveals DocBooker;
-// progress messages are ignored by the shared detector.
+// A confirmed HIPAAtizer workflow completion still runs the handler above (it
+// clears the one-time intake flag and hides the completed intake card), but it
+// no longer reveals a schedule form — that section was removed on request.
+// Progress messages are ignored by the shared detector.
 window.addEventListener('message', function (event) {
     if (!event || !event.data) return;
 
