@@ -711,8 +711,6 @@ let diorPastCurrentPage = 1;
 // --- Extracted dashboard script 5 ---
 window.diorSwitchApptSubTab = function(targetSubTab) {
                         if (!targetSubTab) targetSubTab = 'book';
-                        // Redirects using the retired schedule subtab should return to intake.
-                        if (targetSubTab === 'schedule') targetSubTab = 'book';
                         // The calendar subtab was removed — never fall back to a pane that no longer exists.
                         if (targetSubTab === 'calendar' || !document.getElementById('dior-subtab-' + targetSubTab)) {
                             targetSubTab = 'today';
@@ -758,6 +756,7 @@ window.diorSwitchApptSubTab = function(targetSubTab) {
                         var titles = {
                             'calendar': 'Appointment Calendar',
                             'book': 'Book Appointment',
+                            'schedule': 'Schedule Appointment',
                             'today': "Today's Appointments",
                             'upcoming': 'Upcoming Appointments',
                             'past': 'Past Appointments'

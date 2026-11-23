@@ -12,6 +12,9 @@
         <button type="button" class="dior-subtab-pill btn active" data-appt-subtab="book">
             <i class="fas fa-calendar-plus"></i> Book Appointment
         </button>
+        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="schedule">
+            <i class="fas fa-calendar-days"></i> Schedule Appointment
+        </button>
         <button type="button" class="dior-subtab-pill btn" data-appt-subtab="today">
             <i class="fas fa-calendar-check"></i> Today Appointments
         </button>
@@ -129,12 +132,18 @@
                     </div>
                 </div>
             </div>
-            <?php /* The schedule form that used to follow the intake is removed for now:
-                     after a successful intake submission nothing is revealed here and
-                     HIPAAtizer's own success message is what the patient sees. */ ?>
         </div>
 
-        <!-- 2. Today Appointments -->
+        <!-- 2. Schedule Appointment (DocBooker Booking Form) -->
+        <div class="dior-subtab-panel" id="dior-subtab-schedule" style="display: none;">
+            <div class="medidash-card border-0 shadow-none bg-transparent p-0 m-0 w-100">
+                <div class="medidash-card-body p-0 m-0 w-100">
+                    <?php include DIOR_PORTAL_PATH . 'templates/docbooker-booking-form.php'; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Today Appointments -->
         <div class="dior-subtab-panel dior-ic-44a70a0420" id="dior-subtab-today">
             <div class="va-table-wrapper">
                 <div class="va-table-wrapper">

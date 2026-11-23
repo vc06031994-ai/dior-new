@@ -22,6 +22,11 @@
             console.error('[Dior Medical] Booking page URL is not configured.');
             return;
         }
+        if (document.getElementById('dior-subtab-schedule') &&
+            typeof window.diorSwitchApptSubTab === 'function') {
+            window.diorSwitchApptSubTab('schedule');
+            return;
+        }
         if (document.getElementById('dior-subtab-book') &&
             typeof window.diorSwitchApptSubTab === 'function') {
             window.diorSwitchApptSubTab('book');

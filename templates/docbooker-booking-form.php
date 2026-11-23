@@ -185,7 +185,7 @@ $today_ymd = current_time('Y-m-d');
                         <span class="dior-db-btn-text"><i class="fa-solid fa-calendar-check me-2"></i> Confirm &amp; Book Appointment</span>
                         <span class="dior-db-btn-spinner" style="display: none;"><i class="fa-solid fa-circle-notch fa-spin me-2"></i> Scheduling Appointment...</span>
                     </button>
-                    <a class="dior-db-cancel-link btn" href="<?php echo esc_url(home_url('/patient-dashboard/')); ?>">
+                    <a class="dior-db-cancel-link btn" href="<?php echo esc_url(home_url('/patient-dashboard/#tab=appointments&subtab=book')); ?>" onclick="if(typeof window.diorSwitchApptSubTab==='function'){window.diorSwitchApptSubTab('book');return false;}">
                         Cancel
                     </a>
                 </div>
