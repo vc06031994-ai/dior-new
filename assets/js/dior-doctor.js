@@ -3195,21 +3195,25 @@ function diorShowMeetingJoinModal(alert, force) {
     return true;
 }
 
-/* Notify the patient when the doctor opens a video consultation. */
-(function () {
-  'use strict';
-  document.addEventListener('click', function (event) {
-    var link = event.target.closest('a[data-dior-meeting-join], button[data-dior-meeting-join], a[href*="zoom.us"], a[href*="meet.google.com"]');
-    if (!link) return;
-    var cfg = window.dior_doctor_vars || {};
-    var nonce = link.getAttribute('data-meeting-nonce') || cfg.meeting_nonce || cfg.nonce || cfg.portal_nonce || '';
-    var uid = link.getAttribute('data-appt-uid') || (link.closest('[data-appt-uid]') && link.closest('[data-appt-uid]').getAttribute('data-appt-uid')) || '';
-    var body = new URLSearchParams({ action: 'dior_meeting_participant_joined', appt_uid: uid, nonce: nonce });
-    var url = cfg.ajax_url || '/wp-admin/admin-ajax.php';
-    if (navigator.sendBeacon) navigator.sendBeacon(url, new Blob([body.toString()], { type: 'application/x-www-form-urlencoded; charset=UTF-8' }));
-    else fetch(url, { method: 'POST', credentials: 'same-origin', keepalive: true, headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body: body.toString() }).catch(function () {});
-  }, true);
-})();
+/* The "notify the patient that the doctor opened the video consultation" click
+   handler lives in the guarded block near the top of this file, which runs once
+   (`__diorDoctorMeetingJoinBound`). It used to be duplicated here as a second,
+   UNguarded listener covering a wider selector set — a[href*="zoom.us"] and
+   a[href*="meet.google.com"]. Every join click therefore posted
+   dior_meeting_participant_joined twice:
+
+     • duplicate #1 — both beacons carried no appt_uid, so the handler fell back
+       to "today's appointment" and picked one at random. Two requests wrote two
+       different `meeting_join_<md5(uid|user)>` transients, so neither 15-second
+       guard could swallow the other and the patient got two notifications.
+     • duplicate #2 — the server-side transient is keyed on appt_uid, but the
+       fallback resolved a DIFFERENT appointment for each request, so the keys
+       never collided and the guard never fired.
+
+   Both causes are fixed: the duplicate listener is gone (one handler, one
+   beacon), and the server ignores repeat events for the same appointment and
+   actor inside the window. Keeping the wider selector set here as a no-op note
+   so a future edit does not silently re-add the second beacon. */
 
 
     // dior-doc-meeting-notif-click: Re-open video consultation modal when clicking meeting notification

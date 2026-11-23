@@ -4168,12 +4168,29 @@ class Dior_Medical_Auth
         if (!$join_url || !wp_http_validate_url($join_url) || stripos($join_url, 'https://') !== 0) {
             wp_send_json_error(['message' => 'A valid meeting link is not available for this appointment.'], 409);
         }
-        $event_key = 'dior_meeting_join_' . md5($appt_uid . '|' . $user_id);
-        if (!get_transient($event_key)) {
+        /*
+         * One event per appointment + actor per window.
+         *
+         * Two keys guard this: the per-actor key below stops the same user from
+         * re-firing, and the per-appointment key stops two different code paths
+         * — the dashboard join links, the meeting-join modal, the sendBeacon
+         * fallback — from each delivering their own copy. A join click can
+         * legitimately produce more than one request (a link that is also
+         * caught by a delegated handler), so the appointment-level key is what
+         * actually keeps the patient from receiving the same notification
+         * twice. The window is short: a genuinely new join later still fires.
+         */
+        $actor_key = 'dior_meeting_join_' . md5($appt_uid . '|' . $user_id);
+        $appt_key  = 'dior_meeting_join_appt_' . md5($appt_uid);
+        if (get_transient($appt_key)) {
+            wp_send_json_success(['message' => 'Meeting event already recorded.']);
+        }
+        set_transient($appt_key, $user_id, 15);
+        if (!get_transient($actor_key)) {
             if (class_exists('Dior_Notification_Service')) {
                 Dior_Notification_Service::send_meeting_started_notification($appt, $user_id);
             }
-            set_transient($event_key, 1, 15);
+            set_transient($actor_key, 1, 15);
         }
         wp_send_json_success(['message' => 'Meeting event recorded.']);
     }
