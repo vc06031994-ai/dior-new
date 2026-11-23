@@ -1724,6 +1724,16 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             var aStr = String(answer).trim();
             if (aStr === '' || aStr === '—') return;
             
+            // Filter out HTML strings, instructional widgets, or disclaimer notices
+            if (/<[a-z][\s\S]*>/i.test(aStr) || /please answer the questions|fields marked with|do not continue with this form|before completing this form/i.test(aStr)) {
+                return;
+            }
+
+            // Filter out UUID or raw technical hex tokens as question titles
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(title) || /^[0-9a-f-]{30,}$/i.test(title)) {
+                return;
+            }
+
             var normTitle = normalizeKey(title);
             if (!normTitle || seenTitles[normTitle]) return;
             seenTitles[normTitle] = true;
@@ -1752,6 +1762,8 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         addQA('State of Residence', raw.state_of_residence || raw.state || raw['State of Residence']);
         addQA('Preferred Language', q.preferred_language || raw.preferred_language || raw.language || raw['Preferred Language']);
         addQA('Primary Reason for Visit', raw.primary_problem || raw['Primary Reason for Visit']);
+        addQA('Are you 18 years of age or older?', raw['Are you 18 years of age or older? (Labels)'] || raw['Are you 18 years of age or older?'] || raw.is_adult || raw.is_18_plus || q.is_adult);
+        addQA('Are you currently pregnant?', raw['Are you currently pregnant? (Labels)'] || raw['Are you currently pregnant?'] || raw.is_pregnant || q.is_pregnant);
         addQA('Tested positive or diagnosed with COVID-19?', raw.covid19 || raw['Tested positive or diagnosed with COVID-19? (Labels)']);
         addQA('Suspected COVID-19 Symptoms?', raw.suspected_covid || raw['Suspected COVID-19 Symptoms? (Labels)']);
 
@@ -1843,15 +1855,25 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         Object.keys(raw).forEach(function(key) {
             if (skipKeys.indexOf(key) !== -1) return;
             if (key.indexOf('(Values)') !== -1) return;
+            // Ignore UUIDs (HIPAAtizer static widget IDs) or token keys
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key) || /^[0-9a-f-]{30,}$/i.test(key)) return;
             // Ignore any HTML tag or disclaimer notice keys
-            if (key.indexOf('<') !== -1 || /^<[a-z!]/i.test(key) || /before completing|disclaimer|notice|agreement/i.test(key)) return;
+            if (key.indexOf('<') !== -1 || /^<[a-z!]/i.test(key) || /before completing|disclaimer|notice|agreement|please answer/i.test(key)) return;
 
             var cleanKey = key.replace(/\s*\(Labels\)\s*$/, '').trim();
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanKey) || /^[0-9a-f-]{30,}$/i.test(cleanKey)) return;
+
             var mappedTitle = QUESTION_LABELS[cleanKey];
 
             // If mapped title was already rendered in canonical sequence, skip!
             if (mappedTitle && seenTitles[normalizeKey(mappedTitle)]) return;
             if (seenTitles[normalizeKey(cleanKey)]) return;
+
+            var val = raw[cleanKey + ' (Labels)'] !== undefined ? raw[cleanKey + ' (Labels)'] : raw[key];
+            if (val === undefined || val === null) return;
+            var valStr = String(val).trim();
+            // Ignore if value is HTML markup, static instruction, or disclaimer
+            if (/<[a-z][\s\S]*>/i.test(valStr) || /please answer the questions|fields marked with|do not continue with this form/i.test(valStr)) return;
 
             // Determine prompt label
             var finalTitle = mappedTitle;
@@ -1865,8 +1887,6 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             }
 
             if (seenTitles[normalizeKey(finalTitle)]) return;
-
-            var val = raw[cleanKey + ' (Labels)'] !== undefined ? raw[cleanKey + ' (Labels)'] : raw[key];
             addQA(finalTitle, val);
         });
 
