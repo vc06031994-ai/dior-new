@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css"></head>
+<body style="margin:0;background:#F1F5F9">
+<div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-app"><main class="dior-main-content">
+<div class="dior-tab-content">
+<section class="dior-tab-panel active" id="tab-overview" style="display:block;padding:24px">
+<div class="row">          <div
+            class="card doctor-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 d-flex flex-column justify-content-between"
+            id="dior-overview-doctor-card">
+            
+            <div>
+<div class="d-flex flex-column gap-2 mt-3"><a class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+  href="https://zoom.us/j/987654321" target="_blank" rel="noopener noreferrer" data-dior-meeting-join data-appt-uid="APT-123">
+  <i class="fas fa-video me-2"></i>Join Video Consultation Room
+</a>
+<button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100"
+  data-switch-tab="appointments"><i class="far fa-calendar me-2"></i>Reschedule</button></div></div></section>
+<section class="dior-tab-panel" id="tab-telemedicine" style="display:block;padding:24px">
+<table id="dior-tele-table"><tbody>
+<tr data-tele-id="APT-123" data-doctor="Dr. Marcus Sterling" data-specialty="General Practice" data-date="2026-11-02" data-time="02:00 PM" data-duration="30 minutes" data-type="Video Visit" data-status="Pending" data-join-url="">
+<td><div class="cell-actions"><button type="button" class="action-icon-btn tele-join-btn btn" onclick="window.__teleOpened=true">join</button></div></td>
+</tr></tbody></table></section></div></main></div></div>
+<script src=".harness-assets/jquery.min.js"></script>
+<script src=".harness-assets/sweetalert2.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/dior-bootstrap-alert.js"></script>
+<script src="assets/js/dior-dashboard.js"></script>
+<script>
+window.dior_vars={ajax_url:'#',nonce:'x'};
+window.dior_patient_dashboard={ajax_url:'#',meeting_nonce:'x'};
+window.diorViewTelemedicine=function(b){window.__teleOpened=true;};
+window.__switchedTo=null;
+</script>
+<script src="assets/js/dior-patient-dashboard.js"></script>
+</body></html>

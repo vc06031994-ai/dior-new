@@ -1,0 +1,82 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css"></head>
+<body style="margin:0;background:#F1F5F9">
+<div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-app"><main class="dior-main-content">
+<div class="dior-tab-content" style="display:block !important;padding:24px"><div class="dior-profile-incomplete-alert dior-ic-c03948b3c3" id="dior-profile-incomplete-banner">
+                        <div class="dior-ic-29bdac4ec4">
+                            <div class="dior-ic-3fb01cc77f">
+                                <i class="fas fa-user-pen"></i>
+                            </div>
+                            <div>
+                                <strong class="dior-ic-11190ca3a8">
+                                    Action Required: Complete Your Personal Profile
+                                </strong>
+                                <span class="dior-ic-acb9b5ec47">
+                                    Please complete your required personal information
+                                    (<strong>Last Name, Phone Number</strong>) to
+                                    unlock appointment booking and telehealth consultations.
+                                </span>
+                            </div>
+                        </div>
+                        <button type="button" class="dior-btn-gold-primary dior-ic-4ee0445c2a btn"
+                            onclick="diorOpenHipaaPopup()">
+                            <i class="fas fa-id-card"></i> Complete Profile Now
+                        </button>
+                    </div>
+                
+
+                <!-- ============================================================== -->
+                <!-- 0. HOME / OVERVIEW TAB (Real Functional Patient Data + Clean UI) -->
+                <!-- ============================================================== -->
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+
+            </div> <!-- /.dior-tab-container -->
+
+        </main>
+    </div> <!-- /.dior-app -->
+
+
+    <!-- ============================================================== -->
+    <!-- MODALS -->
+    <!-- ============================================================== -->
+
+    <!-- 1. BOOK NEW APPOINTMENT MODAL (HIPAAtizer Form Integrated) -->
+    <div class="dior-modal-overlay" id="modal-book-appointment">
+        <div class="dior-modal-dialog dior-modal-lg dior-ic-ee0c6b0194">
+            <div class="dior-modal-header dior-ic-78529f928a">
+                <div>
+                    <h3 class="dior-ic-66a69ef8e4"><i class="fas fa-calendar-plus"></i> Book New Visit</h3>
+                    <span class="dior-ic-23927a389b"><i class="fas fa-shield-heart dior-ic-236b5f0eb0"></i>
+                        HIPAA-Compliant Medical Intake &amp; Booking</span>
+                </div>
+                <button type="button" class="dior-modal-close btn"
+                    onclick="diorCloseModal('modal-book-appointment')">&times;</button>
+            </div>
+            <div class="dior-modal-body dior-ic-1d15569872">
+                <iframe id="hipaatizer-book-visit-iframe"
+                    src="https://app.hipaatizer.com/workflow/01a11515-b491-79dc-b59b-e4be2a345a49"
+                    allow="microphone; camera; payment" title="HIPAAtizer Booking Form" class="dior-ic-a52858ae73">
+                </iframe>
+                <div class="dior-ic-44a70a0420">
+                    
+                </div>
+            </div>
+        </div></div>
+</main></div></div></body></html>

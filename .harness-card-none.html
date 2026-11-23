@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css"></head>
+<body style="margin:0;background:#F1F5F9">
+<div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-app"><main class="dior-main-content">
+<div class="dior-tab-content" style="display:block !important;padding:24px">
+<div class="row" id="tab-overview">          <div
+            class="card doctor-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 d-flex flex-column justify-content-between"
+            id="dior-overview-doctor-card">
+            
+            <div>
+              <div class="d-flex align-items-start gap-3 mb-3">
+                <div class="doctor-photo rounded-circle overflow-hidden flex-shrink-0 dior-doctor-photo-md">
+                  <img class="w-100 h-100 object-fit-cover" src="https://ui-avatars.com/api/?name=Dr+Anita"
+                    alt="Dr. Anita Mehta"
+                    onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Dr';">
+                </div>
+                <div class="doctor-copy flex-grow-1 min-w-0">
+                  <span
+                    class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small mb-1">Telehealth
+                    Medical Care</span>
+                  <h4 class="fs-6 fw-bold text-dark mb-0 text-truncate">Dr. Anita Mehta</h4>
+                  <div class="text-secondary small text-truncate mb-2">Telehealth Medical Care</div>
+                  <div class="d-flex align-items-center gap-3 text-secondary small flex-wrap">
+                    <span><i class="far fa-calendar me-1 text-primary"></i>Jun 12, 2026</span>
+                    <span><i class="far fa-clock me-1 text-primary"></i>10:30 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+<div class="d-flex flex-column gap-2 mt-3">
+<button type="button" class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+  data-switch-tab="appointments" data-appt-subtab="book">
+  <i class="fas fa-calendar-plus me-2"></i>Book An Appointment
+</button>
+<p class="text-secondary small text-center mb-0">No consultation scheduled yet.</p>
+            </div>
+          </div>
+        </div></div></div></main></div></div>
+<script>function diorSwitchTab(t){window.__switchedTo=t;}</script>
+</body></html>

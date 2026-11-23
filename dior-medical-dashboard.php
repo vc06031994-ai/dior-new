@@ -935,8 +935,8 @@ class Dior_Medical_Auth
         add_shortcode('dior_lost_password_form', [__CLASS__, 'render_lost_password_form']);
         add_shortcode('dior_reset_password_form', [__CLASS__, 'render_reset_password_form']);
         add_shortcode('dior_patient_dashboard', [__CLASS__, 'render_patient_dashboard']);
-        // The Schedule Appointment screen is a page template, not a shortcode:
-        // templates/template-schedule-appointment.php. The page owns its slug.
+        add_shortcode('dior_book_visit_page', [__CLASS__, 'render_standalone_appointment_page']);
+        add_shortcode('dior_docbooker_booking', [__CLASS__, 'render_docbooker_booking_form']);
 
         // Redirect non-logged-in users from private dashboards to login page
         add_action('template_redirect', [__CLASS__, 'check_dashboard_access_redirect']);
@@ -1029,12 +1029,6 @@ class Dior_Medical_Auth
 
         // Template Canvas Override (Elementor Canvas mode)
         add_filter('template_include', [__CLASS__, 'override_page_template'], 99);
-
-        // Page templates living in a plugin folder are not auto-discovered by
-        // WordPress, so the Schedule Appointment template has to be registered
-        // explicitly or it never appears in the page editor's Template list.
-        add_filter('theme_page_templates', [__CLASS__, 'register_page_templates']);
-        add_filter('template_include', [__CLASS__, 'load_plugin_page_template'], 98);
 
     }
 
@@ -1537,31 +1531,27 @@ class Dior_Medical_Auth
             update_post_meta($reset_id, '_wp_page_template', 'elementor_header_footer');
         }
 
-        // Schedule Appointment page.
-        //
-        // Pages are never created here any more: the slug belongs to the site
-        // owner and the content is theirs to write. The schedule screen is now a
-        // page template (templates/template-schedule-appointment.php), selected
-        // in the page editor. If a page still carries the retired shortcode, the
-        // shortcode is stripped so no raw text is left on the front end — its
-        // remaining content is left exactly as the owner wrote it.
-        $legacy_schedule_pages = get_posts([
-            'post_type' => 'page',
-            'post_status' => 'any',
-            'posts_per_page' => 5,
-            's' => 'dior_book_visit_page',
-            'fields' => 'ids',
-            'no_found_rows' => true,
-        ]);
-        foreach ($legacy_schedule_pages as $legacy_id) {
-            $legacy_page = get_post((int) $legacy_id);
-            if (!$legacy_page || !has_shortcode($legacy_page->post_content, 'dior_book_visit_page')) {
-                continue;
-            }
-            wp_update_post([
-                'ID' => $legacy_page->ID,
-                'post_content' => strip_shortcodes($legacy_page->post_content),
+        // Book Visit & Medical Intake Page (/book-visit/)
+        $book_page = get_page_by_path('book-visit');
+        if (!$book_page) {
+            $book_id = wp_insert_post([
+                'post_title' => 'Book Appointment & Medical Intake',
+                'post_name' => 'book-visit',
+                'post_content' => '[dior_book_visit_page]',
+                'post_status' => 'publish',
+                'post_type' => 'page'
             ]);
+        } else {
+            $book_id = $book_page->ID;
+            if (strpos($book_page->post_content, 'dior_book_visit_page') === false) {
+                wp_update_post([
+                    'ID' => $book_id,
+                    'post_content' => '[dior_book_visit_page]'
+                ]);
+            }
+        }
+        if (!empty($book_id) && !is_wp_error($book_id)) {
+            update_post_meta($book_id, '_wp_page_template', 'elementor_canvas');
         }
 
         // New DocBooker Integration Page (/docbooker-booking/)
@@ -1592,40 +1582,6 @@ class Dior_Medical_Auth
 
 
     /**
-     * Make plugin page templates selectable in the page editor.
-     */
-    public static function register_page_templates($templates)
-    {
-        $templates[self::SCHEDULE_TEMPLATE] = 'Dior Schedule Appointment';
-        return $templates;
-    }
-
-    /**
-     * Load a plugin page template when a page has selected one.
-     *
-     * WordPress looks for the template inside the theme only. When the slug does
-     * not resolve to a real file there, hand it our copy from the plugin folder.
-     */
-    public static function load_plugin_page_template($template)
-    {
-        if (!is_singular('page')) {
-            return $template;
-        }
-
-        global $post;
-        if (!$post instanceof WP_Post) {
-            return $template;
-        }
-
-        if (get_page_template_slug($post->ID) !== self::SCHEDULE_TEMPLATE) {
-            return $template;
-        }
-
-        $plugin_template = DIOR_PORTAL_PATH . self::SCHEDULE_TEMPLATE;
-        return file_exists($plugin_template) ? $plugin_template : $template;
-    }
-
-    /**
      * Override Page Template to Elementor Canvas (or built-in full-screen canvas)
      */
     public static function override_page_template($template)
@@ -1647,9 +1603,6 @@ class Dior_Medical_Auth
 
         $is_portal = false;
         if (is_page(['patient-dashboard', 'doctor-dashboard'])) {
-            $is_portal = true;
-        } else if (self::is_schedule_appointment_page()) {
-            // The schedule screen provides its own full-page shell.
             $is_portal = true;
         } else if (is_singular('page')) {
             if (
@@ -1681,14 +1634,14 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Assets the Schedule Appointment page template needs.
-     *
-     * Called from templates/template-schedule-appointment.php. The template is
-     * chosen in the page editor, so there is no shortcode to hang this off.
+     * Shortcode: [dior_book_visit_page]
+     * Dedicated Luxury Full-Page Medical Intake & Booking Page
      */
-    public static function enqueue_schedule_appointment_assets()
+    public static function render_standalone_appointment_page($atts = [])
     {
-        self::enqueue_docbooker_booking_assets();
+        ob_start();
+        include DIOR_PORTAL_PATH . 'templates/appointment-page.php';
+        return ob_get_clean();
     }
 
     /**
@@ -1715,13 +1668,21 @@ class Dior_Medical_Auth
             'ajax_url' => admin_url('admin-ajax.php'),
             'rest_url' => esc_url_raw(rest_url()),
             'rest_nonce' => wp_create_nonce('wp_rest'),
-            // Where "Book an appointment" sends the patient: the page that uses
-            // the Schedule Appointment template. Resolved at runtime so renaming
-            // the page's slug never breaks the link. Falls back to the dashboard
-            // booking tab when no page uses the template yet.
-            'booking_page_url' => self::schedule_appointment_url(),
+            'booking_page_url' => home_url('/patient-dashboard/#tab=appointments&subtab=book'),
             'patient_dashboard_url' => home_url('/patient-dashboard/'),
         ]);
+    }
+
+    /**
+     * Shortcode: [dior_docbooker_booking]
+     * Render the appointment booking form inline in the dashboard or a page.
+     */
+    public static function render_docbooker_booking_form($atts = [])
+    {
+        self::enqueue_docbooker_booking_assets();
+        ob_start();
+        include DIOR_PORTAL_PATH . 'templates/docbooker-booking-form.php';
+        return ob_get_clean();
     }
 
     /**
@@ -2755,7 +2716,7 @@ class Dior_Medical_Auth
             if (
                 has_shortcode($post->post_content, 'dior_patient_dashboard') ||
                 has_shortcode($post->post_content, 'dior_doctor_dashboard') ||
-                get_page_template_slug($post->ID) === self::SCHEDULE_TEMPLATE
+                has_shortcode($post->post_content, 'dior_book_visit_page')
             ) {
                 $should_redirect = true;
             }
@@ -5764,58 +5725,6 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Page template that renders the Schedule Appointment screen.
-     */
-    const SCHEDULE_TEMPLATE = 'templates/template-schedule-appointment.php';
-
-    /**
-     * URL of the page that uses the Schedule Appointment template.
-     *
-     * The slug belongs to the site owner, so this follows the template rather
-     * than a hardcoded path and never creates a page.
-     */
-    public static function schedule_appointment_url()
-    {
-        static $url = null;
-        if ($url !== null) {
-            return $url;
-        }
-
-        $pages = get_posts([
-            'post_type' => 'page',
-            'post_status' => 'publish',
-            'posts_per_page' => 1,
-            'orderby' => 'ID',
-            'order' => 'ASC',
-            'meta_key' => '_wp_page_template',
-            'meta_value' => self::SCHEDULE_TEMPLATE,
-            'fields' => 'ids',
-            'no_found_rows' => true,
-        ]);
-
-        if (!empty($pages)) {
-            $permalink = get_permalink((int) $pages[0]);
-            if ($permalink) {
-                return $url = $permalink;
-            }
-        }
-
-        return $url = home_url('/patient-dashboard/#tab=appointments&subtab=book');
-    }
-
-    /**
-     * Is the current request the Schedule Appointment page?
-     */
-    public static function is_schedule_appointment_page()
-    {
-        if (!is_singular('page')) {
-            return false;
-        }
-        global $post;
-        return $post instanceof WP_Post && get_page_template_slug($post->ID) === self::SCHEDULE_TEMPLATE;
-    }
-
-    /**
      * Is the current request a signed-in portal dashboard screen?
      */
     public static function is_portal_dashboard_request()
@@ -5844,7 +5753,6 @@ class Dior_Medical_Auth
             if (
                 has_shortcode($post->post_content, 'dior_patient_dashboard') ||
                 has_shortcode($post->post_content, 'dior_doctor_dashboard') ||
-                get_page_template_slug($post->ID) === self::SCHEDULE_TEMPLATE ||
                 in_array($post->post_name, ['patient-dashboard', 'doctor-dashboard'], true)
             ) {
                 return true;

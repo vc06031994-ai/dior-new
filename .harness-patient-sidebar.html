@@ -1,0 +1,182 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css"></head>
+<body style="margin:0"><div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-drawer-backdrop" id="dior-doc-backdrop"></div>
+<div class="dior-app" style="display:flex;min-height:100vh"><aside class="dior-side" id="dior-sidebar">
+            <div class="dior-side-header">
+                <div class="brand">
+                    <a href="" class="brand-link">
+                        <img src="" alt="Dior Medical" class="brand-logo">
+                    </a>
+                </div>
+                <!-- <button type="button" class="dior-side-close btn" id="dior-side-close" onclick="diorCloseMobileDrawer()"
+                    aria-label="Close sidebar">
+                    <i class="fas fa-xmark"></i>
+                </button> -->
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="dior-side-nav">
+                <div class="grp">
+                    <button type="button" class="dior-nav-btn active btn" data-tab="overview">
+                        <i class="fas fa-gauge-high"></i>
+                        <span class="nav-label">Dashboard</span>
+                    </button>
+                    <div class="dior-nav-item-has-children" id="dior-appt-dropdown-wrap">
+                        <button type="button" class="dior-nav-btn btn" data-tab="appointments"
+                            onclick="if(typeof window.diorToggleApptDropdown==='function'){window.diorToggleApptDropdown(event);}">
+                            <i class="far fa-calendar-check"></i>
+                            <span class="nav-label">Appointments</span>
+                            <i class="fas fa-chevron-down ms-auto dior-ic-fdf55d6c0a"></i>
+                        </button>
+                        <div class="dior-nav-dropdown">
+                            <a href="#tab=appointments&subtab=book" class="dior-nav-dropdown-item active" data-appt-subtab="book"><i
+                                    class="fas fa-angle-right"></i> Book Appointment</a>
+                            <a href="#tab=appointments&subtab=today" class="dior-nav-dropdown-item" data-appt-subtab="today"><i
+                                    class="fas fa-angle-right"></i> Today Appointments</a>
+                            <a href="#tab=appointments&subtab=upcoming" class="dior-nav-dropdown-item" data-appt-subtab="upcoming"><i
+                                    class="fas fa-angle-right"></i> Upcoming Appointments</a>
+                            <a href="#tab=appointments&subtab=past" class="dior-nav-dropdown-item" data-appt-subtab="past"><i
+                                    class="fas fa-angle-right"></i> Past Appointments</a>
+                        </div>
+                    </div>
+                    <button type="button" class="dior-nav-btn btn" data-tab="docs_meds">
+                        <i class="fas fa-prescription-bottle-medical"></i>
+                        <span class="nav-label">Prescriptions</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="telemedicine">
+                        <i class="fas fa-video"></i>
+                        <span class="nav-label">Telemedicine</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="medical_record">
+                        <i class="fas fa-notes-medical"></i>
+                        <span class="nav-label">Medical Record</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="payments">
+                        <i class="fas fa-wallet"></i>
+                        <span class="nav-label">Billing &amp; Payment</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="insurance">
+                        <i class="fas fa-shield-heart"></i>
+                        <span class="nav-label">Insurance Claim</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="documents">
+                        <i class="fas fa-file-lines"></i>
+                        <span class="nav-label">Documents &amp; Report</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="emergency">
+                        <i class="fas fa-kit-medical"></i>
+                        <span class="nav-label">Emergency support</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="feedback">
+                        <i class="fas fa-comments"></i>
+                        <span class="nav-label">Feedback &amp; Support</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="nav-label">Notification</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="settings">
+                        <i class="fas fa-gear"></i>
+                        <span class="nav-label">Settings</span>
+                    </button>
+
+                    <!-- Collapse / Expand Sidebar Toggle (matches the Doctor Dashboard) -->
+                    <button type="button" class="dior-nav-btn dior-patient-collapse-btn btn"
+                        id="dior-patient-sidebar-toggle" onclick="diorTogglePatientSidebarCollapse(event)"
+                        title="Collapse Menu">
+                        <i class="fas fa-angles-left collapse-icon" id="dior-patient-collapse-icon"></i>
+                        <span class="nav-label">Collapse Menu</span>
+                    </button>
+                </div>
+            </nav>
+            <script>
+                function diorTogglePatientSidebarCollapse(e) {
+                    if (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                    }
+                    var app = document.getElementById('dior-patient-portal-app');
+                    if (!app) return;
+
+                    var isCollapsed = app.classList.toggle('dior-sidebar-collapsed');
+                    var icon = document.getElementById('dior-patient-collapse-icon');
+                    var btn = document.getElementById('dior-patient-sidebar-toggle');
+
+                    if (icon) {
+                        if (isCollapsed) {
+                            icon.classList.remove('fa-angles-left');
+                            icon.classList.add('fa-angles-right');
+                        } else {
+                            icon.classList.remove('fa-angles-right');
+                            icon.classList.add('fa-angles-left');
+                        }
+                    }
+                    if (btn) {
+                        var label = btn.querySelector('.nav-label');
+                        if (isCollapsed) {
+                            btn.setAttribute('title', 'Expand Menu');
+                            if (label) label.textContent = 'Expand Menu';
+                        } else {
+                            btn.setAttribute('title', 'Collapse Menu');
+                            if (label) label.textContent = 'Collapse Menu';
+                        }
+                    }
+
+                    try {
+                        localStorage.setItem('dior_patient_sidebar_collapsed', isCollapsed ? '1' : '0');
+                    } catch (err) { }
+
+                    // Let responsive widgets re-fit after the width transition.
+                    setTimeout(function () {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 280);
+                }
+
+                // Restore the saved collapsed state on load (desktop only).
+                (function () {
+                    try {
+                        if (localStorage.getItem('dior_patient_sidebar_collapsed') === '1' && window.innerWidth >= 1025) {
+                            var app = document.getElementById('dior-patient-portal-app');
+                            if (app) {
+                                app.classList.add('dior-sidebar-collapsed');
+                                var icon = document.getElementById('dior-patient-collapse-icon');
+                                var btn = document.getElementById('dior-patient-sidebar-toggle');
+                                if (icon) {
+                                    icon.classList.remove('fa-angles-left');
+                                    icon.classList.add('fa-angles-right');
+                                }
+                                if (btn) {
+                                    btn.setAttribute('title', 'Expand Menu');
+                                    var label = btn.querySelector('.nav-label');
+                                    if (label) label.textContent = 'Expand Menu';
+                                }
+                            }
+                        }
+                    } catch (e) { }
+                })();
+            </script>
+
+            <!-- Bottom Sidebar User Profile Card -->
+            <div class="dior-sidebar-bottom-profile">
+                <div class="dior-sidebar-avatar-wrap" id="dior-sidebar-avatar-box">
+                    
+                        <img id="dior-sidebar-avatar-img" src=""
+                            alt="">
+                    
+                        <img id="dior-sidebar-avatar-img"
+                            src=""
+                            alt="">
+                    
+                </div>
+                <div class="dior-sidebar-user-info">
+                    <strong
+                        class="dior-sidebar-user-name"></strong>
+                    <span class="dior-sidebar-user-status">Available</span>
+                </div>
+            </div>
+        </aside>
+<main class="dior-main-content" style="flex:1"><h2 style="font-family:sans-serif">Patient sidebar harness</h2></main></div></div>
+</body></html>

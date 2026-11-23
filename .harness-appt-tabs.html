@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css">
+<style>body{margin:0;background:#F1F5F9;font-family:Montserrat,Arial,sans-serif}</style>
+</head><body>
+<div class="dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-app" style="display:flex;min-height:100vh">
+<main class="dior-main-content" style="flex:1;padding:24px">
+<section class="dior-tab-panel active" id="tab-appointments">
+    <!-- Breadcrumb Header -->
+    <div class="mb-4" style="display:flex;justify-content:space-between;align-items:center;padding:0;">
+        <div>
+            <h4 class="mb-0 text-dark" id="dior-appt-main-title" style="font-size:20px;font-weight:700;">Book Appointment</h4>
+        </div>
+
+    </div>
+
+    <!-- Subtab Navigation Bar -->
+    <div class="dior-subtab-nav-bar px-0 mb-4">
+        <button type="button" class="dior-subtab-pill btn active" data-appt-subtab="book">
+            <i class="fas fa-calendar-plus"></i> Book Appointment
+        </button>
+        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="today">
+            <i class="fas fa-calendar-check"></i> Today Appointments
+        </button>
+        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="upcoming">
+            <i class="fas fa-clock"></i> Upcoming Appointments
+        </button>
+        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="past">
+            <i class="fas fa-history"></i> Past Appointments
+        </button>
+    </div>
+
+    
+</main>
+</div></div>
+</body></html>

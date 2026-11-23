@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css"></head>
+<body style="margin:0;background:#F1F5F9">
+<div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+<div class="dior-app"><main class="dior-main-content">
+<div class="dior-tab-content">
+<section class="dior-tab-panel active" id="tab-overview" style="display:block;padding:24px">
+  <div class="row"><div class="col-12 col-lg-6">
+  <div class="card doctor-card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100 d-flex flex-column justify-content-between" id="dior-overview-doctor-card">
+    <div>
+      <h5 class="fw-bold mb-1">Dr. Marcus Sterling</h5>
+      <p class="text-muted mb-2">General Practice</p>
+      <div class="d-flex flex-column gap-1 small text-muted">
+        <span><i class="far fa-calendar me-2"></i>02 Nov 2026</span>
+        <span><i class="far fa-clock me-2"></i>02:00 PM</span>
+      </div>
+    </div>
+    <div class="d-flex flex-column gap-2 mt-3">
+      <a class="btn btn-primary rounded-3 fw-semibold py-2 px-3 shadow-sm w-100"
+        href="https://zoom.us/j/123" target="_blank" rel="noopener noreferrer" data-dior-meeting-join>
+        <i class="fas fa-video me-2"></i>Join Video Consultation Room
+      </a>
+      <button type="button" class="btn btn-outline-primary rounded-3 fw-semibold py-2 px-3 w-100 dior-card-reschedule"
+        data-appt-uid="APT-123" data-appt-date="2026-12-02" data-appt-time="02:00 PM">
+        <i class="far fa-calendar me-2"></i>Reschedule
+      </button>
+    </div>
+  </div>
+  </div></div>
+</section>
+<section class="dior-tab-panel" id="tab-appointments" style="display:block;padding:24px">
+  <div class="table-responsive"><table class="table align-middle">
+    <thead><tr><th>Doctor</th><th>Date</th><th>Time</th><th>Actions</th></tr></thead>
+    <tbody><tr>
+      <td>Dr. Marcus Sterling</td><td>02 Nov 2026</td><td>02:00 PM</td>
+      <td><div class="cell-actions"><button type="button" class="action-icon-btn btn dior-today-reschedule"
+        data-appt-uid="APT-123" data-appt-date="2026-12-02" data-appt-time="14:00" title="Reschedule">
+        <i class="far fa-calendar"></i></button></div></td>
+    </tr></tbody>
+  </table></div>
+</section>
+</div></main></div></div>
+<script src=".harness-assets/jquery.min.js"></script>
+<script src=".harness-assets/sweetalert2.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/dior-bootstrap-alert.js"></script>
+<script>
+window.dior_vars={ajax_url:'/',nonce:'x'};
+window.dior_patient_dashboard={ajax_url:'/',portal_nonce:'x'};
+window.__posted=[];
+window.diorSwitchTab=function(){};window.diorViewTelemedicine=function(){};
+</script>
+<script src="assets/js/dior-patient-dashboard.js"></script>
+<script>
+// Intercept the reschedule AJAX so the harness never leaves the page.
+window.fetch=function(url,opts){
+  var body=(opts&&opts.body)||'';
+  window.__posted.push(body);
+  if(body.indexOf('dior_patient_reschedule_appointment')!==-1){
+    return Promise.resolve({json:function(){return Promise.resolve({success:true,data:{message:'Rescheduled to the new slot.'}});}});
+  }
+  return Promise.resolve({json:function(){return Promise.resolve({success:false,data:{message:'stub'}});}});
+};
+</script>
+</body></html>

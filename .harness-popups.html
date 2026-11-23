@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href=".harness-assets/all.min.css">
+    <link rel="stylesheet" href="assets/css/dior-custom.css">
+</head>
+
+<body>
+    <div class="dior-doctor-wrap" style="border:0">
+    <div class="dior-app">
+        <main class="dior-main-content">
+            <div class="dior-tab-content" style="display:block !important;height:auto !important;min-height:100vh">
+                <section class="dior-tab-panel" id="tab-doc-overview" style="padding:24px;display:block !important;height:auto !important;min-height:100vh">
+                    <h2 style="font-family:sans-serif">Popup theme harness</h2>
+
+                    <!-- Header controls: notification + profile dropdown -->
+                    <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+                        <div class="dior-notif-wrap" style="position:relative">
+                            <button type="button" class="dior-notif-btn btn">
+                                <i class="far fa-bell"></i><span class="dior-notif-indicator">3</span>
+                            </button>
+                            <div class="dior-notif-dropdown open" id="dior-doc-notif-dd" style="position:static !important;opacity:1 !important;width:360px;margin-top:12px">
+                                <div class="dior-notif-header">
+                                    <h4>Notifications</h4>
+                                    <button type="button">Mark all read</button>
+                                </div>
+                                <div class="dior-notif-list">
+                                    <div class="dior-notif-item unread" style="display:flex;gap:12px;padding:12px">
+                                        <div class="notif-icon"><i class="fas fa-file-medical"></i></div>
+                                        <div class="notif-body">
+                                            <strong>New lab report uploaded</strong>
+                                            <p>Sarah Johnson — CBC panel ready…</p>
+                                            <span class="notif-time">2 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="dior-notif-item" style="display:flex;gap:12px;padding:12px">
+                                        <div class="notif-icon"><i class="fas fa-calendar-check"></i></div>
+                                        <div class="notif-body">
+                                            <strong>Appointment confirmed</strong>
+                                            <p>Michael Chen — 3:30 PM…</p>
+                                            <span class="notif-time">Yesterday</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dior-notif-footer"><button type="button">View All →</button></div>
+                            </div>
+                        </div>
+
+                        <div class="dior-user-pill-wrap" style="position:relative;display:block;width:260px;height:170px;flex:0 0 auto">
+                            <div class="dior-profile-dropdown open" style="position:absolute !important;top:0 !important;left:0 !important;width:240px !important;opacity:1 !important;visibility:visible !important;transform:none !important">
+                                <div class="dior-profile-dropdown-header">HELLO DR. TEST..</div>
+                                <ul class="dior-profile-dropdown-menu">
+                                    <li>
+                                        <button type="button"><i class="fas fa-gear"></i> Settings</button>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dior-logout-text-btn"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real Bootstrap modal from documents.php -->
+                    <div class="modal fade" id="diorDoctorDocUploadModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                                <div class="modal-header border-bottom py-3 px-4 bg-white d-flex align-items-center justify-content-between">
+                                    <h5 class="modal-title fw-bold text-dark fs-5 mb-0">
+                                        <i class="fas fa-file-arrow-up text-primary me-2"></i> Upload Patient Document
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4 bg-white">
+                                    <p class="text-secondary small mb-3">Select a patient and attach clinical
+                                        records, lab results, prescriptions, or imaging scans.</p>
+                                    <div class="mb-3">
+                                        <label class="form-label small text-uppercase text-secondary fw-semibold">Select Patient *</label>
+                                        <select class="form-select rounded-3 py-2">
+                                            <option>Sarah Johnson (DM-10001)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small text-uppercase text-secondary fw-semibold">Document Title *</label>
+                                        <input type="text" class="form-control rounded-3 py-2" placeholder="e.g. Lab Results">
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top py-3 px-4 bg-white d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-outline-secondary rounded-3 px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary rounded-3 px-4 fw-semibold shadow-sm">
+                                        <i class="fas fa-cloud-arrow-up me-1"></i> Upload Document
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/dior-bootstrap-alert.js"></script>
+    <script>
+        window.harness = {
+            info: function () {
+                return Swal.fire({
+                    icon: 'info',
+                    title: 'Complete Your Provider Information',
+                    html: '<p style="font-size:14.5px">Welcome Dr. test! Please complete your required professional credentials (Last Name, Phone Number, Medical License Number, NPI Number) in Provider Settings.</p>',
+                    confirmButtonText: '<i class="fa-solid fa-user-pen"></i> Complete Profile Now',
+                    showCancelButton: true,
+                    cancelButtonText: 'Remind Me Later',
+                    focusConfirm: true
+                });
+            },
+            success: function () {
+                return Swal.fire({ icon: 'success', title: 'Document Uploaded Successfully', text: 'The document is now available in patient records.' });
+            },
+            warning: function () {
+                return Swal.fire({
+                    icon: 'warning', title: 'Delete 2 signed consent(s)?',
+                    text: 'The patient will no longer see these forms in their portal.',
+                    showCancelButton: true, confirmButtonText: 'Yes, delete'
+                });
+            },
+            error: function () {
+                return Swal.fire({ icon: 'error', title: 'Upload Failed', text: 'File content does not match its declared extension.' });
+            },
+            question: function () {
+                return Swal.fire({ icon: 'question', title: 'Save changes?', showCancelButton: true, confirmButtonText: 'Save' });
+            },
+            alertCall: function () {
+                return window.alert('Profile updated successfully');
+            },
+            confirmCall: function () {
+                return window.confirm('Please confirm this action.');
+            },
+            toast: function () {
+                return Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'List refreshed.', timer: 60000, timerProgressBar: true, showConfirmButton: false });
+            },
+            bsModal: function () {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('diorDoctorDocUploadModal')).show();
+            }
+        };
+    </script>
+</body>
+
+</html>

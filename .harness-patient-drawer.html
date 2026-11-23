@@ -1,0 +1,150 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href=".harness-assets/all.min.css">
+<link rel="stylesheet" href="assets/css/dior-custom.css">
+<style>
+  /* stand-in for the real page body so the drawer has a page behind it */
+  .fake-page{min-height:100vh;background:#F8FAFC;padding:16px}
+  .fake-topbar{height:64px;background:#fff;border-bottom:1px solid #E2E8F0;border-radius:12px;display:flex;align-items:center;padding:0 14px;gap:10px;color:#00346C;font:600 14px Montserrat,sans-serif}
+  .fake-card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;height:180px;margin-top:14px}
+</style>
+</head>
+<body style="margin:0">
+<div class="dior-wrap dior-patient-portal-wrap" id="dior-patient-portal-app">
+  <div class="dior-drawer-backdrop" id="dior-drawer-backdrop" onclick="diorCloseMobileDrawer()"></div>
+  <div class="dior-app" style="display:flex;min-height:100vh">
+        <aside class="dior-side" id="dior-sidebar">
+            <div class="dior-side-header">
+                <div class="brand">
+                    <a href=".harness-assets/logo-crest.png" class="brand-link">
+                        <img src=".harness-assets/logo-crest.png" alt="Dior Medical" class="brand-logo">
+                    </a>
+                </div>
+                <!-- Close control for the mobile drawer. Hidden on desktop by the
+                     stylesheet, shown while the drawer is open, and wired to the
+                     same close helper as the backdrop. -->
+                <button type="button" class="dior-side-close btn" id="dior-side-close" onclick="diorCloseMobileDrawer()"
+                    aria-label="Close sidebar" title="Close menu">&times;</button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="dior-side-nav">
+                <div class="grp">
+                    <span class="grp-title">PATIENT MENU</span>
+                    <button type="button" class="dior-nav-btn active btn" data-tab="overview">
+                        <i class="fas fa-gauge-high"></i>
+                        <span class="nav-label">Dashboard</span>
+                    </button>
+                    
+                    <div class="dior-nav-item has-submenu dior-nav-item-has-children" id="dior-appt-dropdown-wrap">
+                        <button type="button" class="dior-nav-btn btn" data-tab="appointments"
+                            onclick="if(typeof window.diorToggleApptDropdown==='function'){window.diorToggleApptDropdown(event);}">
+                            <i class="far fa-calendar-check"></i>
+                            <span class="nav-label">Appointments</span>
+                            <i class="fas fa-plus submenu-icon"></i>
+                        </button>
+                        <div class="dior-submenu dior-nav-dropdown">
+                            <a href="#tab=appointments&subtab=book" class="dior-nav-btn submenu-btn dior-nav-dropdown-item active" data-appt-subtab="book"><i
+                                    class="fas fa-calendar-plus"></i><span class="nav-label">Book Appointment</span></a>
+                            <a href="#tab=appointments&subtab=today" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="today"><i
+                                    class="fas fa-calendar-day"></i><span class="nav-label">Today Appointments</span></a>
+                            <a href="#tab=appointments&subtab=upcoming" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="upcoming"><i
+                                    class="fas fa-calendar-week"></i><span class="nav-label">Upcoming Appointments</span></a>
+                            <a href="#tab=appointments&subtab=past" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="past"><i
+                                    class="fas fa-clock-rotate-left"></i><span class="nav-label">Past Appointments</span></a>
+                        </div>
+                    </div>
+                    <button type="button" class="dior-nav-btn btn" data-tab="docs_meds">
+                        <i class="fas fa-prescription-bottle-medical"></i>
+                        <span class="nav-label">Prescriptions</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="telemedicine">
+                        <i class="fas fa-video"></i>
+                        <span class="nav-label">Telemedicine</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="medical_record">
+                        <i class="fas fa-notes-medical"></i>
+                        <span class="nav-label">Medical Record</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="payments">
+                        <i class="fas fa-wallet"></i>
+                        <span class="nav-label">Billing &amp; Payment</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="insurance">
+                        <i class="fas fa-shield-heart"></i>
+                        <span class="nav-label">Insurance Claim</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="documents">
+                        <i class="fas fa-file-lines"></i>
+                        <span class="nav-label">Documents &amp; Report</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="emergency">
+                        <i class="fas fa-kit-medical"></i>
+                        <span class="nav-label">Emergency support</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="feedback">
+                        <i class="fas fa-comments"></i>
+                        <span class="nav-label">Feedback &amp; Support</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="nav-label">Notification</span>
+                    </button>
+                    <button type="button" class="dior-nav-btn btn" data-tab="settings">
+                        <i class="fas fa-gear"></i>
+                        <span class="nav-label">Settings</span>
+                    </button>
+
+                    <!-- Collapse / Expand Sidebar Toggle (matches the Doctor Dashboard) -->
+                    <button type="button" class="dior-nav-btn dior-patient-collapse-btn btn"
+                        id="dior-patient-sidebar-toggle" onclick="diorTogglePatientSidebarCollapse(event)"
+                        title="Collapse Menu">
+                        <i class="fas fa-angles-left collapse-icon" id="dior-patient-collapse-icon"></i>
+                        <span class="nav-label">Collapse Menu</span>
+                    </button>
+                </div>
+            </nav>
+            
+
+            <!-- Bottom Sidebar User Profile Card -->
+            <div class="dior-sidebar-bottom-profile">
+                <div class="dior-sidebar-avatar-wrap" id="dior-sidebar-avatar-box">
+                    
+                        <img id="dior-sidebar-avatar-img"
+                            src=".harness-assets/logo-crest.png"
+                            alt="Mia Song">
+                    
+                </div>
+                <div class="dior-sidebar-user-info">
+                    <strong
+                        class="dior-sidebar-user-name">Mia Song</strong>
+                    <span class="dior-sidebar-user-status">Available</span>
+                </div>
+            </div>
+        </aside>
+    <main class="dior-main-content" style="flex:1">
+
+      <div class="fake-page">
+        <div class="fake-topbar"><button type="button" class="dior-mobile-menu-toggle btn" id="dior-mobile-menu-toggle" aria-label="Open navigation menu"><i class="fas fa-bars"></i></button> Search a doctor, appointment…</div>
+        <div class="fake-card"></div><div class="fake-card"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src=".harness-assets/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script>
+window.dior_vars={ajax_url:'#',nonce:'x'};
+window.dior_patient_dashboard={ajax_url:'#',portal_nonce:'x'};
+</script>
+<script src="assets/js/dior-dashboard.js"></script>
+<script src="assets/js/dior-patient-navigation.js"></script>
+<script src="assets/js/dior-patient-live.js"></script>
+<script>
+/* harness only: stub the tab switcher the real page provides */
+if (typeof window.diorSwitchApptSubTab !== 'function') {
+  window.diorSwitchApptSubTab = function (s) { window.__subtab = s; };
+}
+</script>
+</body></html>
