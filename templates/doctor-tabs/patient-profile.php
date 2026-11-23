@@ -615,7 +615,7 @@ $pp_ajax_url = admin_url('admin-ajax.php');
                         </div>
 
                         <!-- Specialized Clinical Modules (UTI, Allergy, Asthma, Refill) -->
-                        <h5 class="fw-bold text-dark mb-3">
+                        <h5 class="fw-bold text-dark mb-3" id="pp-q-modules-header">
                             <i class="fas fa-layer-group text-primary me-2"></i>Condition-Specific Assessments
                         </h5>
                         <div class="row g-3 mb-4" id="pp-q-modules-row">
@@ -775,6 +775,44 @@ $pp_ajax_url = admin_url('admin-ajax.php');
                                     </div>
                                 </div>
                                 <span class="text-secondary small font-monospace">Legal Consent Stored</span>
+                            </div>
+                        </div>
+
+                        <!-- Complete Dynamic Questions & Answers from Intake Form -->
+                        <div class="card border rounded-4 p-3 p-md-4 mt-4 bg-white shadow-sm" id="pp-all-questions-card">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        <i class="fas fa-clipboard-list text-primary me-2"></i>All HIPAAtizer Form Questions &amp; Patient Responses
+                                    </h5>
+                                    <span class="text-secondary small">Comprehensive responses submitted by the patient during their clinical questionnaire intake.</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="input-group input-group-sm" style="max-width: 260px;">
+                                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-secondary"></i></span>
+                                        <input type="text" id="pp-qa-search" class="form-control border-start-0" placeholder="Filter questions..." oninput="ppFilterQuestions()">
+                                    </div>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 fw-semibold small" id="pp-qa-count">0 Questions</span>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0" id="pp-qa-table">
+                                    <thead class="table-light small text-uppercase text-secondary">
+                                        <tr>
+                                            <th style="width: 45px;" class="text-center">#</th>
+                                            <th style="width: 45%;">Question Prompt</th>
+                                            <th style="width: 50%;">Patient's Answer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pp-qa-tbody">
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">
+                                                <i class="fas fa-clipboard-question d-block mb-1 fs-4 opacity-50"></i>
+                                                Loading intake responses...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -1429,6 +1467,192 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         field('consultation-count', String((p.consultations || []).length));
     }
 
+    // Format boolean / radio values cleanly
+    function formatBool(val, type) {
+        if (val === undefined || val === null || val === '' || val === '—') return '<span class="text-muted">—</span>';
+        var s = String(val).trim().toLowerCase();
+        if (s === '1' || s === 'yes' || s === 'true') {
+            if (type === 'danger') {
+                return '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 fw-semibold"><i class="fas fa-circle-exclamation me-1"></i>Yes</span>';
+            }
+            if (type === 'warning') {
+                return '<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 fw-bold">Yes</span>';
+            }
+            return '<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-semibold">Yes</span>';
+        }
+        if (s === '2' || s === 'no' || s === 'false' || s === '0' || s === 'none') {
+            return '<span class="badge bg-light text-secondary border px-2 py-1 fw-semibold">No</span>';
+        }
+        return escapeHtml(val);
+    }
+
+    // Format Q&A Answers
+    function formatQuestionAnswer(val, qText) {
+        if (val === undefined || val === null || String(val).trim() === '' || val === '—') {
+            return '<span class="text-muted">—</span>';
+        }
+        var s = String(val).trim();
+        var sLow = s.toLowerCase();
+
+        if (s === '1' || sLow === 'yes' || sLow === 'true') {
+            var isAlert = /fever|red_flag|trouble|chest|confusion|bleed|emergency|anaphylaxis/i.test(qText || '');
+            var badgeCls = isAlert ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle';
+            return '<span class="badge rounded-pill px-3 py-1 fw-semibold ' + badgeCls + '"><i class="fas fa-circle-check me-1"></i>Yes</span>';
+        }
+        if (s === '2' || sLow === 'no' || sLow === 'false') {
+            return '<span class="badge rounded-pill bg-light text-secondary border px-3 py-1 fw-semibold"><i class="fas fa-circle-xmark me-1"></i>No</span>';
+        }
+
+        if (/severity/i.test(qText || '')) {
+            if (/severe|high/i.test(sLow)) return '<span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+            if (/moderate|medium/i.test(sLow)) return '<span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+            if (/mild|low/i.test(sLow)) return '<span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+        }
+
+        return '<span class="text-dark fw-medium">' + escapeHtml(s) + '</span>';
+    }
+
+    // Filter dynamic questions table
+    window.ppFilterQuestions = function() {
+        var query = (document.getElementById('pp-qa-search').value || '').toLowerCase().trim();
+        var rows = document.querySelectorAll('#pp-qa-tbody tr');
+        var matched = 0;
+        rows.forEach(function(row) {
+            var text = row.textContent.toLowerCase();
+            var isMatch = !query || text.indexOf(query) !== -1;
+            row.style.display = isMatch ? '' : 'none';
+            if (isMatch) matched++;
+        });
+        var countBadge = document.getElementById('pp-qa-count');
+        if (countBadge && query) {
+            countBadge.textContent = matched + ' Matched';
+        }
+    };
+
+    // Render Full List of All Questions & Patient Responses
+    function renderAllQuestions(q) {
+        var tbody = document.getElementById('pp-qa-tbody');
+        var countBadge = document.getElementById('pp-qa-count');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        var qaList = [];
+        var seenQuestions = {};
+
+        // 1. Raw fields from HIPAAtizer if available
+        var raw = q.raw || {};
+        var skipKeys = [
+            'user_id', 'submission_id', 'submissionId', 'form_id', 'workflowId',
+            'raw_data', 'viewSubmissionLink', 'downloadPdfLink', 'View Submission Link',
+            'Download PDF Link', 'Submission Id', 'Form Id', 'consent_all', 'token', 'action'
+        ];
+
+        Object.keys(raw).forEach(function(key) {
+            if (skipKeys.indexOf(key) !== -1) return;
+            if (key.indexOf('(Values)') !== -1) return;
+            var cleanKey = key.replace(/\s*\(Labels\)\s*$/, '').trim();
+            if (seenQuestions[cleanKey]) return;
+
+            var val = raw[key];
+            if (raw[cleanKey + ' (Labels)']) {
+                val = raw[cleanKey + ' (Labels)'];
+            }
+
+            if (val !== undefined && val !== null && String(val).trim() !== '') {
+                seenQuestions[cleanKey] = true;
+                qaList.push({
+                    question: cleanKey,
+                    answer: val
+                });
+            }
+        });
+
+        // 2. Structured questionnaire fields mapping (ensures every known clinical intake question is listed)
+        var structuredMap = [
+            { q: 'Selected Service / Condition', a: q.selected_service },
+            { q: 'Preferred Consultation Type', a: q.consultation_type },
+            { q: 'How did you hear about us?', a: q.referral_source },
+            { q: 'Main Reason for Visit', a: q.reason_for_visit },
+            { q: 'Detailed Symptoms Description', a: q.symptom_description },
+            { q: 'How long have you had these symptoms?', a: q.symptom_duration },
+            { q: 'Symptom Severity', a: q.symptom_severity },
+            { q: 'Do you currently have a fever?', a: q.has_fever },
+            { q: 'Have you tried any treatment for these symptoms?', a: q.tried_treatment },
+            { q: 'Prior Treatment Details', a: q.treatment_tried_details },
+            { q: 'Trouble breathing, chest pain, or confusion (Red Flags)', a: q.red_flags },
+            // Condition Modules
+            { q: 'UTI - Burning or pain when urinating', a: (q.uti || {}).burning },
+            { q: 'UTI - Frequent or urgent urination', a: (q.uti || {}).frequency },
+            { q: 'UTI - Blood in urine', a: (q.uti || {}).blood },
+            { q: 'UTI - Flank or lower back pain', a: (q.uti || {}).flank_pain },
+            { q: 'UTI - Prior UTI history', a: (q.uti || {}).history },
+            { q: 'Allergy - Main Symptoms', a: (q.allergy || {}).main_symptom },
+            { q: 'Allergy - Known Triggers', a: (q.allergy || {}).triggers },
+            { q: 'Allergy - Severe reaction (anaphylaxis) history', a: (q.allergy || {}).anaphylaxis },
+            { q: 'Allergy - Carries epinephrine auto-injector (EpiPen)', a: (q.allergy || {}).epipen },
+            { q: 'Asthma - Rescue inhaler frequency', a: (q.asthma || {}).rescue_use },
+            { q: 'Asthma - Nighttime waking symptoms', a: (q.asthma || {}).night_symptoms },
+            { q: 'Asthma - ER / Hospital visits in past year', a: (q.asthma || {}).er_visit },
+            { q: 'Refill - Medication Name Requested', a: (q.refill || {}).med_name },
+            { q: 'Refill - Dose & Frequency', a: (q.refill || {}).med_dose },
+            { q: 'Refill - Approximate Date of Last Refill', a: (q.refill || {}).last_date },
+            // Medical History
+            { q: 'High Blood Pressure (Hypertension)', a: (q.medical_history || {}).hypertension },
+            { q: 'Diabetes', a: (q.medical_history || {}).diabetes },
+            { q: 'Heart Disease', a: (q.medical_history || {}).heart_disease },
+            { q: 'Asthma or Lung Disease', a: (q.medical_history || {}).lung_disease },
+            { q: 'Kidney or Liver Disease', a: (q.medical_history || {}).kidney_liver },
+            { q: 'Cancer or Immune System Disorder', a: (q.medical_history || {}).cancer_immune },
+            { q: 'Other Medical Conditions / Surgeries', a: (q.medical_history || {}).other },
+            // Meds & Allergies
+            { q: 'Currently taking any medications, vitamins, supplements', a: (q.medications || {}).takes_medications },
+            { q: 'Medications List & Dosages', a: (q.medications || {}).list },
+            { q: 'Known Drug Allergies', a: (q.allergies || {}).has_drug_allergy },
+            { q: 'Drug Allergies List & Reactions', a: (q.allergies || {}).list },
+            // Social & Pharmacy
+            { q: 'Tobacco / Vaping Use', a: (q.social_history || {}).tobacco },
+            { q: 'Alcohol Use', a: (q.social_history || {}).alcohol },
+            { q: 'Preferred Pharmacy Name', a: (q.pharmacy || {}).name },
+            { q: 'Preferred Pharmacy Location', a: (q.pharmacy || {}).location },
+            // Consent & Signature
+            { q: 'Consent & Acknowledgements', a: q.consent },
+            { q: 'Full Legal Name (E-Signature)', a: q.signature },
+            { q: 'Date of Signature', a: q.signature_date }
+        ];
+
+        structuredMap.forEach(function(item) {
+            var cleanQ = item.q.trim();
+            if (seenQuestions[cleanQ]) return;
+            var a = item.a;
+            if (a !== undefined && a !== null && String(a).trim() !== '' && String(a).trim() !== '—') {
+                seenQuestions[cleanQ] = true;
+                qaList.push({
+                    question: cleanQ,
+                    answer: a
+                });
+            }
+        });
+
+        if (countBadge) {
+            countBadge.textContent = qaList.length + ' Questions Answered';
+        }
+
+        if (!qaList.length) {
+            tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4"><i class="fas fa-clipboard-question d-block mb-1 fs-4 opacity-50"></i>No individual question responses on record.</td></tr>';
+            return;
+        }
+
+        qaList.forEach(function(item, idx) {
+            var tr = document.createElement('tr');
+            var ansFormatted = formatQuestionAnswer(item.answer, item.question);
+            tr.innerHTML = 
+                '<td class="text-secondary small font-monospace text-center">' + (idx + 1) + '</td>' +
+                '<td class="fw-semibold text-dark">' + escapeHtml(item.question) + '</td>' +
+                '<td>' + ansFormatted + '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+
     // Questionnaire rendering
     function renderQuestionnaire(q) {
         var emptyBox = document.getElementById('pp-questionnaire-empty');
@@ -1444,9 +1668,13 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         emptyBox.hidden = true;
         contentBox.hidden = false;
 
-        function qField(key, val, def) {
+        function qField(key, val, def, isHtml) {
             document.querySelectorAll('[data-pp-q="' + key + '"]').forEach(function(el) {
-                el.textContent = val || def || '—';
+                if (isHtml) {
+                    el.innerHTML = val || def || '—';
+                } else {
+                    el.textContent = val || def || '—';
+                }
             });
         }
 
@@ -1458,18 +1686,24 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         qField('reason_for_visit', q.reason_for_visit);
         qField('symptom_description', q.symptom_description);
         qField('symptom_duration', q.symptom_duration);
-        qField('has_fever', q.has_fever);
-        qField('tried_treatment', q.tried_treatment);
-        qField('treatment_tried_details', q.treatment_tried_details);
-        qField('red_flags', q.red_flags);
 
+        // Clean boolean formatting for symptoms
+        qField('has_fever', formatBool(q.has_fever, 'danger'), '—', true);
+        qField('tried_treatment', formatBool(q.tried_treatment), '—', true);
+        qField('treatment_tried_details', q.treatment_tried_details || '—');
+
+        // Red Flags Alert Banner: ONLY show if true red flags reported
         var redFlagBox = document.getElementById('pp-q-redflag-box');
         if (redFlagBox) {
-            var rf = (q.red_flags || '').toString().toLowerCase();
-            var hasRf = rf && rf !== 'no' && rf !== 'none' && rf !== 'false' && rf !== '0' && rf !== '—';
+            var rf = (q.red_flags || '').toString().toLowerCase().trim();
+            var hasRf = rf && rf !== 'no' && rf !== 'none' && rf !== 'false' && rf !== '0' && rf !== '2' && rf !== '—';
             redFlagBox.hidden = !hasRf;
+            if (hasRf) {
+                qField('red_flags', formatBool(q.red_flags, 'danger'), '—', true);
+            }
         }
 
+        // Severity badge
         var sevEl = document.querySelector('[data-pp-q-badge="symptom_severity"]');
         if (sevEl) {
             var sev = q.symptom_severity || '—';
@@ -1486,6 +1720,7 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             sevEl.textContent = sev;
         }
 
+        // Action links
         var pdfLink = document.querySelector('[data-pp-q-link="pdf"]');
         if (pdfLink) {
             var pUrl = q.view_pdf_link || q.download_pdf_link;
@@ -1508,50 +1743,120 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             }
         }
 
+        // Condition-Specific Assessments: Dynamically show only modules with actual data
+        var activeModulesCount = 0;
+        var serviceLower = String(q.selected_service || '').toLowerCase();
+        var conditionModules = [
+            { id: 'uti', data: q.uti || {}, label: 'uti' },
+            { id: 'allergy', data: q.allergy || {}, label: 'allergy' },
+            { id: 'asthma', data: q.asthma || {}, label: 'asthma' },
+            { id: 'refill', data: q.refill || {}, label: 'refill' }
+        ];
+
+        // Format each module's fields
         var uti = q.uti || {};
-        qField('uti_burning', uti.burning);
-        qField('uti_frequency', uti.frequency);
-        qField('uti_blood', uti.blood);
-        qField('uti_flank_pain', uti.flank_pain);
-        qField('uti_history', uti.history);
+        qField('uti_burning', formatBool(uti.burning), '—', true);
+        qField('uti_frequency', formatBool(uti.frequency), '—', true);
+        qField('uti_blood', formatBool(uti.blood, 'danger'), '—', true);
+        qField('uti_flank_pain', formatBool(uti.flank_pain, 'warning'), '—', true);
+        qField('uti_history', formatBool(uti.history), '—', true);
 
         var allergy = q.allergy || {};
         qField('allergy_main_symptom', allergy.main_symptom);
         qField('allergy_triggers', allergy.triggers);
-        qField('allergy_anaphylaxis', allergy.anaphylaxis);
-        qField('allergy_epipen', allergy.epipen);
+        qField('allergy_anaphylaxis', formatBool(allergy.anaphylaxis, 'danger'), '—', true);
+        qField('allergy_epipen', formatBool(allergy.epipen), '—', true);
 
         var asthma = q.asthma || {};
         qField('asthma_rescue_use', asthma.rescue_use);
-        qField('asthma_night', asthma.night_symptoms);
-        qField('asthma_er_visit', asthma.er_visit);
+        qField('asthma_night', formatBool(asthma.night_symptoms), '—', true);
+        qField('asthma_er_visit', formatBool(asthma.er_visit, 'danger'), '—', true);
 
         var refill = q.refill || {};
         qField('refill_med_name', refill.med_name);
         qField('refill_med_dose', refill.med_dose);
         qField('refill_last_date', refill.last_date);
 
+        // Hide empty modules so it doesn't look like dummy UI with empty dashes
+        conditionModules.forEach(function(m) {
+            var el = document.querySelector('[data-pp-module="' + m.id + '"]');
+            if (!el) return;
+            var hasData = false;
+            if (serviceLower.indexOf(m.label) !== -1) {
+                hasData = true;
+            }
+            Object.keys(m.data).forEach(function(k) {
+                var v = String(m.data[k] || '').trim();
+                if (v && v !== '—' && v !== '2' && v !== 'no' && v !== 'none' && v !== 'false') {
+                    hasData = true;
+                }
+            });
+            if (hasData) {
+                el.style.display = '';
+                activeModulesCount++;
+            } else {
+                el.style.display = 'none';
+            }
+        });
+
+        var modulesHeader = document.getElementById('pp-q-modules-header');
+        var modulesRow = document.getElementById('pp-q-modules-row');
+        if (modulesHeader) {
+            modulesHeader.style.display = activeModulesCount > 0 ? '' : 'none';
+        }
+        if (modulesRow) {
+            modulesRow.style.display = activeModulesCount > 0 ? '' : 'none';
+        }
+
+        // Medical History & Chronic Conditions: Clean badges
         var hx = q.medical_history || {};
-        qField('hx_hypertension', hx.hypertension);
-        qField('hx_diabetes', hx.diabetes);
-        qField('hx_heart', hx.heart_disease);
-        qField('hx_lung', hx.lung_disease);
-        qField('hx_kidney_liver', hx.kidney_liver);
-        qField('hx_cancer_immune', hx.cancer_immune);
-        qField('hx_other', hx.other);
+        qField('hx_hypertension', formatBool(hx.hypertension, 'warning'), '—', true);
+        qField('hx_diabetes', formatBool(hx.diabetes, 'warning'), '—', true);
+        qField('hx_heart', formatBool(hx.heart_disease, 'warning'), '—', true);
+        qField('hx_lung', formatBool(hx.lung_disease, 'warning'), '—', true);
+        qField('hx_kidney_liver', formatBool(hx.kidney_liver, 'warning'), '—', true);
+        qField('hx_cancer_immune', formatBool(hx.cancer_immune, 'warning'), '—', true);
+        qField('hx_other', hx.other || 'No other chronic conditions or past surgeries reported.');
 
+        // Patient-Reported Medications
         var meds = q.medications || {};
-        qField('medication_list', meds.list || meds.takes_medications);
+        var medList = String(meds.list || '').trim();
+        var takesMeds = String(meds.takes_medications || '').trim().toLowerCase();
+        var medBox = document.querySelector('[data-pp-q="medication_list"]');
+        if (medBox) {
+            if (medList && medList !== '2' && medList !== 'no' && medList !== 'none') {
+                medBox.innerHTML = '<div class="text-dark fw-semibold"><i class="fas fa-pills text-primary me-2"></i>' + escapeHtml(medList) + '</div>';
+            } else if (takesMeds === '2' || takesMeds === 'no' || takesMeds === 'none' || takesMeds === 'false' || !takesMeds) {
+                medBox.innerHTML = '<span class="text-secondary small"><i class="fas fa-check-circle text-success me-1"></i> Patient reported taking no daily medications, vitamins, or supplements.</span>';
+            } else {
+                medBox.textContent = 'None reported.';
+            }
+        }
 
+        // Patient-Reported Drug Allergies
         var algs = q.allergies || {};
-        qField('drug_allergy_list', algs.list || algs.has_drug_allergy);
+        var algList = String(algs.list || '').trim();
+        var hasAlg = String(algs.has_drug_allergy || '').trim().toLowerCase();
+        var algBox = document.querySelector('[data-pp-q="drug_allergy_list"]');
+        if (algBox) {
+            if (algList && algList !== '2' && algList !== 'no' && algList !== 'none') {
+                algBox.innerHTML = '<div class="text-danger fw-semibold"><i class="fas fa-triangle-exclamation text-danger me-2"></i>' + escapeHtml(algList) + '</div>';
+            } else if (hasAlg === '2' || hasAlg === 'no' || hasAlg === 'none' || hasAlg === 'false' || !hasAlg) {
+                algBox.innerHTML = '<span class="text-secondary small"><i class="fas fa-shield-halved text-success me-1"></i> No known drug allergies (NKDA) reported by patient.</span>';
+            } else {
+                algBox.textContent = 'None reported.';
+            }
+        }
 
+        // Legal Consent & Signatures
         var pharm = q.pharmacy || {};
         qField('pharmacy_name', pharm.name);
         qField('pharmacy_location', pharm.location);
-
         qField('e_signature', q.signature);
         qField('signature_date', q.signature_date);
+
+        // Dynamically populate all Questions & Patient Answers
+        renderAllQuestions(q);
     }
 
     // Load Patient API Request
