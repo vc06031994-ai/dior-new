@@ -52,8 +52,6 @@
                         <div class="dior-submenu dior-nav-dropdown">
                             <a href="#tab=appointments&subtab=book" class="dior-nav-btn submenu-btn dior-nav-dropdown-item active" data-appt-subtab="book"><i
                                     class="fas fa-calendar-plus"></i><span class="nav-label">Book Appointment</span></a>
-                            <a href="#tab=appointments&subtab=schedule" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="schedule"><i
-                                    class="fas fa-calendar-days"></i><span class="nav-label">Schedule Appointment</span></a>
                             <a href="#tab=appointments&subtab=today" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="today"><i
                                     class="fas fa-calendar-day"></i><span class="nav-label">Today Appointments</span></a>
                             <a href="#tab=appointments&subtab=upcoming" class="dior-nav-btn submenu-btn dior-nav-dropdown-item" data-appt-subtab="upcoming"><i

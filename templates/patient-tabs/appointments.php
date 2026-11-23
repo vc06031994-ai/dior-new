@@ -12,9 +12,6 @@
         <button type="button" class="dior-subtab-pill btn active" data-appt-subtab="book">
             <i class="fas fa-calendar-plus"></i> Book Appointment
         </button>
-        <button type="button" class="dior-subtab-pill btn" data-appt-subtab="schedule">
-            <i class="fas fa-calendar-days"></i> Schedule Appointment
-        </button>
         <button type="button" class="dior-subtab-pill btn" data-appt-subtab="today">
             <i class="fas fa-calendar-check"></i> Today Appointments
         </button>
@@ -44,7 +41,6 @@
             return $ts ? date('Y-m-d', $ts) : '';
         }
     }
-
 
     // Prepare appointment data as JSON for JS calendar
     $cal_apt_dates = [];
@@ -231,8 +227,7 @@
                                             $date_ymd,
                                             sanitize_text_field($apt_row['time'] ?? ($apt_row['appt_time'] ?? ''))
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($today_mock as $tm):
                                         ?>
                                         <tr>
@@ -396,8 +391,7 @@
                                             $date_ymd,
                                             sanitize_text_field($apt_row['time'] ?? ($apt_row['appt_time'] ?? ''))
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($upcoming_mock as $um):
                                         ?>
                                         <tr>
@@ -534,8 +528,7 @@
                                             '—',
                                             ''
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($past_mock as $pm):
                                         ?>
                                         <tr>
