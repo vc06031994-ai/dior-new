@@ -19,22 +19,22 @@
 
     function isDashboardOverview(element) {
         if (!element) return false;
-        return !!element.closest('#tab-overview, #tab-doc-overview, #tab-doc-appointments, #tab-appointments, #tab-doc-appointments-view, .dior-bs-calendar-container, #dior-doc-cal-month-wrap, .dior-bs-cal-table');
+        return !!element.closest('#tab-overview, #tab-doc-overview, #tab-doc-appointments, #tab-appointments, #tab-doc-appointments-view, #tab-doc-patients-profile, #pp-all-questions-card, [data-pp-pane="questionnaire"], .dior-bs-calendar-container, #dior-doc-cal-month-wrap, .dior-bs-cal-table');
     }
 
     function getTableSelector() {
-        return '.va-table, .docs-table, .dior-table, .lab-table, .master-modern-table, .dior-invoice-table, .dior-ref-table, .dior-doc-table, .dior-tab-panel:not(#tab-overview):not(#tab-doc-overview):not(#tab-doc-appointments):not(#tab-doc-appointments-view):not(#tab-appointments) table:not(.dior-bs-cal-table)';
+        return '.va-table, .docs-table, .dior-table, .lab-table, .master-modern-table, .dior-invoice-table, .dior-ref-table, .dior-doc-table, .dior-tab-panel:not(#tab-overview):not(#tab-doc-overview):not(#tab-doc-appointments):not(#tab-doc-appointments-view):not(#tab-appointments):not(#tab-doc-patients-profile) table:not(.dior-bs-cal-table):not(#pp-qa-table):not(.dior-static-skip)';
     }
 
     function getAllTables() {
         return Array.prototype.slice.call(document.querySelectorAll(getTableSelector())).filter(function (table) {
-            // Strictly exclude main overview screens, appointments view and calendars per user requirement
+            // Strictly exclude main overview screens, appointments view, calendars, and patient profile dynamic tables
             if (isDashboardOverview(table)) return false;
-            if (table.classList.contains('dior-bs-cal-table') || table.closest('.dior-bs-calendar-container, #dior-doc-cal-month-wrap, #tab-doc-appointments, #tab-doc-appointments-view, #tab-appointments')) {
+            if (table.classList.contains('dior-bs-cal-table') || table.closest('.dior-bs-calendar-container, #dior-doc-cal-month-wrap, #tab-doc-appointments, #tab-doc-appointments-view, #tab-appointments, #tab-doc-patients-profile')) {
                 return false;
             }
-            // Ignore nested preview/receipt/modal small tables
-            if (table.closest('.receipt-info-table, .dior-rx-med-table, .pp-info-table, .dior-modal, #dior-static-edit-modal')) {
+            // Ignore nested preview/receipt/modal small tables or questionnaire tables
+            if (table.id === 'pp-qa-table' || table.classList.contains('dior-static-skip') || table.classList.contains('dior-no-table-interactions') || table.closest('.receipt-info-table, .dior-rx-med-table, .pp-info-table, .dior-modal, #dior-static-edit-modal, #pp-all-questions-card, [data-pp-pane="questionnaire"]')) {
                 return false;
             }
             return table.querySelector('tbody > tr') !== null;

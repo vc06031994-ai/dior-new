@@ -796,10 +796,10 @@ $pp_ajax_url = admin_url('admin-ajax.php');
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0" id="pp-qa-table">
+                                <table class="table table-hover align-middle mb-0 dior-static-skip dior-no-table-interactions" id="pp-qa-table">
                                     <thead class="table-light small text-uppercase text-secondary">
                                         <tr>
-                                            <th style="width: 45px;" class="text-center">#</th>
+                                            <th style="width: 50px;" class="text-center">#</th>
                                             <th style="width: 45%;">Question Prompt</th>
                                             <th style="width: 50%;">Patient's Answer</th>
                                         </tr>
@@ -1536,9 +1536,20 @@ $pp_ajax_url = admin_url('admin-ajax.php');
 
     // Render Full List of All Questions & Patient Responses
     function renderAllQuestions(q) {
+        var table = document.getElementById('pp-qa-table');
         var tbody = document.getElementById('pp-qa-tbody');
         var countBadge = document.getElementById('pp-qa-count');
-        if (!tbody) return;
+        if (!table || !tbody) return;
+
+        // Ensure table header strictly has the 3 correct columns without any injected checkboxes or rogue th
+        var theadTr = table.querySelector('thead tr');
+        if (theadTr) {
+            theadTr.innerHTML = 
+                '<th style="width: 50px;" class="text-center">#</th>' +
+                '<th style="width: 45%;">Question Prompt</th>' +
+                '<th style="width: 50%;">Patient\'s Answer</th>';
+        }
+
         tbody.innerHTML = '';
 
         var raw = q.raw || {};
