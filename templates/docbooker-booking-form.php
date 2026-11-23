@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dior Medical - Inline DocBooker Appointment Booking Form
  * Clean, modern registration-style UI matching Dior Patient Portal design standards.
@@ -21,7 +22,7 @@ $patient_reason = !empty($intake['service_condition']) ? $intake['service_condit
 
 // Doctor details (Primary attending doctor: dynamic lookup for live compatibility)
 $doctor_user_id = class_exists('Dior_Doctor_Resolver') ? Dior_Doctor_Resolver::get_default_doctor_id() : 4;
-$doctor_id = 1957; // Default CPT ID
+$doctor_id = 1957;  // Default CPT ID
 $doctor_post = get_post($doctor_id);
 if (!$doctor_post || $doctor_post->post_type !== 'wpddb_doctor') {
     $published_docs = get_posts([
@@ -148,6 +149,7 @@ $today_ymd = current_time('Y-m-d');
                             <button type="button" class="dior-db-slot-btn btn" data-time="04:00 PM - 05:00 PM" onclick="diorSelectTimeSlot('04:00 PM - 05:00 PM', this)">04:00 PM - 05:00 PM</button>
                         </div>
                     </div>
+                    
                 </div>
 
                 <!-- 3. PATIENT DETAILS (Registration style 2-column fields) -->
@@ -185,7 +187,7 @@ $today_ymd = current_time('Y-m-d');
                         <span class="dior-db-btn-text"><i class="fa-solid fa-calendar-check me-2"></i> Confirm &amp; Book Appointment</span>
                         <span class="dior-db-btn-spinner" style="display: none;"><i class="fa-solid fa-circle-notch fa-spin me-2"></i> Scheduling Appointment...</span>
                     </button>
-                    <a class="dior-db-cancel-link btn" href="<?php echo esc_url(home_url('/patient-dashboard/')); ?>">
+                    <a class="dior-db-cancel-link btn" href="<?php echo esc_url(home_url('/patient-dashboard/#tab=appointments&subtab=book')); ?>" onclick="if(typeof window.diorSwitchApptSubTab==='function'){window.diorSwitchApptSubTab('book');return false;}">
                         Cancel
                     </a>
                 </div>

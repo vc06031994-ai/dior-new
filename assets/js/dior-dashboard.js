@@ -40,11 +40,21 @@ window.diorOnIntakeSubmitted = function(e) {
         window.Swal.close();
     }
 
-    if (document.getElementById('dior-subtab-book') &&
+    if (document.getElementById('dior-subtab-schedule') &&
+        typeof window.diorSwitchApptSubTab === 'function') {
+        window.diorSwitchApptSubTab('schedule');
+        try {
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, '', '#tab=appointments&subtab=schedule');
+            } else {
+                window.location.hash = '#tab=appointments&subtab=schedule';
+            }
+        } catch (e) {}
+    } else if (document.getElementById('dior-subtab-book') &&
         typeof window.diorSwitchApptSubTab === 'function') {
         window.diorSwitchApptSubTab('book');
     } else {
-        window.location.hash = '#tab=appointments&subtab=book';
+        window.location.hash = '#tab=appointments&subtab=schedule';
     }
 };
 

@@ -42,7 +42,6 @@
         }
     }
 
-
     // Prepare appointment data as JSON for JS calendar
     $cal_apt_dates = [];
     $apt_total = count($appointments);
@@ -129,12 +128,18 @@
                     </div>
                 </div>
             </div>
-            <?php /* The schedule form that used to follow the intake is removed for now:
-                     after a successful intake submission nothing is revealed here and
-                     HIPAAtizer's own success message is what the patient sees. */ ?>
         </div>
 
-        <!-- 2. Today Appointments -->
+        <!-- 2. Schedule Appointment (DocBooker Booking Form) -->
+        <div class="dior-subtab-panel" id="dior-subtab-schedule" style="display: none;">
+            <div class="medidash-card border-0 shadow-none bg-transparent p-0 m-0 w-100">
+                <div class="medidash-card-body p-0 m-0 w-100">
+                    <?php include DIOR_PORTAL_PATH . 'templates/docbooker-booking-form.php'; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Today Appointments -->
         <div class="dior-subtab-panel dior-ic-44a70a0420" id="dior-subtab-today">
             <div class="va-table-wrapper">
                 <div class="va-table-wrapper">
@@ -222,8 +227,7 @@
                                             $date_ymd,
                                             sanitize_text_field($apt_row['time'] ?? ($apt_row['appt_time'] ?? ''))
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($today_mock as $tm):
                                         ?>
                                         <tr>
@@ -387,8 +391,7 @@
                                             $date_ymd,
                                             sanitize_text_field($apt_row['time'] ?? ($apt_row['appt_time'] ?? ''))
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($upcoming_mock as $um):
                                         ?>
                                         <tr>
@@ -525,8 +528,7 @@
                                             '—',
                                             ''
                                         ];
-                                    }
-                                    ;
+                                    };
                                     foreach ($past_mock as $pm):
                                         ?>
                                         <tr>

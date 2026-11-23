@@ -615,7 +615,7 @@ $pp_ajax_url = admin_url('admin-ajax.php');
                         </div>
 
                         <!-- Specialized Clinical Modules (UTI, Allergy, Asthma, Refill) -->
-                        <h5 class="fw-bold text-dark mb-3">
+                        <h5 class="fw-bold text-dark mb-3" id="pp-q-modules-header">
                             <i class="fas fa-layer-group text-primary me-2"></i>Condition-Specific Assessments
                         </h5>
                         <div class="row g-3 mb-4" id="pp-q-modules-row">
@@ -775,6 +775,44 @@ $pp_ajax_url = admin_url('admin-ajax.php');
                                     </div>
                                 </div>
                                 <span class="text-secondary small font-monospace">Legal Consent Stored</span>
+                            </div>
+                        </div>
+
+                        <!-- Complete Dynamic Questions & Answers from Intake Form -->
+                        <div class="card border rounded-4 p-3 p-md-4 mt-4 bg-white shadow-sm" id="pp-all-questions-card">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">
+                                        <i class="fas fa-clipboard-list text-primary me-2"></i>All HIPAAtizer Form Questions &amp; Patient Responses
+                                    </h5>
+                                    <span class="text-secondary small">Comprehensive responses submitted by the patient during their clinical questionnaire intake.</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="input-group input-group-sm" style="max-width: 260px;">
+                                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-secondary"></i></span>
+                                        <input type="text" id="pp-qa-search" class="form-control border-start-0" placeholder="Filter questions..." oninput="ppFilterQuestions()">
+                                    </div>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 fw-semibold small" id="pp-qa-count">0 Questions</span>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 dior-static-skip dior-no-table-interactions" id="pp-qa-table">
+                                    <thead class="table-light small text-uppercase text-secondary">
+                                        <tr>
+                                            <th style="width: 50px;" class="text-center">#</th>
+                                            <th style="width: 45%;">Question Prompt</th>
+                                            <th style="width: 50%;">Patient's Answer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pp-qa-tbody">
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">
+                                                <i class="fas fa-clipboard-question d-block mb-1 fs-4 opacity-50"></i>
+                                                Loading intake responses...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -1429,6 +1467,449 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         field('consultation-count', String((p.consultations || []).length));
     }
 
+    // Format boolean / radio values cleanly
+    function formatBool(val, type) {
+        if (val === undefined || val === null || val === '' || val === '—') return '<span class="text-muted">—</span>';
+        var s = String(val).trim().toLowerCase();
+        if (s === '1' || s === 'yes' || s === 'true') {
+            if (type === 'danger') {
+                return '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 fw-semibold"><i class="fas fa-circle-exclamation me-1"></i>Yes</span>';
+            }
+            if (type === 'warning') {
+                return '<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 fw-bold">Yes</span>';
+            }
+            return '<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-semibold">Yes</span>';
+        }
+        if (s === '2' || s === 'no' || s === 'false' || s === '0' || s === 'none') {
+            return '<span class="badge bg-light text-secondary border px-2 py-1 fw-semibold">No</span>';
+        }
+        return escapeHtml(val);
+    }
+
+    // Format Q&A Answers
+    function formatQuestionAnswer(val, qText) {
+        if (val === undefined || val === null || String(val).trim() === '' || val === '—') {
+            return '<span class="text-muted">—</span>';
+        }
+        var s = String(val).trim();
+        var sLow = s.toLowerCase();
+
+        // For list questions, treat 2/none/no as "None reported"
+        if (/list|surgeries|treatment details|triggers/i.test(qText || '') && (s === '2' || sLow === 'none' || sLow === 'no' || sLow === 'n/a')) {
+            return '<span class="text-secondary small fst-italic"><i class="fas fa-minus-circle me-1 opacity-50"></i>None reported</span>';
+        }
+
+        if (s === '1' || sLow === 'yes' || sLow === 'true') {
+            var isAlert = /fever|red_flag|trouble|chest|confusion|bleed|emergency|anaphylaxis|shortness|er visit/i.test(qText || '');
+            var badgeCls = isAlert ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle';
+            return '<span class="badge rounded-pill px-3 py-1 fw-semibold ' + badgeCls + '"><i class="fas fa-circle-check me-1"></i>Yes</span>';
+        }
+        if (s === '2' || sLow === 'no' || sLow === 'false') {
+            return '<span class="badge rounded-pill bg-light text-secondary border px-3 py-1 fw-semibold"><i class="fas fa-circle-xmark me-1"></i>No</span>';
+        }
+
+        if (/severity/i.test(qText || '')) {
+            if (/severe|high/i.test(sLow)) return '<span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+            if (/moderate|medium/i.test(sLow)) return '<span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+            if (/mild|low/i.test(sLow)) return '<span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold">' + escapeHtml(s) + '</span>';
+        }
+
+        return '<span class="text-dark fw-medium">' + escapeHtml(s) + '</span>';
+    }
+
+    // Filter dynamic questions table
+    window.ppFilterQuestions = function() {
+        var query = (document.getElementById('pp-qa-search').value || '').toLowerCase().trim();
+        var rows = document.querySelectorAll('#pp-qa-tbody tr');
+        var matched = 0;
+        rows.forEach(function(row) {
+            var text = row.textContent.toLowerCase();
+            var isMatch = !query || text.indexOf(query) !== -1;
+            row.style.display = isMatch ? '' : 'none';
+            if (isMatch) matched++;
+        });
+        var countBadge = document.getElementById('pp-qa-count');
+        if (countBadge && query) {
+            countBadge.textContent = matched + ' Matched';
+        }
+    };
+
+    // Render Full List of All Questions & Patient Responses
+    function renderAllQuestions(q) {
+        var table = document.getElementById('pp-qa-table');
+        var tbody = document.getElementById('pp-qa-tbody');
+        var countBadge = document.getElementById('pp-qa-count');
+        if (!table || !tbody) return;
+
+        // Ensure table header strictly has the 3 correct columns without any injected checkboxes or rogue th
+        var theadTr = table.querySelector('thead tr');
+        if (theadTr) {
+            theadTr.innerHTML = 
+                '<th style="width: 50px;" class="text-center">#</th>' +
+                '<th style="width: 45%;">Question Prompt</th>' +
+                '<th style="width: 50%;">Patient\'s Answer</th>';
+        }
+
+        tbody.innerHTML = '';
+
+        var raw = q.raw || {};
+        var qaList = [];
+        var seenTitles = {}; // Track by normalized question prompt to prevent ANY duplicate
+
+        // Dictionary to map ANY raw key or variable to human-readable clinical question title
+        var QUESTION_LABELS = {
+            // Patient Demographics
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'full_name': 'Full Legal Name',
+            'name': 'Full Legal Name',
+            'patient_name': 'Full Legal Name',
+            'date_of_birth': 'Date of Birth',
+            'dob': 'Date of Birth',
+            'birth_date': 'Date of Birth',
+            'gender': 'Sex Assigned at Birth',
+            'sex': 'Sex Assigned at Birth',
+            'sex_at_birth': 'Sex Assigned at Birth',
+            'sex_assigned_at_birth': 'Sex Assigned at Birth',
+            'email': 'Email Address',
+            'email_address': 'Email Address',
+            'patient_email': 'Email Address',
+            'phone': 'Mobile Phone Number',
+            'phone_number': 'Mobile Phone Number',
+            'mobile': 'Mobile Phone Number',
+            'mobile_phone': 'Mobile Phone Number',
+            'state_of_residence': 'State of Residence',
+            'state': 'State of Residence',
+            'primary_problem': 'Primary Reason for Visit',
+            'preferred_language': 'Preferred Language',
+            'language': 'Preferred Language',
+            'is_adult': 'Are you 18 years of age or older?',
+            'is_18_plus': 'Are you 18 years of age or older?',
+            'is_pregnant': 'Are you currently pregnant?',
+
+            // Visit Details & Symptoms
+            'selected_service': 'Selected Service / Condition',
+            'service_condition': 'Selected Service / Condition',
+            'condition': 'Selected Service / Condition',
+            'consultation_type': 'Preferred Consultation Type',
+            'appointment_type': 'Preferred Consultation Type',
+            'referral_source': 'How did you hear about us? (Referral Source)',
+            'reason_for_visit': 'Main Reason for Visit',
+            'chief_complaint': 'Main Reason for Visit',
+            'symptom_description': 'Detailed Symptoms Description',
+            'symptoms_description': 'Detailed Symptoms Description',
+            'symptoms': 'Detailed Symptoms Description',
+            'symptom_duration': 'How long have you had these symptoms?',
+            'symptoms_duration': 'How long have you had these symptoms?',
+            'symptom_severity': 'Symptom Severity',
+            'has_fever': 'Do you currently have a fever?',
+            'fever': 'Do you currently have a fever?',
+            'tried_treatment': 'Have you tried any treatment for these symptoms?',
+            'treatment_tried': 'Prior Treatment Details',
+            'treatment_tried_details': 'Prior Treatment Details',
+            'treatment_details': 'Prior Treatment Details',
+            'red_flags': 'Trouble breathing, chest pain, or confusion (Red Flags)',
+
+            // Condition: Asthma
+            'asthma_rescue_use': 'Asthma - Rescue inhaler frequency',
+            'asthma_night': 'Asthma - Nighttime waking symptoms?',
+            'asthma_night_waking': 'Asthma - Nighttime waking symptoms?',
+            'asthma_er_visit': 'Asthma - ER / Hospital visits in past year?',
+            'asthma_wheeze': 'Asthma - Current wheezing or shortness of breath?',
+
+            // Condition: UTI
+            'uti_burning': 'UTI - Burning or pain when urinating?',
+            'uti_burning_pain': 'UTI - Burning or pain when urinating?',
+            'uti_frequency': 'UTI - Frequent or urgent urination?',
+            'uti_blood': 'UTI - Blood in urine?',
+            'uti_flank_pain': 'UTI - Flank or lower back pain?',
+            'uti_history': 'UTI - Prior history of UTI?',
+            'uti_previous': 'UTI - Prior history of UTI?',
+            'uti_discharge': 'UTI - Vaginal discharge or irritation?',
+
+            // Condition: Allergy
+            'allergy_main_symptom': 'Allergy - Main Symptoms',
+            'allergy_symptoms': 'Allergy - Main Symptoms',
+            'allergy_triggers': 'Allergy - Known Triggers',
+            'allergy_anaphylaxis': 'Allergy - Severe reaction (anaphylaxis) history?',
+            'allergy_epipen': 'Allergy - Carries epinephrine auto-injector (EpiPen)?',
+
+            // Condition: Refill
+            'refill_med_name': 'Prescription Refill - Medication Requested',
+            'refill_medication': 'Prescription Refill - Medication Requested',
+            'refill_med_dose': 'Prescription Refill - Dose & Frequency',
+            'refill_doctor': 'Prescribing Doctor',
+            'refill_last_date': 'Prescription Refill - Date of Last Refill',
+
+            // Condition: Birth Control
+            'bc_current_method': 'Current Birth Control Method',
+            'bc_lmp': 'First Day of Last Menstrual Period',
+            'bc_smoker_35': 'Do you smoke and are you over 35?',
+            'bc_clot_history': 'History of blood clots, stroke, or migraines with aura?',
+
+            // Condition: COVID-19
+            'covid19': 'Tested positive or diagnosed with COVID-19?',
+            'suspected_covid': 'Suspected COVID-19 Symptoms?',
+            'covid_contact': 'Close contact with a confirmed COVID-19 case?',
+            'covid_test_result': 'Recent COVID-19 Test Result',
+            'covid_taste_smell': 'Loss of taste or smell?',
+            'covid_vaccinated': 'COVID-19 vaccination or booster in past year?',
+
+            // Condition: Rash
+            'rash_location': 'Rash - Location on body',
+            'rash_itchy': 'Rash - Is it itchy?',
+            'rash_new_exposure': 'Rash - New exposure to soap, medicine, plant, or food?',
+            'rash_spreading': 'Rash - Spreading quickly or blistering?',
+
+            // Medical History: Chronic Conditions
+            'hx_hypertension': 'High Blood Pressure (Hypertension)',
+            'hypertension': 'High Blood Pressure (Hypertension)',
+            'hx_diabetes': 'Diabetes',
+            'diabetes': 'Diabetes',
+            'hx_heart': 'Heart Disease',
+            'heart_disease': 'Heart Disease',
+            'hx_asthma': 'Asthma or Lung Disease',
+            'hx_lung': 'Asthma or Lung Disease',
+            'lung_disease': 'Asthma or Lung Disease',
+            'hx_kidney_liver': 'Kidney or Liver Disease',
+            'kidney_liver': 'Kidney or Liver Disease',
+            'hx_cancer_immune': 'Cancer or Immune System Disorder',
+            'cancer_immune': 'Cancer or Immune System Disorder',
+            'surgeries': 'Other Medical Conditions / Surgeries',
+            'hx_other': 'Other Medical Conditions / Surgeries',
+            'other_conditions': 'Other Medical Conditions / Surgeries',
+
+            // Medications & Drug Allergies
+            'current_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'takes_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'taking_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'medication_list': 'Medications List & Dosages',
+            'medications_list': 'Medications List & Dosages',
+            'medications': 'Medications List & Dosages',
+            'known_drug_allergies': 'Known Drug Allergies?',
+            'has_drug_allergy': 'Known Drug Allergies?',
+            'drug_allergies': 'Known Drug Allergies?',
+            'drug_allergies_list': 'Drug Allergies List & Reactions',
+            'drug_allergy_list': 'Drug Allergies List & Reactions',
+
+            // Social & Pharmacy
+            'tobacco_use': 'Tobacco / Vaping Use',
+            'alcohol_use': 'Alcohol Use',
+            'pharmacy_name': 'Preferred Pharmacy Name',
+            'pharmacy_location': 'Preferred Pharmacy Location (City / ZIP Code)',
+
+            // Consent & Signature
+            'consent_all': 'Consent & Acknowledgements',
+            'consent': 'Consent & Acknowledgements',
+            'e_signature': 'Full Legal Name (E-Signature)',
+            'signature': 'Full Legal Name (E-Signature)',
+            'full_legal_name': 'Full Legal Name (E-Signature)',
+            'signature_date': 'Date of Signature'
+        };
+
+        // Keys to ignore completely (technical tokens, system metadata, HTML)
+        var skipKeys = [
+            'user_id', 'patient_id', 'submission_id', 'submissionId', 'Submission Id',
+            'form_id', 'Form Id', 'workflowId', 'raw_data', 'viewSubmissionLink',
+            'downloadPdfLink', 'View Submission Link', 'Download PDF Link',
+            'token', 'action', 'nonce', '_wpnonce', 'status', 'id'
+        ];
+
+        function normalizeKey(str) {
+            return String(str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        function addQA(title, answer) {
+            if (answer === undefined || answer === null) return;
+            var aStr = String(answer).trim();
+            if (aStr === '' || aStr === '—') return;
+            
+            // Filter out HTML strings, instructional widgets, or disclaimer notices
+            if (/<[a-z][\s\S]*>/i.test(aStr) || /please answer the questions|fields marked with|do not continue with this form|before completing this form/i.test(aStr)) {
+                return;
+            }
+
+            // Filter out UUID or raw technical hex tokens as question titles
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(title) || /^[0-9a-f-]{30,}$/i.test(title)) {
+                return;
+            }
+
+            var normTitle = normalizeKey(title);
+            if (!normTitle || seenTitles[normTitle]) return;
+            seenTitles[normTitle] = true;
+
+            qaList.push({
+                question: title,
+                answer: aStr
+            });
+        }
+
+        // 1. Patient Demographics & Profile
+        if (raw.first_name) {
+            addQA('First Name', raw.first_name);
+        }
+        if (raw.last_name) {
+            addQA('Last Name', raw.last_name);
+        }
+        var fullNameVal = q.full_name || raw.full_name || raw.name;
+        if (fullNameVal && fullNameVal !== raw.first_name) {
+            addQA('Full Legal Name', fullNameVal);
+        }
+        addQA('Date of Birth', q.dob || raw.date_of_birth || raw.dob || raw['Date of Birth']);
+        addQA('Sex Assigned at Birth', q.gender || raw['Sex Assigned at Birth (Labels)'] || raw['Sex Assigned at Birth'] || raw.gender || raw.sex || raw.sex_at_birth);
+        addQA('Email Address', q.email || raw.email || raw.email_address || raw['Email Address']);
+        addQA('Mobile Phone Number', q.phone || raw.phone_number || raw.phone || raw['Mobile Phone Number']);
+        addQA('State of Residence', raw.state_of_residence || raw.state || raw['State of Residence']);
+        addQA('Preferred Language', q.preferred_language || raw.preferred_language || raw.language || raw['Preferred Language']);
+        addQA('Primary Reason for Visit', raw.primary_problem || raw['Primary Reason for Visit']);
+        addQA('Are you 18 years of age or older?', raw['Are you 18 years of age or older? (Labels)'] || raw['Are you 18 years of age or older?'] || raw.is_adult || raw.is_18_plus || q.is_adult);
+        addQA('Are you currently pregnant?', raw['Are you currently pregnant? (Labels)'] || raw['Are you currently pregnant?'] || raw.is_pregnant || q.is_pregnant);
+        addQA('Tested positive or diagnosed with COVID-19?', raw.covid19 || raw['Tested positive or diagnosed with COVID-19? (Labels)']);
+        addQA('Suspected COVID-19 Symptoms?', raw.suspected_covid || raw['Suspected COVID-19 Symptoms? (Labels)']);
+
+        // 2. Visit Details & Symptoms
+        addQA('Selected Service / Condition', q.selected_service || raw['Selected Service / Condition (Labels)'] || raw['Selected Service / Condition'] || raw.selected_service);
+        addQA('Preferred Consultation Type', q.consultation_type || raw['Preferred Consultation Type (Labels)'] || raw['Preferred Consultation Type'] || raw.consultation_type);
+        addQA('How did you hear about us? (Referral Source)', q.referral_source || raw['How did you hear about us? (Labels)'] || raw['How did you hear about us?'] || raw.referral_source);
+        addQA('Main Reason for Visit', q.reason_for_visit || raw['Main Reason for Visit'] || raw.reason_for_visit || raw.chief_complaint);
+        addQA('Detailed Symptoms Description', q.symptom_description || raw['Describe Your Symptoms'] || raw.symptom_description || raw.symptoms);
+        addQA('How long have you had these symptoms?', q.symptom_duration || raw['How long have you had these symptoms? (Labels)'] || raw['How long have you had these symptoms?'] || raw.symptoms_duration || raw.symptom_duration);
+        addQA('Symptom Severity', q.symptom_severity || raw['Symptom Severity (Labels)'] || raw['Symptom Severity'] || raw.symptom_severity);
+        addQA('Do you currently have a fever?', q.has_fever || raw['Do you currently have a fever? (Labels)'] || raw['Do you currently have a fever?'] || raw.has_fever || raw.fever);
+        addQA('Have you tried any treatment for these symptoms?', q.tried_treatment || raw['Have you tried any treatment for these symptoms? (Labels)'] || raw['Have you tried any treatment for these symptoms?'] || raw.tried_treatment);
+        addQA('Prior Treatment Details', q.treatment_tried_details || raw['Treatment Tried'] || raw.treatment_tried || raw.treatment_tried_details || raw.treatment_details);
+        addQA('Trouble breathing, chest pain, or confusion (Red Flags)', q.red_flags || raw['Do you have trouble breathing, chest pain, or confusion? (Labels)'] || raw['Do you have trouble breathing, chest pain, or confusion?'] || raw.red_flags);
+
+        // 3. Condition-Specific Assessments (only added if answer was provided)
+        // Asthma
+        addQA('Asthma - Rescue inhaler frequency', (q.asthma || {}).rescue_use || raw['How often do you use a rescue inhaler? (Labels)'] || raw['How often do you use a rescue inhaler?'] || raw.asthma_rescue_use);
+        addQA('Asthma - Nighttime waking symptoms?', (q.asthma || {}).night_symptoms || raw['Do symptoms wake you at night? (Labels)'] || raw['Do symptoms wake you at night?'] || raw.asthma_night_waking || raw.asthma_night);
+        addQA('Asthma - ER / Hospital visits in past year?', (q.asthma || {}).er_visit || raw['ER or hospital visit for asthma in the past year? (Labels)'] || raw['ER or hospital visit for asthma in the past year?'] || raw.asthma_er_visit);
+        addQA('Asthma - Current wheezing or shortness of breath?', (q.asthma || {}).wheeze || raw['Do you currently have a wheeze or shortness of breath? (Labels)'] || raw.asthma_wheeze);
+
+        // UTI
+        addQA('UTI - Burning or pain when urinating?', (q.uti || {}).burning || raw['Burning or pain when urinating? (Labels)'] || raw['Burning or pain when urinating?'] || raw.uti_burning);
+        addQA('UTI - Frequent or urgent urination?', (q.uti || {}).frequency || raw['Frequent or urgent need to urinate? (Labels)'] || raw['Frequent or urgent need to urinate?'] || raw.uti_frequency);
+        addQA('UTI - Blood in urine?', (q.uti || {}).blood || raw['Blood in your urine? (Labels)'] || raw['Blood in your urine?'] || raw.uti_blood);
+        addQA('UTI - Flank or lower back pain?', (q.uti || {}).flank_pain || raw['Pain in your side or lower back? (Labels)'] || raw['Pain in your side or lower back?'] || raw.uti_flank_pain);
+        addQA('UTI - Prior history of UTI?', (q.uti || {}).history || raw['Have you had a UTI before? (Labels)'] || raw['Have you had a UTI before?'] || raw.uti_history);
+        addQA('UTI - Vaginal discharge or irritation?', (q.uti || {}).discharge || raw['Any vaginal discharge or irritation? (Labels)'] || raw.uti_discharge);
+
+        // Allergy
+        addQA('Allergy - Main Symptoms', (q.allergy || {}).main_symptom || raw['Main Symptom (Labels)'] || raw['Main Symptom'] || raw.allergy_main_symptom || raw.allergy_symptoms);
+        addQA('Allergy - Known Triggers', (q.allergy || {}).triggers || raw['Known Triggers'] || raw.allergy_triggers);
+        addQA('Allergy - Severe reaction (anaphylaxis) history?', (q.allergy || {}).anaphylaxis || raw['Have you ever had a severe allergic reaction (anaphylaxis)? (Labels)'] || raw['Have you ever had a severe allergic reaction (anaphylaxis)?'] || raw.allergy_anaphylaxis);
+        addQA('Allergy - Carries epinephrine auto-injector (EpiPen)?', (q.allergy || {}).epipen || raw['Do you carry an epinephrine auto-injector? (Labels)'] || raw['Do you carry an epinephrine auto-injector?'] || raw.allergy_epipen);
+
+        // Refill
+        addQA('Prescription Refill - Medication Requested', (q.refill || {}).med_name || raw['Medication Name'] || raw.refill_medication || raw.refill_med_name);
+        addQA('Prescription Refill - Dose & Frequency', (q.refill || {}).med_dose || raw['Dose and How Often'] || raw.refill_med_dose);
+        addQA('Prescribing Doctor', (q.refill || {}).doctor || raw['Prescribing Doctor'] || raw.refill_doctor);
+        addQA('Prescription Refill - Date of Last Refill', (q.refill || {}).last_date || raw['Approximate Date of Last Refill'] || raw.refill_last_date);
+
+        // Birth Control
+        addQA('Current Birth Control Method', (q.birth_control || {}).method || raw['Current Birth Control Method (Labels)'] || raw['Current Birth Control Method'] || raw.bc_current_method);
+        addQA('First Day of Last Menstrual Period', (q.birth_control || {}).lmp || raw['First Day of Last Menstrual Period'] || raw.bc_lmp);
+        addQA('Do you smoke and are you over 35?', (q.birth_control || {}).smoker_35 || raw['Do you smoke and are you over 35? (Labels)'] || raw.bc_smoker_35);
+        addQA('History of blood clots, stroke, or migraine with aura?', (q.birth_control || {}).clot_history || raw['History of blood clots, stroke or migraines with aura? (Labels)'] || raw.bc_clot_history);
+
+        // COVID Details
+        addQA('Close contact with a confirmed COVID-19 case?', (q.covid || {}).contact || raw['Close contact with a confirmed case in the past 10 days? (Labels)'] || raw.covid_contact);
+        addQA('Recent COVID-19 Test Result', (q.covid || {}).test_result || raw['Recent Test Result (Labels)'] || raw.covid_test_result);
+        addQA('Loss of taste or smell?', (q.covid || {}).taste_smell || raw['Loss of taste or smell? (Labels)'] || raw.covid_taste_smell);
+        addQA('COVID-19 vaccination or booster in past year?', (q.covid || {}).vaccinated || raw['Vaccinated or boosted in the past year? (Labels)'] || raw.covid_vaccinated);
+
+        // Rash
+        addQA('Rash - Location on body', (q.rash || {}).location || raw['Where on your body is the rash?'] || raw.rash_location);
+        addQA('Rash - Is it itchy?', (q.rash || {}).itchy || raw['Is it itchy? (Labels)'] || raw.rash_itchy);
+        addQA('Rash - New exposure to soap, medicine, plant, or food?', (q.rash || {}).new_exposure || raw['Any new soap, medicine, plant or food exposure? (Labels)'] || raw.rash_new_exposure);
+        addQA('Rash - Spreading quickly or blistering?', (q.rash || {}).spreading || raw['Is the rash spreading quickly or blistering? (Labels)'] || raw.rash_spreading);
+
+        // 4. Past Medical History & Chronic Conditions
+        addQA('High Blood Pressure (Hypertension)', (q.medical_history || {}).hypertension || raw['High blood pressure? (Labels)'] || raw['High blood pressure?'] || raw.hx_hypertension || raw.hypertension);
+        addQA('Diabetes', (q.medical_history || {}).diabetes || raw['Diabetes? (Labels)'] || raw['Diabetes?'] || raw.hx_diabetes || raw.diabetes);
+        addQA('Heart Disease', (q.medical_history || {}).heart_disease || raw['Heart disease? (Labels)'] || raw['Heart disease?'] || raw.hx_heart || raw.heart_disease);
+        addQA('Asthma or Lung Disease', (q.medical_history || {}).lung_disease || raw['Asthma or lung disease? (Labels)'] || raw['Asthma or lung disease?'] || raw.hx_asthma || raw.hx_lung || raw.lung_disease);
+        addQA('Kidney or Liver Disease', (q.medical_history || {}).kidney_liver || raw['Kidney or liver disease? (Labels)'] || raw['Kidney or liver disease?'] || raw.hx_kidney_liver || raw.kidney_liver);
+        addQA('Cancer or Immune System Disorder', (q.medical_history || {}).cancer_immune || raw['Cancer or immune system disorder? (Labels)'] || raw['Cancer or immune system disorder?'] || raw.hx_cancer_immune || raw.cancer_immune);
+        addQA('Other Medical Conditions / Surgeries', (q.medical_history || {}).other || raw['Other Medical Conditions or Past Surgeries'] || raw.surgeries || raw.hx_other || raw.other_conditions);
+
+        // 5. Patient-Reported Medications & Drug Allergies
+        addQA('Currently taking any medications, vitamins, or supplements?', (q.medications || {}).takes_medications || raw['Are you currently taking any medications, vitamins or supplements? (Labels)'] || raw['Are you currently taking any medications, vitamins or supplements?'] || raw.current_medications || raw.takes_medications);
+        addQA('Medications List & Dosages', (q.medications || {}).list || raw['Please List Your Medications'] || raw.medication_list || raw.medications_list);
+        addQA('Known Drug Allergies?', (q.allergies || {}).has_drug_allergy || raw['Do you have any known drug allergies? (Labels)'] || raw['Do you have any known drug allergies?'] || raw.known_drug_allergies || raw.has_drug_allergy);
+        addQA('Drug Allergies List & Reactions', (q.allergies || {}).list || raw['Please List Allergies and Reactions'] || raw.drug_allergies_list || raw.drug_allergy_list);
+
+        // 6. Social History & Preferred Pharmacy
+        addQA('Tobacco / Vaping Use', (q.social_history || {}).tobacco || raw['Tobacco / Vaping Use (Labels)'] || raw['Tobacco / Vaping Use'] || raw.tobacco_use);
+        addQA('Alcohol Use', (q.social_history || {}).alcohol || raw['Alcohol Use (Labels)'] || raw['Alcohol Use'] || raw.alcohol_use);
+        addQA('Preferred Pharmacy Name', (q.pharmacy || {}).name || raw['Pharmacy Name'] || raw.pharmacy_name);
+        addQA('Preferred Pharmacy Location (City / ZIP Code)', (q.pharmacy || {}).location || raw['Pharmacy City / ZIP Code'] || raw.pharmacy_location);
+
+        // 7. Electronic Consent & Signature
+        addQA('Consent & Acknowledgements', q.consent || raw['Consent & Acknowledgements (Labels)'] || raw['Consent & Acknowledgements'] || raw.consent_all);
+        addQA('Full Legal Name (E-Signature)', q.signature || raw['Type Your Full Legal Name'] || raw.e_signature || raw.signature);
+        addQA('Date of Signature', q.signature_date || raw['Date'] || raw.signature_date);
+
+        // 8. Dynamic Fallback: Process any remaining raw fields not captured in the canonical sequence
+        Object.keys(raw).forEach(function(key) {
+            if (skipKeys.indexOf(key) !== -1) return;
+            if (key.indexOf('(Values)') !== -1) return;
+            // Ignore UUIDs (HIPAAtizer static widget IDs) or token keys
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key) || /^[0-9a-f-]{30,}$/i.test(key)) return;
+            // Ignore any HTML tag or disclaimer notice keys
+            if (key.indexOf('<') !== -1 || /^<[a-z!]/i.test(key) || /before completing|disclaimer|notice|agreement|please answer/i.test(key)) return;
+
+            var cleanKey = key.replace(/\s*\(Labels\)\s*$/, '').trim();
+            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanKey) || /^[0-9a-f-]{30,}$/i.test(cleanKey)) return;
+
+            var mappedTitle = QUESTION_LABELS[cleanKey];
+
+            // If mapped title was already rendered in canonical sequence, skip!
+            if (mappedTitle && seenTitles[normalizeKey(mappedTitle)]) return;
+            if (seenTitles[normalizeKey(cleanKey)]) return;
+
+            var val = raw[cleanKey + ' (Labels)'] !== undefined ? raw[cleanKey + ' (Labels)'] : raw[key];
+            if (val === undefined || val === null) return;
+            var valStr = String(val).trim();
+            // Ignore if value is HTML markup, static instruction, or disclaimer
+            if (/<[a-z][\s\S]*>/i.test(valStr) || /please answer the questions|fields marked with|do not continue with this form/i.test(valStr)) return;
+
+            // Determine prompt label
+            var finalTitle = mappedTitle;
+            if (!finalTitle) {
+                // If it looks like a variable with underscores, convert to Title Case words
+                if (cleanKey.indexOf('_') !== -1) {
+                    finalTitle = cleanKey.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+                } else {
+                    finalTitle = cleanKey;
+                }
+            }
+
+            if (seenTitles[normalizeKey(finalTitle)]) return;
+            addQA(finalTitle, val);
+        });
+
+        if (countBadge) {
+            countBadge.textContent = qaList.length + ' Questions Answered';
+        }
+
+        if (!qaList.length) {
+            tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4"><i class="fas fa-clipboard-question d-block mb-1 fs-4 opacity-50"></i>No individual question responses on record.</td></tr>';
+            return;
+        }
+
+        qaList.forEach(function(item, idx) {
+            var tr = document.createElement('tr');
+            var ansFormatted = formatQuestionAnswer(item.answer, item.question);
+            tr.innerHTML = 
+                '<td class="text-secondary small font-monospace text-center">' + (idx + 1) + '</td>' +
+                '<td class="fw-semibold text-dark">' + escapeHtml(item.question) + '</td>' +
+                '<td>' + ansFormatted + '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+
     // Questionnaire rendering
     function renderQuestionnaire(q) {
         var emptyBox = document.getElementById('pp-questionnaire-empty');
@@ -1444,9 +1925,13 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         emptyBox.hidden = true;
         contentBox.hidden = false;
 
-        function qField(key, val, def) {
+        function qField(key, val, def, isHtml) {
             document.querySelectorAll('[data-pp-q="' + key + '"]').forEach(function(el) {
-                el.textContent = val || def || '—';
+                if (isHtml) {
+                    el.innerHTML = val || def || '—';
+                } else {
+                    el.textContent = val || def || '—';
+                }
             });
         }
 
@@ -1458,18 +1943,24 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         qField('reason_for_visit', q.reason_for_visit);
         qField('symptom_description', q.symptom_description);
         qField('symptom_duration', q.symptom_duration);
-        qField('has_fever', q.has_fever);
-        qField('tried_treatment', q.tried_treatment);
-        qField('treatment_tried_details', q.treatment_tried_details);
-        qField('red_flags', q.red_flags);
 
+        // Clean boolean formatting for symptoms
+        qField('has_fever', formatBool(q.has_fever, 'danger'), '—', true);
+        qField('tried_treatment', formatBool(q.tried_treatment), '—', true);
+        qField('treatment_tried_details', q.treatment_tried_details || '—');
+
+        // Red Flags Alert Banner: ONLY show if true red flags reported
         var redFlagBox = document.getElementById('pp-q-redflag-box');
         if (redFlagBox) {
-            var rf = (q.red_flags || '').toString().toLowerCase();
-            var hasRf = rf && rf !== 'no' && rf !== 'none' && rf !== 'false' && rf !== '0' && rf !== '—';
+            var rf = (q.red_flags || '').toString().toLowerCase().trim();
+            var hasRf = rf && rf !== 'no' && rf !== 'none' && rf !== 'false' && rf !== '0' && rf !== '2' && rf !== '—';
             redFlagBox.hidden = !hasRf;
+            if (hasRf) {
+                qField('red_flags', formatBool(q.red_flags, 'danger'), '—', true);
+            }
         }
 
+        // Severity badge
         var sevEl = document.querySelector('[data-pp-q-badge="symptom_severity"]');
         if (sevEl) {
             var sev = q.symptom_severity || '—';
@@ -1486,6 +1977,7 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             sevEl.textContent = sev;
         }
 
+        // Action links
         var pdfLink = document.querySelector('[data-pp-q-link="pdf"]');
         if (pdfLink) {
             var pUrl = q.view_pdf_link || q.download_pdf_link;
@@ -1508,50 +2000,120 @@ $pp_ajax_url = admin_url('admin-ajax.php');
             }
         }
 
+        // Condition-Specific Assessments: Dynamically show only modules with actual data
+        var activeModulesCount = 0;
+        var serviceLower = String(q.selected_service || '').toLowerCase();
+        var conditionModules = [
+            { id: 'uti', data: q.uti || {}, label: 'uti' },
+            { id: 'allergy', data: q.allergy || {}, label: 'allergy' },
+            { id: 'asthma', data: q.asthma || {}, label: 'asthma' },
+            { id: 'refill', data: q.refill || {}, label: 'refill' }
+        ];
+
+        // Format each module's fields
         var uti = q.uti || {};
-        qField('uti_burning', uti.burning);
-        qField('uti_frequency', uti.frequency);
-        qField('uti_blood', uti.blood);
-        qField('uti_flank_pain', uti.flank_pain);
-        qField('uti_history', uti.history);
+        qField('uti_burning', formatBool(uti.burning), '—', true);
+        qField('uti_frequency', formatBool(uti.frequency), '—', true);
+        qField('uti_blood', formatBool(uti.blood, 'danger'), '—', true);
+        qField('uti_flank_pain', formatBool(uti.flank_pain, 'warning'), '—', true);
+        qField('uti_history', formatBool(uti.history), '—', true);
 
         var allergy = q.allergy || {};
         qField('allergy_main_symptom', allergy.main_symptom);
         qField('allergy_triggers', allergy.triggers);
-        qField('allergy_anaphylaxis', allergy.anaphylaxis);
-        qField('allergy_epipen', allergy.epipen);
+        qField('allergy_anaphylaxis', formatBool(allergy.anaphylaxis, 'danger'), '—', true);
+        qField('allergy_epipen', formatBool(allergy.epipen), '—', true);
 
         var asthma = q.asthma || {};
         qField('asthma_rescue_use', asthma.rescue_use);
-        qField('asthma_night', asthma.night_symptoms);
-        qField('asthma_er_visit', asthma.er_visit);
+        qField('asthma_night', formatBool(asthma.night_symptoms), '—', true);
+        qField('asthma_er_visit', formatBool(asthma.er_visit, 'danger'), '—', true);
 
         var refill = q.refill || {};
         qField('refill_med_name', refill.med_name);
         qField('refill_med_dose', refill.med_dose);
         qField('refill_last_date', refill.last_date);
 
+        // Hide empty modules so it doesn't look like dummy UI with empty dashes
+        conditionModules.forEach(function(m) {
+            var el = document.querySelector('[data-pp-module="' + m.id + '"]');
+            if (!el) return;
+            var hasData = false;
+            if (serviceLower.indexOf(m.label) !== -1) {
+                hasData = true;
+            }
+            Object.keys(m.data).forEach(function(k) {
+                var v = String(m.data[k] || '').trim();
+                if (v && v !== '—' && v !== '2' && v !== 'no' && v !== 'none' && v !== 'false') {
+                    hasData = true;
+                }
+            });
+            if (hasData) {
+                el.style.display = '';
+                activeModulesCount++;
+            } else {
+                el.style.display = 'none';
+            }
+        });
+
+        var modulesHeader = document.getElementById('pp-q-modules-header');
+        var modulesRow = document.getElementById('pp-q-modules-row');
+        if (modulesHeader) {
+            modulesHeader.style.display = activeModulesCount > 0 ? '' : 'none';
+        }
+        if (modulesRow) {
+            modulesRow.style.display = activeModulesCount > 0 ? '' : 'none';
+        }
+
+        // Medical History & Chronic Conditions: Clean badges
         var hx = q.medical_history || {};
-        qField('hx_hypertension', hx.hypertension);
-        qField('hx_diabetes', hx.diabetes);
-        qField('hx_heart', hx.heart_disease);
-        qField('hx_lung', hx.lung_disease);
-        qField('hx_kidney_liver', hx.kidney_liver);
-        qField('hx_cancer_immune', hx.cancer_immune);
-        qField('hx_other', hx.other);
+        qField('hx_hypertension', formatBool(hx.hypertension, 'warning'), '—', true);
+        qField('hx_diabetes', formatBool(hx.diabetes, 'warning'), '—', true);
+        qField('hx_heart', formatBool(hx.heart_disease, 'warning'), '—', true);
+        qField('hx_lung', formatBool(hx.lung_disease, 'warning'), '—', true);
+        qField('hx_kidney_liver', formatBool(hx.kidney_liver, 'warning'), '—', true);
+        qField('hx_cancer_immune', formatBool(hx.cancer_immune, 'warning'), '—', true);
+        qField('hx_other', hx.other || 'No other chronic conditions or past surgeries reported.');
 
+        // Patient-Reported Medications
         var meds = q.medications || {};
-        qField('medication_list', meds.list || meds.takes_medications);
+        var medList = String(meds.list || '').trim();
+        var takesMeds = String(meds.takes_medications || '').trim().toLowerCase();
+        var medBox = document.querySelector('[data-pp-q="medication_list"]');
+        if (medBox) {
+            if (medList && medList !== '2' && medList !== 'no' && medList !== 'none') {
+                medBox.innerHTML = '<div class="text-dark fw-semibold"><i class="fas fa-pills text-primary me-2"></i>' + escapeHtml(medList) + '</div>';
+            } else if (takesMeds === '2' || takesMeds === 'no' || takesMeds === 'none' || takesMeds === 'false' || !takesMeds) {
+                medBox.innerHTML = '<span class="text-secondary small"><i class="fas fa-check-circle text-success me-1"></i> Patient reported taking no daily medications, vitamins, or supplements.</span>';
+            } else {
+                medBox.textContent = 'None reported.';
+            }
+        }
 
+        // Patient-Reported Drug Allergies
         var algs = q.allergies || {};
-        qField('drug_allergy_list', algs.list || algs.has_drug_allergy);
+        var algList = String(algs.list || '').trim();
+        var hasAlg = String(algs.has_drug_allergy || '').trim().toLowerCase();
+        var algBox = document.querySelector('[data-pp-q="drug_allergy_list"]');
+        if (algBox) {
+            if (algList && algList !== '2' && algList !== 'no' && algList !== 'none') {
+                algBox.innerHTML = '<div class="text-danger fw-semibold"><i class="fas fa-triangle-exclamation text-danger me-2"></i>' + escapeHtml(algList) + '</div>';
+            } else if (hasAlg === '2' || hasAlg === 'no' || hasAlg === 'none' || hasAlg === 'false' || !hasAlg) {
+                algBox.innerHTML = '<span class="text-secondary small"><i class="fas fa-shield-halved text-success me-1"></i> No known drug allergies (NKDA) reported by patient.</span>';
+            } else {
+                algBox.textContent = 'None reported.';
+            }
+        }
 
+        // Legal Consent & Signatures
         var pharm = q.pharmacy || {};
         qField('pharmacy_name', pharm.name);
         qField('pharmacy_location', pharm.location);
-
         qField('e_signature', q.signature);
         qField('signature_date', q.signature_date);
+
+        // Dynamically populate all Questions & Patient Answers
+        renderAllQuestions(q);
     }
 
     // Load Patient API Request

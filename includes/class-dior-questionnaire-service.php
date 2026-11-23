@@ -20,16 +20,31 @@ class Dior_Questionnaire_Service
     /**
      * Helper to safely extract field values matching multiple possible keys.
      * Supports both human-readable form labels and internal variable keys.
+     * Automatically prioritizes human-readable (Labels) and normalizes boolean options (1=Yes, 2=No).
      */
-    public static function extract_value(array $data, array $candidate_keys, $default = '')
+    public static function extract_value(array $data, array $candidate_keys, $default = '', $is_boolean = false)
     {
-        foreach ($candidate_keys as $key) {
+        $ordered_keys = [];
+        foreach ($candidate_keys as $k) {
+            if (strpos($k, '(Labels)') !== false) {
+                array_unshift($ordered_keys, $k);
+            } else {
+                $ordered_keys[] = $k;
+            }
+        }
+        foreach ($ordered_keys as $key) {
             if (array_key_exists($key, $data) && $data[$key] !== '' && $data[$key] !== null) {
                 $val = $data[$key];
                 if (is_array($val)) {
-                    return implode(', ', array_map('sanitize_text_field', $val));
+                    $val = implode(', ', array_map('sanitize_text_field', $val));
+                } else {
+                    $val = sanitize_text_field((string)$val);
                 }
-                return sanitize_text_field((string)$val);
+                if ($is_boolean) {
+                    if ($val === '1') $val = 'Yes';
+                    elseif ($val === '2') $val = 'No';
+                }
+                return $val;
             }
         }
         return $default;
@@ -58,8 +73,8 @@ class Dior_Questionnaire_Service
         $fields = isset($data['fields']) && is_array($data['fields']) ? $data['fields'] : $data;
 
         // Helper shorthand
-        $get = function(array $keys, $default = '') use ($fields) {
-            return self::extract_value($fields, $keys, $default);
+        $get = function(array $keys, $default = '', $is_bool = false) use ($fields) {
+            return self::extract_value($fields, $keys, $default, $is_bool);
         };
 
         // 1. Patient Identifiers
@@ -111,37 +126,37 @@ class Dior_Questionnaire_Service
             'Symptom Severity', 'Symptom Severity (Labels)', 'Symptom Severity (Values)', 'symptom_severity'
         ]);
         $has_fever = $get([
-            'Do you currently have a fever?', 'Do you currently have a fever? (Labels)', 'Do you currently have a fever? (Values)', 'has_fever'
-        ]);
+            'Do you currently have a fever? (Labels)', 'Do you currently have a fever?', 'Do you currently have a fever? (Values)', 'has_fever'
+        ], 'No', true);
         $tried_treatment = $get([
-            'Have you tried any treatment for these symptoms?', 'Have you tried any treatment for these symptoms? (Labels)', 'Have you tried any treatment for these symptoms? (Values)', 'tried_treatment'
-        ]);
+            'Have you tried any treatment for these symptoms? (Labels)', 'Have you tried any treatment for these symptoms?', 'Have you tried any treatment for these symptoms? (Values)', 'tried_treatment'
+        ], 'No', true);
         $treatment_tried_details = $get([
             'Treatment Tried', 'treatment_tried_details'
         ]);
         $red_flags = $get([
-            'Do you have trouble breathing, chest pain, or confusion?', 'Do you have trouble breathing, chest pain, or confusion? (Labels)', 'Do you have trouble breathing, chest pain, or confusion? (Values)', 'red_flags'
-        ]);
+            'Do you have trouble breathing, chest pain, or confusion? (Labels)', 'Do you have trouble breathing, chest pain, or confusion?', 'Do you have trouble breathing, chest pain, or confusion? (Values)', 'red_flags'
+        ], 'No', true);
 
         // 3. Condition Specific: UTI
-        $uti_burning = $get(['Burning or pain when urinating?', 'Burning or pain when urinating? (Labels)', 'Burning or pain when urinating? (Values)', 'uti_burning', 'uti_burning_pain']);
-        $uti_frequency = $get(['Frequent or urgent need to urinate?', 'Frequent or urgent need to urinate? (Labels)', 'Frequent or urgent need to urinate? (Values)', 'uti_frequency']);
-        $uti_blood = $get(['Blood in your urine?', 'Blood in your urine? (Labels)', 'Blood in your urine? (Values)', 'uti_blood']);
-        $uti_flank_pain = $get(['Pain in your side or lower back?', 'Pain in your side or lower back? (Labels)', 'Pain in your side or lower back? (Values)', 'uti_flank_pain']);
-        $uti_history = $get(['Have you had a UTI before?', 'Have you had a UTI before? (Labels)', 'Have you had a UTI before? (Values)', 'uti_history', 'uti_previous']);
-        $uti_discharge = $get(['Any vaginal discharge or irritation?', 'Any vaginal discharge or irritation? (Labels)', 'Any vaginal discharge or irritation? (Values)', 'uti_discharge']);
+        $uti_burning = $get(['Burning or pain when urinating? (Labels)', 'Burning or pain when urinating?', 'Burning or pain when urinating? (Values)', 'uti_burning', 'uti_burning_pain'], '', true);
+        $uti_frequency = $get(['Frequent or urgent need to urinate? (Labels)', 'Frequent or urgent need to urinate?', 'Frequent or urgent need to urinate? (Values)', 'uti_frequency'], '', true);
+        $uti_blood = $get(['Blood in your urine? (Labels)', 'Blood in your urine?', 'Blood in your urine? (Values)', 'uti_blood'], '', true);
+        $uti_flank_pain = $get(['Pain in your side or lower back? (Labels)', 'Pain in your side or lower back?', 'Pain in your side or lower back? (Values)', 'uti_flank_pain'], '', true);
+        $uti_history = $get(['Have you had a UTI before? (Labels)', 'Have you had a UTI before?', 'Have you had a UTI before? (Values)', 'uti_history', 'uti_previous'], '', true);
+        $uti_discharge = $get(['Any vaginal discharge or irritation? (Labels)', 'Any vaginal discharge or irritation?', 'Any vaginal discharge or irritation? (Values)', 'uti_discharge'], '', true);
 
         // 4. Condition Specific: Allergy
         $allergy_triggers = $get(['Known Triggers', 'allergy_triggers']);
-        $allergy_main_symptom = $get(['Main Symptom', 'Main Symptom (Labels)', 'Main Symptom (Values)', 'allergy_main_symptom', 'allergy_symptoms']);
-        $allergy_anaphylaxis = $get(['Have you ever had a severe allergic reaction (anaphylaxis)?', 'Have you ever had a severe allergic reaction (anaphylaxis)? (Labels)', 'Have you ever had a severe allergic reaction (anaphylaxis)? (Values)', 'allergy_anaphylaxis']);
-        $allergy_epipen = $get(['Do you carry an epinephrine auto-injector?', 'Do you carry an epinephrine auto-injector? (Labels)', 'Do you carry an epinephrine auto-injector? (Values)', 'allergy_epipen']);
+        $allergy_main_symptom = $get(['Main Symptom (Labels)', 'Main Symptom', 'Main Symptom (Values)', 'allergy_main_symptom', 'allergy_symptoms']);
+        $allergy_anaphylaxis = $get(['Have you ever had a severe allergic reaction (anaphylaxis)? (Labels)', 'Have you ever had a severe allergic reaction (anaphylaxis)?', 'Have you ever had a severe allergic reaction (anaphylaxis)? (Values)', 'allergy_anaphylaxis'], '', true);
+        $allergy_epipen = $get(['Do you carry an epinephrine auto-injector? (Labels)', 'Do you carry an epinephrine auto-injector?', 'Do you carry an epinephrine auto-injector? (Values)', 'allergy_epipen'], '', true);
 
         // 5. Condition Specific: Asthma
-        $asthma_rescue_use = $get(['How often do you use a rescue inhaler?', 'How often do you use a rescue inhaler? (Labels)', 'How often do you use a rescue inhaler? (Values)', 'asthma_rescue_use']);
-        $asthma_night = $get(['Do symptoms wake you at night?', 'Do symptoms wake you at night? (Labels)', 'Do symptoms wake you at night? (Values)', 'asthma_night']);
-        $asthma_er_visit = $get(['ER or hospital visit for asthma in the past year?', 'ER or hospital visit for asthma in the past year? (Labels)', 'ER or hospital visit for asthma in the past year? (Values)', 'asthma_er_visit']);
-        $asthma_wheeze = $get(['Do you currently have a wheeze or shortness of breath?', 'Do you currently have a wheeze or shortness of breath? (Labels)', 'Do you currently have a wheeze or shortness of breath? (Values)', 'asthma_wheeze']);
+        $asthma_rescue_use = $get(['How often do you use a rescue inhaler? (Labels)', 'How often do you use a rescue inhaler?', 'How often do you use a rescue inhaler? (Values)', 'asthma_rescue_use']);
+        $asthma_night = $get(['Do symptoms wake you at night? (Labels)', 'Do symptoms wake you at night?', 'Do symptoms wake you at night? (Values)', 'asthma_night'], '', true);
+        $asthma_er_visit = $get(['ER or hospital visit for asthma in the past year? (Labels)', 'ER or hospital visit for asthma in the past year?', 'ER or hospital visit for asthma in the past year? (Values)', 'asthma_er_visit'], '', true);
+        $asthma_wheeze = $get(['Do you currently have a wheeze or shortness of breath? (Labels)', 'Do you currently have a wheeze or shortness of breath?', 'Do you currently have a wheeze or shortness of breath? (Values)', 'asthma_wheeze'], '', true);
 
         // 6. Condition Specific: Prescription Refill
         $refill_med_name = $get(['Medication Name', 'refill_med_name']);
@@ -150,36 +165,36 @@ class Dior_Questionnaire_Service
         $refill_last_date = $get(['Approximate Date of Last Refill', 'refill_last_date']);
 
         // 7. Condition Specific: Birth Control
-        $bc_current_method = $get(['Current Birth Control Method', 'Current Birth Control Method (Labels)', 'Current Birth Control Method (Values)', 'bc_current_method']);
+        $bc_current_method = $get(['Current Birth Control Method (Labels)', 'Current Birth Control Method', 'Current Birth Control Method (Values)', 'bc_current_method']);
         $bc_lmp = $get(['First Day of Last Menstrual Period', 'bc_lmp']);
-        $bc_smoker_35 = $get(['Do you smoke and are you over 35?', 'Do you smoke and are you over 35? (Labels)', 'Do you smoke and are you over 35? (Values)', 'bc_smoker_35']);
-        $bc_clot_history = $get(['History of blood clots, stroke or migraines with aura?', 'History of blood clots, stroke or migraines with aura? (Labels)', 'History of blood clots, stroke or migraines with aura? (Values)', 'bc_clot_history']);
+        $bc_smoker_35 = $get(['Do you smoke and are you over 35? (Labels)', 'Do you smoke and are you over 35?', 'Do you smoke and are you over 35? (Values)', 'bc_smoker_35'], '', true);
+        $bc_clot_history = $get(['History of blood clots, stroke or migraines with aura? (Labels)', 'History of blood clots, stroke or migraines with aura?', 'History of blood clots, stroke or migraines with aura? (Values)', 'bc_clot_history'], '', true);
 
         // 8. Condition Specific: COVID
-        $covid_contact = $get(['Close contact with a confirmed case in the past 10 days?', 'Close contact with a confirmed case in the past 10 days? (Labels)', 'Close contact with a confirmed case in the past 10 days? (Values)', 'covid_contact']);
-        $covid_test_result = $get(['Recent Test Result', 'Recent Test Result (Labels)', 'Recent Test Result (Values)', 'covid_test_result']);
-        $covid_taste_smell = $get(['Loss of taste or smell?', 'Loss of taste or smell? (Labels)', 'Loss of taste or smell? (Values)', 'covid_taste_smell']);
-        $covid_vaccinated = $get(['Vaccinated or boosted in the past year?', 'Vaccinated or boosted in the past year? (Labels)', 'Vaccinated or boosted in the past year? (Values)', 'covid_vaccinated']);
+        $covid_contact = $get(['Close contact with a confirmed case in the past 10 days? (Labels)', 'Close contact with a confirmed case in the past 10 days?', 'Close contact with a confirmed case in the past 10 days? (Values)', 'covid_contact'], '', true);
+        $covid_test_result = $get(['Recent Test Result (Labels)', 'Recent Test Result', 'Recent Test Result (Values)', 'covid_test_result']);
+        $covid_taste_smell = $get(['Loss of taste or smell? (Labels)', 'Loss of taste or smell?', 'Loss of taste or smell? (Values)', 'covid_taste_smell'], '', true);
+        $covid_vaccinated = $get(['Vaccinated or boosted in the past year? (Labels)', 'Vaccinated or boosted in the past year?', 'Vaccinated or boosted in the past year? (Values)', 'covid_vaccinated'], '', true);
 
         // 9. Condition Specific: Rash
         $rash_location = $get(['Where on your body is the rash?', 'rash_location']);
-        $rash_itchy = $get(['Is it itchy?', 'Is it itchy? (Labels)', 'Is it itchy? (Values)', 'rash_itchy']);
-        $rash_new_exposure = $get(['Any new soap, medicine, plant or food exposure?', 'Any new soap, medicine, plant or food exposure? (Labels)', 'Any new soap, medicine, plant or food exposure? (Values)', 'rash_new_exposure']);
-        $rash_spreading = $get(['Is the rash spreading quickly or blistering?', 'Is the rash spreading quickly or blistering? (Labels)', 'Is the rash spreading quickly or blistering? (Values)', 'rash_spreading']);
+        $rash_itchy = $get(['Is it itchy? (Labels)', 'Is it itchy?', 'Is it itchy? (Values)', 'rash_itchy'], '', true);
+        $rash_new_exposure = $get(['Any new soap, medicine, plant or food exposure? (Labels)', 'Any new soap, medicine, plant or food exposure?', 'Any new soap, medicine, plant or food exposure? (Values)', 'rash_new_exposure'], '', true);
+        $rash_spreading = $get(['Is the rash spreading quickly or blistering? (Labels)', 'Is the rash spreading quickly or blistering?', 'Is the rash spreading quickly or blistering? (Values)', 'rash_spreading'], '', true);
 
         // 10. Medical History: Chronic Conditions
-        $hx_hypertension = $get(['High blood pressure?', 'High blood pressure? (Labels)', 'High blood pressure? (Values)', 'hx_hypertension']);
-        $hx_diabetes = $get(['Diabetes?', 'Diabetes? (Labels)', 'Diabetes? (Values)', 'hx_diabetes']);
-        $hx_heart = $get(['Heart disease?', 'Heart disease? (Labels)', 'Heart disease? (Values)', 'hx_heart']);
-        $hx_lung = $get(['Asthma or lung disease?', 'Asthma or lung disease? (Labels)', 'Asthma or lung disease? (Values)', 'hx_lung']);
-        $hx_kidney_liver = $get(['Kidney or liver disease?', 'Kidney or liver disease? (Labels)', 'Kidney or liver disease? (Values)', 'hx_kidney_liver']);
-        $hx_cancer_immune = $get(['Cancer or immune system disorder?', 'Cancer or immune system disorder? (Labels)', 'Cancer or immune system disorder? (Values)', 'hx_cancer_immune']);
+        $hx_hypertension = $get(['High blood pressure? (Labels)', 'High blood pressure?', 'High blood pressure? (Values)', 'hx_hypertension'], 'No', true);
+        $hx_diabetes = $get(['Diabetes? (Labels)', 'Diabetes?', 'Diabetes? (Values)', 'hx_diabetes'], 'No', true);
+        $hx_heart = $get(['Heart disease? (Labels)', 'Heart disease?', 'Heart disease? (Values)', 'hx_heart'], 'No', true);
+        $hx_lung = $get(['Asthma or lung disease? (Labels)', 'Asthma or lung disease?', 'Asthma or lung disease? (Values)', 'hx_lung'], 'No', true);
+        $hx_kidney_liver = $get(['Kidney or liver disease? (Labels)', 'Kidney or liver disease?', 'Kidney or liver disease? (Values)', 'hx_kidney_liver'], 'No', true);
+        $hx_cancer_immune = $get(['Cancer or immune system disorder? (Labels)', 'Cancer or immune system disorder?', 'Cancer or immune system disorder? (Values)', 'hx_cancer_immune'], 'No', true);
         $hx_other = $get(['Other Medical Conditions or Past Surgeries', 'hx_other']);
 
         // 11. Medications & Allergies
-        $takes_medications = $get(['Are you currently taking any medications, vitamins or supplements?', 'Are you currently taking any medications, vitamins or supplements? (Labels)', 'Are you currently taking any medications, vitamins or supplements? (Values)', 'takes_medications']);
+        $takes_medications = $get(['Are you currently taking any medications, vitamins or supplements? (Labels)', 'Are you currently taking any medications, vitamins or supplements?', 'Are you currently taking any medications, vitamins or supplements? (Values)', 'takes_medications'], 'No', true);
         $medication_list = $get(['Please List Your Medications', 'medication_list', 'medications_list']);
-        $has_drug_allergy = $get(['Do you have any known drug allergies?', 'Do you have any known drug allergies? (Labels)', 'Do you have any known drug allergies? (Values)', 'has_drug_allergy']);
+        $has_drug_allergy = $get(['Do you have any known drug allergies? (Labels)', 'Do you have any known drug allergies?', 'Do you have any known drug allergies? (Values)', 'has_drug_allergy'], 'No', true);
         $drug_allergy_list = $get(['Please List Allergies and Reactions', 'drug_allergy_list', 'drug_allergies_list']);
 
         // 12. Social History

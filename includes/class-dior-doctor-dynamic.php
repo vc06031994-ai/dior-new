@@ -610,6 +610,56 @@ class Dior_Doctor_Dynamic {
         $intake = is_array($intake) ? $intake : [];
         $questionnaire = get_user_meta($pid, 'dior_medical_questionnaire', true);
         $questionnaire = is_array($questionnaire) ? $questionnaire : [];
+
+        // If questionnaire meta is missing or incomplete, synthesize from intake meta
+        if (empty($questionnaire) && !empty($intake)) {
+            $questionnaire = [
+                'submission_id'          => $intake['submission_id'] ?? '',
+                'submitted_at'           => $intake['submitted_at'] ?? '',
+                'view_submission_link'   => $intake['view_submission_link'] ?? '',
+                'download_pdf_link'      => $intake['download_pdf_link'] ?? '',
+                'view_pdf_link'          => $intake['download_pdf_link'] ?? ($intake['view_submission_link'] ?? ''),
+                'full_name'              => $intake['full_name'] ?? ($p['full_name'] ?? ''),
+                'email'                  => $intake['email'] ?? ($p['email'] ?? ''),
+                'dob'                    => $intake['dob'] ?? ($p['dob'] ?? ''),
+                'gender'                 => $intake['gender'] ?? ($p['gender'] ?? ''),
+                'phone'                  => $intake['phone'] ?? ($p['phone'] ?? ''),
+                'selected_service'       => $intake['service_condition'] ?? ($intake['condition'] ?? 'General Consultation'),
+                'consultation_type'      => $intake['appointment_type'] ?? 'Telehealth Video Visit',
+                'referral_source'        => $intake['referral_source'] ?? 'Patient Portal',
+                'reason_for_visit'       => $intake['chief_complaint'] ?? ($intake['symptoms'] ?? 'Medical Consultation'),
+                'symptom_description'    => $intake['symptoms'] ?? '',
+                'symptom_duration'       => $intake['symptom_duration'] ?? '',
+                'symptom_severity'       => $intake['symptom_severity'] ?? 'Moderate',
+                'has_fever'              => $intake['fever'] ?? 'No',
+                'tried_treatment'        => $intake['treatment_tried'] ?? 'No',
+                'treatment_tried_details'=> $intake['treatment_details'] ?? '',
+                'red_flags'              => $intake['red_flags'] ?? 'No',
+                'medical_history'        => [
+                    'hypertension'    => $intake['hypertension'] ?? 'No',
+                    'diabetes'        => $intake['diabetes'] ?? 'No',
+                    'heart_disease'   => $intake['heart_disease'] ?? 'No',
+                    'lung_disease'    => $intake['lung_disease'] ?? 'No',
+                    'kidney_liver'    => $intake['kidney_liver'] ?? 'No',
+                    'cancer_immune'   => $intake['cancer_immune'] ?? 'No',
+                    'other'           => $intake['other_conditions'] ?? ($intake['medical_history'] ?? ''),
+                ],
+                'medications'            => [
+                    'takes_medications' => $intake['taking_medications'] ?? 'No',
+                    'list'              => $intake['medications_list'] ?? ($intake['medications'] ?? ''),
+                ],
+                'allergies'              => [
+                    'has_drug_allergy'  => $intake['drug_allergies'] ?? 'No',
+                    'list'              => $intake['drug_allergies_list'] ?? ($intake['allergies'] ?? ''),
+                ],
+                'signature'              => $intake['signature'] ?? ($intake['full_legal_name'] ?? ''),
+                'signature_date'         => $intake['signature_date'] ?? '',
+                'raw'                    => $intake['raw_data'] ?? [],
+            ];
+        }
+        if (empty($questionnaire['raw']) && !empty($intake['raw_data'])) {
+            $questionnaire['raw'] = $intake['raw_data'];
+        }
         $prescriptions = $wpdb->get_results($wpdb->prepare(
             "SELECT medication, instructions, status, created_at FROM {$wpdb->prefix}dior_prescriptions WHERE patient_id = %d ORDER BY created_at DESC LIMIT 50", $pid
         ), ARRAY_A) ?: [];

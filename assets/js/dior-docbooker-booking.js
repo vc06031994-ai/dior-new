@@ -22,6 +22,11 @@
             console.error('[Dior Medical] Booking page URL is not configured.');
             return;
         }
+        if (document.getElementById('dior-subtab-schedule') &&
+            typeof window.diorSwitchApptSubTab === 'function') {
+            window.diorSwitchApptSubTab('schedule');
+            return;
+        }
         if (document.getElementById('dior-subtab-book') &&
             typeof window.diorSwitchApptSubTab === 'function') {
             window.diorSwitchApptSubTab('book');
@@ -436,10 +441,8 @@
     ];
 
     var HIPAATIZER_COMPLETE_EVENTS = [
-        'submitSuccess',
         'workflowSubmitted',
-        'formCompleted',
-        'submissionSuccess'
+        'formCompleted'
     ];
 
     var hipaatizerCompletionEvent = null;
@@ -483,6 +486,9 @@
             try {
                 data = JSON.parse(data);
             } catch (e) {
+                if (typeof data === 'string' && (/subtab=schedule/i.test(data) || (/schedule/i.test(data) && /appointments/i.test(data)))) {
+                    return true;
+                }
                 return false;
             }
             if (typeof data !== 'object' || data === null) return false;
@@ -491,20 +497,26 @@
 
         var name = String(data.type || data.event || data.action || data.name || data.message || '').trim();
 
-        // A payload that identifies a step is a step save, never a completion.
-        //
-        // This check MUST come before the workflow flags: a step save can carry
-        // `step: 1` together with `workflowComplete: true` (or `isWorkflowComplete`,
-        // or `completed`) and the flag-first ordering read that as "the whole
-        // intake is finished" — which revealed the booking form on the FIRST
-        // Continue press, the exact bug reported. A step ordinal is proof that
-        // the patient is mid-form, whatever else the payload claims.
+        // Intermediate step saves & progress events: NEVER a completion
         if (/step/i.test(name)) return false;
         if (data.step !== undefined && data.step !== null && data.step !== '') return false;
+        if (name === 'submitSuccess' || name === 'submissionSuccess' || name === 'submitted' || name === 'form_submitted') {
+            return false;
+        }
 
-        // Explicit workflow-level flags, now only reachable for payloads that do
-        // not identify any step.
-        if (data.workflowComplete === true || data.isWorkflowComplete === true) {
+        // Redirect URL check: If HIPAAtizer emits a redirect message to the schedule page
+        var targetUrl = String(
+            data.url || data.redirect || data.redirectUrl || data.target || data.location ||
+            (data.data && (data.data.url || data.data.redirectUrl || data.data.target)) ||
+            (data.payload && (data.payload.url || data.payload.redirectUrl || data.payload.target)) ||
+            ''
+        ).trim();
+        if (targetUrl && (/subtab=schedule/i.test(targetUrl) || (/schedule/i.test(targetUrl) && /appointments/i.test(targetUrl)))) {
+            return true;
+        }
+
+        // Explicit workflow-level flags only
+        if (data.workflowComplete === true || data.isWorkflowComplete === true || data.isFinal === true || data.isComplete === true) {
             return true;
         }
 

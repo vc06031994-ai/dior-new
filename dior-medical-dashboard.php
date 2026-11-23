@@ -936,7 +936,6 @@ class Dior_Medical_Auth
         add_shortcode('dior_reset_password_form', [__CLASS__, 'render_reset_password_form']);
         add_shortcode('dior_patient_dashboard', [__CLASS__, 'render_patient_dashboard']);
         add_shortcode('dior_book_visit_page', [__CLASS__, 'render_standalone_appointment_page']);
-        add_shortcode('dior_docbooker_booking', [__CLASS__, 'render_docbooker_booking_form']);
 
         // Redirect non-logged-in users from private dashboards to login page
         add_action('template_redirect', [__CLASS__, 'check_dashboard_access_redirect']);
@@ -1645,9 +1644,9 @@ class Dior_Medical_Auth
     }
 
     /**
-     * Enqueue the booking controller for dashboard navigation and the inline booking shortcode.
+     * Enqueue the booking controller for dashboard navigation and the schedule tab.
      */
-    private static function enqueue_docbooker_booking_assets()
+    public static function enqueue_docbooker_booking_assets()
     {
         static $enqueued = false;
         if ($enqueued) {
@@ -1668,14 +1667,13 @@ class Dior_Medical_Auth
             'ajax_url' => admin_url('admin-ajax.php'),
             'rest_url' => esc_url_raw(rest_url()),
             'rest_nonce' => wp_create_nonce('wp_rest'),
-            'booking_page_url' => home_url('/patient-dashboard/#tab=appointments&subtab=book'),
+            'booking_page_url' => home_url('/patient-dashboard/#tab=appointments&subtab=schedule'),
             'patient_dashboard_url' => home_url('/patient-dashboard/'),
         ]);
     }
 
     /**
-     * Shortcode: [dior_docbooker_booking]
-     * Render the appointment booking form inline in the dashboard or a page.
+     * Legacy Booking Form Render Helper (shortcode [dior_docbooker_booking] retired in favor of native appointment tab).
      */
     public static function render_docbooker_booking_form($atts = [])
     {
