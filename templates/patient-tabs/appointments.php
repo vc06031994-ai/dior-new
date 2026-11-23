@@ -129,9 +129,9 @@
                     </div>
                 </div>
             </div>
-            <div id="dior-docbooker-after-intake" style="display:none;">
-                <?php echo do_shortcode('[dior_docbooker_booking]'); ?>
-            </div>
+            <?php /* The schedule form that used to follow the intake is removed for now:
+                     after a successful intake submission nothing is revealed here and
+                     HIPAAtizer's own success message is what the patient sees. */ ?>
         </div>
 
         <!-- 2. Today Appointments -->
