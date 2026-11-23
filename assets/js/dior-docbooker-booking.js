@@ -490,14 +490,23 @@
         if (typeof data !== 'object') return false;
 
         var name = String(data.type || data.event || data.action || data.name || data.message || '').trim();
-        if (/step/i.test(name)) return false;
 
-        // Multi-step forms emit step-level success messages; only workflow-level signals are terminal.
-        var hasStep = data.step !== undefined && data.step !== null && data.step !== '';
+        // A payload that identifies a step is a step save, never a completion.
+        //
+        // This check MUST come before the workflow flags: a step save can carry
+        // `step: 1` together with `workflowComplete: true` (or `isWorkflowComplete`,
+        // or `completed`) and the flag-first ordering read that as "the whole
+        // intake is finished" — which revealed the booking form on the FIRST
+        // Continue press, the exact bug reported. A step ordinal is proof that
+        // the patient is mid-form, whatever else the payload claims.
+        if (/step/i.test(name)) return false;
+        if (data.step !== undefined && data.step !== null && data.step !== '') return false;
+
+        // Explicit workflow-level flags, now only reachable for payloads that do
+        // not identify any step.
         if (data.workflowComplete === true || data.isWorkflowComplete === true) {
             return true;
         }
-        if (hasStep) return false;
 
         return HIPAATIZER_COMPLETE_EVENTS.indexOf(name) !== -1;
     }
