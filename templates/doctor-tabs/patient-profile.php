@@ -1494,8 +1494,13 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         var s = String(val).trim();
         var sLow = s.toLowerCase();
 
+        // For list questions, treat 2/none/no as "None reported"
+        if (/list|surgeries|treatment details|triggers/i.test(qText || '') && (s === '2' || sLow === 'none' || sLow === 'no' || sLow === 'n/a')) {
+            return '<span class="text-secondary small fst-italic"><i class="fas fa-minus-circle me-1 opacity-50"></i>None reported</span>';
+        }
+
         if (s === '1' || sLow === 'yes' || sLow === 'true') {
-            var isAlert = /fever|red_flag|trouble|chest|confusion|bleed|emergency|anaphylaxis/i.test(qText || '');
+            var isAlert = /fever|red_flag|trouble|chest|confusion|bleed|emergency|anaphylaxis|shortness|er visit/i.test(qText || '');
             var badgeCls = isAlert ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle';
             return '<span class="badge rounded-pill px-3 py-1 fw-semibold ' + badgeCls + '"><i class="fas fa-circle-check me-1"></i>Yes</span>';
         }
@@ -1536,101 +1541,322 @@ $pp_ajax_url = admin_url('admin-ajax.php');
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        var qaList = [];
-        var seenQuestions = {};
-
-        // 1. Raw fields from HIPAAtizer if available
         var raw = q.raw || {};
+        var qaList = [];
+        var seenTitles = {}; // Track by normalized question prompt to prevent ANY duplicate
+
+        // Dictionary to map ANY raw key or variable to human-readable clinical question title
+        var QUESTION_LABELS = {
+            // Patient Demographics
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'full_name': 'Full Legal Name',
+            'name': 'Full Legal Name',
+            'patient_name': 'Full Legal Name',
+            'date_of_birth': 'Date of Birth',
+            'dob': 'Date of Birth',
+            'birth_date': 'Date of Birth',
+            'gender': 'Sex Assigned at Birth',
+            'sex': 'Sex Assigned at Birth',
+            'sex_at_birth': 'Sex Assigned at Birth',
+            'sex_assigned_at_birth': 'Sex Assigned at Birth',
+            'email': 'Email Address',
+            'email_address': 'Email Address',
+            'patient_email': 'Email Address',
+            'phone': 'Mobile Phone Number',
+            'phone_number': 'Mobile Phone Number',
+            'mobile': 'Mobile Phone Number',
+            'mobile_phone': 'Mobile Phone Number',
+            'state_of_residence': 'State of Residence',
+            'state': 'State of Residence',
+            'primary_problem': 'Primary Reason for Visit',
+            'preferred_language': 'Preferred Language',
+            'language': 'Preferred Language',
+            'is_adult': 'Are you 18 years of age or older?',
+            'is_18_plus': 'Are you 18 years of age or older?',
+            'is_pregnant': 'Are you currently pregnant?',
+
+            // Visit Details & Symptoms
+            'selected_service': 'Selected Service / Condition',
+            'service_condition': 'Selected Service / Condition',
+            'condition': 'Selected Service / Condition',
+            'consultation_type': 'Preferred Consultation Type',
+            'appointment_type': 'Preferred Consultation Type',
+            'referral_source': 'How did you hear about us? (Referral Source)',
+            'reason_for_visit': 'Main Reason for Visit',
+            'chief_complaint': 'Main Reason for Visit',
+            'symptom_description': 'Detailed Symptoms Description',
+            'symptoms_description': 'Detailed Symptoms Description',
+            'symptoms': 'Detailed Symptoms Description',
+            'symptom_duration': 'How long have you had these symptoms?',
+            'symptoms_duration': 'How long have you had these symptoms?',
+            'symptom_severity': 'Symptom Severity',
+            'has_fever': 'Do you currently have a fever?',
+            'fever': 'Do you currently have a fever?',
+            'tried_treatment': 'Have you tried any treatment for these symptoms?',
+            'treatment_tried': 'Prior Treatment Details',
+            'treatment_tried_details': 'Prior Treatment Details',
+            'treatment_details': 'Prior Treatment Details',
+            'red_flags': 'Trouble breathing, chest pain, or confusion (Red Flags)',
+
+            // Condition: Asthma
+            'asthma_rescue_use': 'Asthma - Rescue inhaler frequency',
+            'asthma_night': 'Asthma - Nighttime waking symptoms?',
+            'asthma_night_waking': 'Asthma - Nighttime waking symptoms?',
+            'asthma_er_visit': 'Asthma - ER / Hospital visits in past year?',
+            'asthma_wheeze': 'Asthma - Current wheezing or shortness of breath?',
+
+            // Condition: UTI
+            'uti_burning': 'UTI - Burning or pain when urinating?',
+            'uti_burning_pain': 'UTI - Burning or pain when urinating?',
+            'uti_frequency': 'UTI - Frequent or urgent urination?',
+            'uti_blood': 'UTI - Blood in urine?',
+            'uti_flank_pain': 'UTI - Flank or lower back pain?',
+            'uti_history': 'UTI - Prior history of UTI?',
+            'uti_previous': 'UTI - Prior history of UTI?',
+            'uti_discharge': 'UTI - Vaginal discharge or irritation?',
+
+            // Condition: Allergy
+            'allergy_main_symptom': 'Allergy - Main Symptoms',
+            'allergy_symptoms': 'Allergy - Main Symptoms',
+            'allergy_triggers': 'Allergy - Known Triggers',
+            'allergy_anaphylaxis': 'Allergy - Severe reaction (anaphylaxis) history?',
+            'allergy_epipen': 'Allergy - Carries epinephrine auto-injector (EpiPen)?',
+
+            // Condition: Refill
+            'refill_med_name': 'Prescription Refill - Medication Requested',
+            'refill_medication': 'Prescription Refill - Medication Requested',
+            'refill_med_dose': 'Prescription Refill - Dose & Frequency',
+            'refill_doctor': 'Prescribing Doctor',
+            'refill_last_date': 'Prescription Refill - Date of Last Refill',
+
+            // Condition: Birth Control
+            'bc_current_method': 'Current Birth Control Method',
+            'bc_lmp': 'First Day of Last Menstrual Period',
+            'bc_smoker_35': 'Do you smoke and are you over 35?',
+            'bc_clot_history': 'History of blood clots, stroke, or migraines with aura?',
+
+            // Condition: COVID-19
+            'covid19': 'Tested positive or diagnosed with COVID-19?',
+            'suspected_covid': 'Suspected COVID-19 Symptoms?',
+            'covid_contact': 'Close contact with a confirmed COVID-19 case?',
+            'covid_test_result': 'Recent COVID-19 Test Result',
+            'covid_taste_smell': 'Loss of taste or smell?',
+            'covid_vaccinated': 'COVID-19 vaccination or booster in past year?',
+
+            // Condition: Rash
+            'rash_location': 'Rash - Location on body',
+            'rash_itchy': 'Rash - Is it itchy?',
+            'rash_new_exposure': 'Rash - New exposure to soap, medicine, plant, or food?',
+            'rash_spreading': 'Rash - Spreading quickly or blistering?',
+
+            // Medical History: Chronic Conditions
+            'hx_hypertension': 'High Blood Pressure (Hypertension)',
+            'hypertension': 'High Blood Pressure (Hypertension)',
+            'hx_diabetes': 'Diabetes',
+            'diabetes': 'Diabetes',
+            'hx_heart': 'Heart Disease',
+            'heart_disease': 'Heart Disease',
+            'hx_asthma': 'Asthma or Lung Disease',
+            'hx_lung': 'Asthma or Lung Disease',
+            'lung_disease': 'Asthma or Lung Disease',
+            'hx_kidney_liver': 'Kidney or Liver Disease',
+            'kidney_liver': 'Kidney or Liver Disease',
+            'hx_cancer_immune': 'Cancer or Immune System Disorder',
+            'cancer_immune': 'Cancer or Immune System Disorder',
+            'surgeries': 'Other Medical Conditions / Surgeries',
+            'hx_other': 'Other Medical Conditions / Surgeries',
+            'other_conditions': 'Other Medical Conditions / Surgeries',
+
+            // Medications & Drug Allergies
+            'current_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'takes_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'taking_medications': 'Currently taking any medications, vitamins, or supplements?',
+            'medication_list': 'Medications List & Dosages',
+            'medications_list': 'Medications List & Dosages',
+            'medications': 'Medications List & Dosages',
+            'known_drug_allergies': 'Known Drug Allergies?',
+            'has_drug_allergy': 'Known Drug Allergies?',
+            'drug_allergies': 'Known Drug Allergies?',
+            'drug_allergies_list': 'Drug Allergies List & Reactions',
+            'drug_allergy_list': 'Drug Allergies List & Reactions',
+
+            // Social & Pharmacy
+            'tobacco_use': 'Tobacco / Vaping Use',
+            'alcohol_use': 'Alcohol Use',
+            'pharmacy_name': 'Preferred Pharmacy Name',
+            'pharmacy_location': 'Preferred Pharmacy Location (City / ZIP Code)',
+
+            // Consent & Signature
+            'consent_all': 'Consent & Acknowledgements',
+            'consent': 'Consent & Acknowledgements',
+            'e_signature': 'Full Legal Name (E-Signature)',
+            'signature': 'Full Legal Name (E-Signature)',
+            'full_legal_name': 'Full Legal Name (E-Signature)',
+            'signature_date': 'Date of Signature'
+        };
+
+        // Keys to ignore completely (technical tokens, system metadata, HTML)
         var skipKeys = [
-            'user_id', 'submission_id', 'submissionId', 'form_id', 'workflowId',
-            'raw_data', 'viewSubmissionLink', 'downloadPdfLink', 'View Submission Link',
-            'Download PDF Link', 'Submission Id', 'Form Id', 'consent_all', 'token', 'action'
+            'user_id', 'patient_id', 'submission_id', 'submissionId', 'Submission Id',
+            'form_id', 'Form Id', 'workflowId', 'raw_data', 'viewSubmissionLink',
+            'downloadPdfLink', 'View Submission Link', 'Download PDF Link',
+            'token', 'action', 'nonce', '_wpnonce', 'status', 'id'
         ];
 
+        function normalizeKey(str) {
+            return String(str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        function addQA(title, answer) {
+            if (answer === undefined || answer === null) return;
+            var aStr = String(answer).trim();
+            if (aStr === '' || aStr === '—') return;
+            
+            var normTitle = normalizeKey(title);
+            if (!normTitle || seenTitles[normTitle]) return;
+            seenTitles[normTitle] = true;
+
+            qaList.push({
+                question: title,
+                answer: aStr
+            });
+        }
+
+        // 1. Patient Demographics & Profile
+        if (raw.first_name) {
+            addQA('First Name', raw.first_name);
+        }
+        if (raw.last_name) {
+            addQA('Last Name', raw.last_name);
+        }
+        var fullNameVal = q.full_name || raw.full_name || raw.name;
+        if (fullNameVal && fullNameVal !== raw.first_name) {
+            addQA('Full Legal Name', fullNameVal);
+        }
+        addQA('Date of Birth', q.dob || raw.date_of_birth || raw.dob || raw['Date of Birth']);
+        addQA('Sex Assigned at Birth', q.gender || raw['Sex Assigned at Birth (Labels)'] || raw['Sex Assigned at Birth'] || raw.gender || raw.sex || raw.sex_at_birth);
+        addQA('Email Address', q.email || raw.email || raw.email_address || raw['Email Address']);
+        addQA('Mobile Phone Number', q.phone || raw.phone_number || raw.phone || raw['Mobile Phone Number']);
+        addQA('State of Residence', raw.state_of_residence || raw.state || raw['State of Residence']);
+        addQA('Preferred Language', q.preferred_language || raw.preferred_language || raw.language || raw['Preferred Language']);
+        addQA('Primary Reason for Visit', raw.primary_problem || raw['Primary Reason for Visit']);
+        addQA('Tested positive or diagnosed with COVID-19?', raw.covid19 || raw['Tested positive or diagnosed with COVID-19? (Labels)']);
+        addQA('Suspected COVID-19 Symptoms?', raw.suspected_covid || raw['Suspected COVID-19 Symptoms? (Labels)']);
+
+        // 2. Visit Details & Symptoms
+        addQA('Selected Service / Condition', q.selected_service || raw['Selected Service / Condition (Labels)'] || raw['Selected Service / Condition'] || raw.selected_service);
+        addQA('Preferred Consultation Type', q.consultation_type || raw['Preferred Consultation Type (Labels)'] || raw['Preferred Consultation Type'] || raw.consultation_type);
+        addQA('How did you hear about us? (Referral Source)', q.referral_source || raw['How did you hear about us? (Labels)'] || raw['How did you hear about us?'] || raw.referral_source);
+        addQA('Main Reason for Visit', q.reason_for_visit || raw['Main Reason for Visit'] || raw.reason_for_visit || raw.chief_complaint);
+        addQA('Detailed Symptoms Description', q.symptom_description || raw['Describe Your Symptoms'] || raw.symptom_description || raw.symptoms);
+        addQA('How long have you had these symptoms?', q.symptom_duration || raw['How long have you had these symptoms? (Labels)'] || raw['How long have you had these symptoms?'] || raw.symptoms_duration || raw.symptom_duration);
+        addQA('Symptom Severity', q.symptom_severity || raw['Symptom Severity (Labels)'] || raw['Symptom Severity'] || raw.symptom_severity);
+        addQA('Do you currently have a fever?', q.has_fever || raw['Do you currently have a fever? (Labels)'] || raw['Do you currently have a fever?'] || raw.has_fever || raw.fever);
+        addQA('Have you tried any treatment for these symptoms?', q.tried_treatment || raw['Have you tried any treatment for these symptoms? (Labels)'] || raw['Have you tried any treatment for these symptoms?'] || raw.tried_treatment);
+        addQA('Prior Treatment Details', q.treatment_tried_details || raw['Treatment Tried'] || raw.treatment_tried || raw.treatment_tried_details || raw.treatment_details);
+        addQA('Trouble breathing, chest pain, or confusion (Red Flags)', q.red_flags || raw['Do you have trouble breathing, chest pain, or confusion? (Labels)'] || raw['Do you have trouble breathing, chest pain, or confusion?'] || raw.red_flags);
+
+        // 3. Condition-Specific Assessments (only added if answer was provided)
+        // Asthma
+        addQA('Asthma - Rescue inhaler frequency', (q.asthma || {}).rescue_use || raw['How often do you use a rescue inhaler? (Labels)'] || raw['How often do you use a rescue inhaler?'] || raw.asthma_rescue_use);
+        addQA('Asthma - Nighttime waking symptoms?', (q.asthma || {}).night_symptoms || raw['Do symptoms wake you at night? (Labels)'] || raw['Do symptoms wake you at night?'] || raw.asthma_night_waking || raw.asthma_night);
+        addQA('Asthma - ER / Hospital visits in past year?', (q.asthma || {}).er_visit || raw['ER or hospital visit for asthma in the past year? (Labels)'] || raw['ER or hospital visit for asthma in the past year?'] || raw.asthma_er_visit);
+        addQA('Asthma - Current wheezing or shortness of breath?', (q.asthma || {}).wheeze || raw['Do you currently have a wheeze or shortness of breath? (Labels)'] || raw.asthma_wheeze);
+
+        // UTI
+        addQA('UTI - Burning or pain when urinating?', (q.uti || {}).burning || raw['Burning or pain when urinating? (Labels)'] || raw['Burning or pain when urinating?'] || raw.uti_burning);
+        addQA('UTI - Frequent or urgent urination?', (q.uti || {}).frequency || raw['Frequent or urgent need to urinate? (Labels)'] || raw['Frequent or urgent need to urinate?'] || raw.uti_frequency);
+        addQA('UTI - Blood in urine?', (q.uti || {}).blood || raw['Blood in your urine? (Labels)'] || raw['Blood in your urine?'] || raw.uti_blood);
+        addQA('UTI - Flank or lower back pain?', (q.uti || {}).flank_pain || raw['Pain in your side or lower back? (Labels)'] || raw['Pain in your side or lower back?'] || raw.uti_flank_pain);
+        addQA('UTI - Prior history of UTI?', (q.uti || {}).history || raw['Have you had a UTI before? (Labels)'] || raw['Have you had a UTI before?'] || raw.uti_history);
+        addQA('UTI - Vaginal discharge or irritation?', (q.uti || {}).discharge || raw['Any vaginal discharge or irritation? (Labels)'] || raw.uti_discharge);
+
+        // Allergy
+        addQA('Allergy - Main Symptoms', (q.allergy || {}).main_symptom || raw['Main Symptom (Labels)'] || raw['Main Symptom'] || raw.allergy_main_symptom || raw.allergy_symptoms);
+        addQA('Allergy - Known Triggers', (q.allergy || {}).triggers || raw['Known Triggers'] || raw.allergy_triggers);
+        addQA('Allergy - Severe reaction (anaphylaxis) history?', (q.allergy || {}).anaphylaxis || raw['Have you ever had a severe allergic reaction (anaphylaxis)? (Labels)'] || raw['Have you ever had a severe allergic reaction (anaphylaxis)?'] || raw.allergy_anaphylaxis);
+        addQA('Allergy - Carries epinephrine auto-injector (EpiPen)?', (q.allergy || {}).epipen || raw['Do you carry an epinephrine auto-injector? (Labels)'] || raw['Do you carry an epinephrine auto-injector?'] || raw.allergy_epipen);
+
+        // Refill
+        addQA('Prescription Refill - Medication Requested', (q.refill || {}).med_name || raw['Medication Name'] || raw.refill_medication || raw.refill_med_name);
+        addQA('Prescription Refill - Dose & Frequency', (q.refill || {}).med_dose || raw['Dose and How Often'] || raw.refill_med_dose);
+        addQA('Prescribing Doctor', (q.refill || {}).doctor || raw['Prescribing Doctor'] || raw.refill_doctor);
+        addQA('Prescription Refill - Date of Last Refill', (q.refill || {}).last_date || raw['Approximate Date of Last Refill'] || raw.refill_last_date);
+
+        // Birth Control
+        addQA('Current Birth Control Method', (q.birth_control || {}).method || raw['Current Birth Control Method (Labels)'] || raw['Current Birth Control Method'] || raw.bc_current_method);
+        addQA('First Day of Last Menstrual Period', (q.birth_control || {}).lmp || raw['First Day of Last Menstrual Period'] || raw.bc_lmp);
+        addQA('Do you smoke and are you over 35?', (q.birth_control || {}).smoker_35 || raw['Do you smoke and are you over 35? (Labels)'] || raw.bc_smoker_35);
+        addQA('History of blood clots, stroke, or migraine with aura?', (q.birth_control || {}).clot_history || raw['History of blood clots, stroke or migraines with aura? (Labels)'] || raw.bc_clot_history);
+
+        // COVID Details
+        addQA('Close contact with a confirmed COVID-19 case?', (q.covid || {}).contact || raw['Close contact with a confirmed case in the past 10 days? (Labels)'] || raw.covid_contact);
+        addQA('Recent COVID-19 Test Result', (q.covid || {}).test_result || raw['Recent Test Result (Labels)'] || raw.covid_test_result);
+        addQA('Loss of taste or smell?', (q.covid || {}).taste_smell || raw['Loss of taste or smell? (Labels)'] || raw.covid_taste_smell);
+        addQA('COVID-19 vaccination or booster in past year?', (q.covid || {}).vaccinated || raw['Vaccinated or boosted in the past year? (Labels)'] || raw.covid_vaccinated);
+
+        // Rash
+        addQA('Rash - Location on body', (q.rash || {}).location || raw['Where on your body is the rash?'] || raw.rash_location);
+        addQA('Rash - Is it itchy?', (q.rash || {}).itchy || raw['Is it itchy? (Labels)'] || raw.rash_itchy);
+        addQA('Rash - New exposure to soap, medicine, plant, or food?', (q.rash || {}).new_exposure || raw['Any new soap, medicine, plant or food exposure? (Labels)'] || raw.rash_new_exposure);
+        addQA('Rash - Spreading quickly or blistering?', (q.rash || {}).spreading || raw['Is the rash spreading quickly or blistering? (Labels)'] || raw.rash_spreading);
+
+        // 4. Past Medical History & Chronic Conditions
+        addQA('High Blood Pressure (Hypertension)', (q.medical_history || {}).hypertension || raw['High blood pressure? (Labels)'] || raw['High blood pressure?'] || raw.hx_hypertension || raw.hypertension);
+        addQA('Diabetes', (q.medical_history || {}).diabetes || raw['Diabetes? (Labels)'] || raw['Diabetes?'] || raw.hx_diabetes || raw.diabetes);
+        addQA('Heart Disease', (q.medical_history || {}).heart_disease || raw['Heart disease? (Labels)'] || raw['Heart disease?'] || raw.hx_heart || raw.heart_disease);
+        addQA('Asthma or Lung Disease', (q.medical_history || {}).lung_disease || raw['Asthma or lung disease? (Labels)'] || raw['Asthma or lung disease?'] || raw.hx_asthma || raw.hx_lung || raw.lung_disease);
+        addQA('Kidney or Liver Disease', (q.medical_history || {}).kidney_liver || raw['Kidney or liver disease? (Labels)'] || raw['Kidney or liver disease?'] || raw.hx_kidney_liver || raw.kidney_liver);
+        addQA('Cancer or Immune System Disorder', (q.medical_history || {}).cancer_immune || raw['Cancer or immune system disorder? (Labels)'] || raw['Cancer or immune system disorder?'] || raw.hx_cancer_immune || raw.cancer_immune);
+        addQA('Other Medical Conditions / Surgeries', (q.medical_history || {}).other || raw['Other Medical Conditions or Past Surgeries'] || raw.surgeries || raw.hx_other || raw.other_conditions);
+
+        // 5. Patient-Reported Medications & Drug Allergies
+        addQA('Currently taking any medications, vitamins, or supplements?', (q.medications || {}).takes_medications || raw['Are you currently taking any medications, vitamins or supplements? (Labels)'] || raw['Are you currently taking any medications, vitamins or supplements?'] || raw.current_medications || raw.takes_medications);
+        addQA('Medications List & Dosages', (q.medications || {}).list || raw['Please List Your Medications'] || raw.medication_list || raw.medications_list);
+        addQA('Known Drug Allergies?', (q.allergies || {}).has_drug_allergy || raw['Do you have any known drug allergies? (Labels)'] || raw['Do you have any known drug allergies?'] || raw.known_drug_allergies || raw.has_drug_allergy);
+        addQA('Drug Allergies List & Reactions', (q.allergies || {}).list || raw['Please List Allergies and Reactions'] || raw.drug_allergies_list || raw.drug_allergy_list);
+
+        // 6. Social History & Preferred Pharmacy
+        addQA('Tobacco / Vaping Use', (q.social_history || {}).tobacco || raw['Tobacco / Vaping Use (Labels)'] || raw['Tobacco / Vaping Use'] || raw.tobacco_use);
+        addQA('Alcohol Use', (q.social_history || {}).alcohol || raw['Alcohol Use (Labels)'] || raw['Alcohol Use'] || raw.alcohol_use);
+        addQA('Preferred Pharmacy Name', (q.pharmacy || {}).name || raw['Pharmacy Name'] || raw.pharmacy_name);
+        addQA('Preferred Pharmacy Location (City / ZIP Code)', (q.pharmacy || {}).location || raw['Pharmacy City / ZIP Code'] || raw.pharmacy_location);
+
+        // 7. Electronic Consent & Signature
+        addQA('Consent & Acknowledgements', q.consent || raw['Consent & Acknowledgements (Labels)'] || raw['Consent & Acknowledgements'] || raw.consent_all);
+        addQA('Full Legal Name (E-Signature)', q.signature || raw['Type Your Full Legal Name'] || raw.e_signature || raw.signature);
+        addQA('Date of Signature', q.signature_date || raw['Date'] || raw.signature_date);
+
+        // 8. Dynamic Fallback: Process any remaining raw fields not captured in the canonical sequence
         Object.keys(raw).forEach(function(key) {
             if (skipKeys.indexOf(key) !== -1) return;
             if (key.indexOf('(Values)') !== -1) return;
+            // Ignore any HTML tag or disclaimer notice keys
+            if (key.indexOf('<') !== -1 || /^<[a-z!]/i.test(key) || /before completing|disclaimer|notice|agreement/i.test(key)) return;
+
             var cleanKey = key.replace(/\s*\(Labels\)\s*$/, '').trim();
-            if (seenQuestions[cleanKey]) return;
+            var mappedTitle = QUESTION_LABELS[cleanKey];
 
-            var val = raw[key];
-            if (raw[cleanKey + ' (Labels)']) {
-                val = raw[cleanKey + ' (Labels)'];
+            // If mapped title was already rendered in canonical sequence, skip!
+            if (mappedTitle && seenTitles[normalizeKey(mappedTitle)]) return;
+            if (seenTitles[normalizeKey(cleanKey)]) return;
+
+            // Determine prompt label
+            var finalTitle = mappedTitle;
+            if (!finalTitle) {
+                // If it looks like a variable with underscores, convert to Title Case words
+                if (cleanKey.indexOf('_') !== -1) {
+                    finalTitle = cleanKey.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+                } else {
+                    finalTitle = cleanKey;
+                }
             }
 
-            if (val !== undefined && val !== null && String(val).trim() !== '') {
-                seenQuestions[cleanKey] = true;
-                qaList.push({
-                    question: cleanKey,
-                    answer: val
-                });
-            }
-        });
+            if (seenTitles[normalizeKey(finalTitle)]) return;
 
-        // 2. Structured questionnaire fields mapping (ensures every known clinical intake question is listed)
-        var structuredMap = [
-            { q: 'Selected Service / Condition', a: q.selected_service },
-            { q: 'Preferred Consultation Type', a: q.consultation_type },
-            { q: 'How did you hear about us?', a: q.referral_source },
-            { q: 'Main Reason for Visit', a: q.reason_for_visit },
-            { q: 'Detailed Symptoms Description', a: q.symptom_description },
-            { q: 'How long have you had these symptoms?', a: q.symptom_duration },
-            { q: 'Symptom Severity', a: q.symptom_severity },
-            { q: 'Do you currently have a fever?', a: q.has_fever },
-            { q: 'Have you tried any treatment for these symptoms?', a: q.tried_treatment },
-            { q: 'Prior Treatment Details', a: q.treatment_tried_details },
-            { q: 'Trouble breathing, chest pain, or confusion (Red Flags)', a: q.red_flags },
-            // Condition Modules
-            { q: 'UTI - Burning or pain when urinating', a: (q.uti || {}).burning },
-            { q: 'UTI - Frequent or urgent urination', a: (q.uti || {}).frequency },
-            { q: 'UTI - Blood in urine', a: (q.uti || {}).blood },
-            { q: 'UTI - Flank or lower back pain', a: (q.uti || {}).flank_pain },
-            { q: 'UTI - Prior UTI history', a: (q.uti || {}).history },
-            { q: 'Allergy - Main Symptoms', a: (q.allergy || {}).main_symptom },
-            { q: 'Allergy - Known Triggers', a: (q.allergy || {}).triggers },
-            { q: 'Allergy - Severe reaction (anaphylaxis) history', a: (q.allergy || {}).anaphylaxis },
-            { q: 'Allergy - Carries epinephrine auto-injector (EpiPen)', a: (q.allergy || {}).epipen },
-            { q: 'Asthma - Rescue inhaler frequency', a: (q.asthma || {}).rescue_use },
-            { q: 'Asthma - Nighttime waking symptoms', a: (q.asthma || {}).night_symptoms },
-            { q: 'Asthma - ER / Hospital visits in past year', a: (q.asthma || {}).er_visit },
-            { q: 'Refill - Medication Name Requested', a: (q.refill || {}).med_name },
-            { q: 'Refill - Dose & Frequency', a: (q.refill || {}).med_dose },
-            { q: 'Refill - Approximate Date of Last Refill', a: (q.refill || {}).last_date },
-            // Medical History
-            { q: 'High Blood Pressure (Hypertension)', a: (q.medical_history || {}).hypertension },
-            { q: 'Diabetes', a: (q.medical_history || {}).diabetes },
-            { q: 'Heart Disease', a: (q.medical_history || {}).heart_disease },
-            { q: 'Asthma or Lung Disease', a: (q.medical_history || {}).lung_disease },
-            { q: 'Kidney or Liver Disease', a: (q.medical_history || {}).kidney_liver },
-            { q: 'Cancer or Immune System Disorder', a: (q.medical_history || {}).cancer_immune },
-            { q: 'Other Medical Conditions / Surgeries', a: (q.medical_history || {}).other },
-            // Meds & Allergies
-            { q: 'Currently taking any medications, vitamins, supplements', a: (q.medications || {}).takes_medications },
-            { q: 'Medications List & Dosages', a: (q.medications || {}).list },
-            { q: 'Known Drug Allergies', a: (q.allergies || {}).has_drug_allergy },
-            { q: 'Drug Allergies List & Reactions', a: (q.allergies || {}).list },
-            // Social & Pharmacy
-            { q: 'Tobacco / Vaping Use', a: (q.social_history || {}).tobacco },
-            { q: 'Alcohol Use', a: (q.social_history || {}).alcohol },
-            { q: 'Preferred Pharmacy Name', a: (q.pharmacy || {}).name },
-            { q: 'Preferred Pharmacy Location', a: (q.pharmacy || {}).location },
-            // Consent & Signature
-            { q: 'Consent & Acknowledgements', a: q.consent },
-            { q: 'Full Legal Name (E-Signature)', a: q.signature },
-            { q: 'Date of Signature', a: q.signature_date }
-        ];
-
-        structuredMap.forEach(function(item) {
-            var cleanQ = item.q.trim();
-            if (seenQuestions[cleanQ]) return;
-            var a = item.a;
-            if (a !== undefined && a !== null && String(a).trim() !== '' && String(a).trim() !== '—') {
-                seenQuestions[cleanQ] = true;
-                qaList.push({
-                    question: cleanQ,
-                    answer: a
-                });
-            }
+            var val = raw[cleanKey + ' (Labels)'] !== undefined ? raw[cleanKey + ' (Labels)'] : raw[key];
+            addQA(finalTitle, val);
         });
 
         if (countBadge) {
