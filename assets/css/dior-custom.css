@@ -73754,3 +73754,304 @@ body:has(.dior-doctor-wrap),
 #diorDoctorLetterModal .modal-title i {
     color: #1A528E !important;
 }
+
+/* ==========================================================================
+   DOCTOR — PATIENT PROFILE & CLINICAL CHART (theme lock)
+
+   This screen was the only doctor tab with no theme layer: it rendered on raw
+   Bootstrap while every other tab had been pinned to the portal palette.
+
+   What that looked like:
+     • the 5 top pills (All Patients / Add Patient / ...) were ALL solid navy,
+       because the shared .dior-subtab-pill paints every pill primary — the
+       active tab was indistinguishable from the other four
+     • .btn-outline-secondary is Bootstrap's raw grey and the parent theme
+       repaints its hover with magenta (#CC3366), so the refresh button read as
+       a stray pink control
+     • cards, headers, stat ribbon and the inner pills carried no portal
+       treatment at all
+
+   Everything below is scoped to #tab-doc-patients-profile, follows the same
+   treatment as #tab-doc-settings / #tab-doc-documents-upload, and uses the
+   tokens declared on #dior-doctor-app. No markup or layout is changed.
+   ========================================================================== */
+
+/* ---------- 1. Subtab pills: outline vs filled, so the current page reads -- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    background-image: none !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    box-shadow: none !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill:hover {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary-hover, #00346C) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill:focus-visible {
+    outline: none !important;
+    box-shadow: var(--dior-focus-ring, 0 0 0 3px rgba(0, 52, 108, 0.14)) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill.active,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill.active:hover {
+    background: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    box-shadow: 0 2px 8px rgba(26, 82, 142, 0.24) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .dior-subtab-nav-bar .dior-subtab-pill.active i {
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* ---------- 2. Page title and breadcrumb --------------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-page-title,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-page-title i {
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-page-title i {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .breadcrumb .breadcrumb-item {
+    color: var(--dior-color-text-muted, #64748B) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .breadcrumb .breadcrumb-item.active {
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+/* ---------- 3. Patient picker input group -------------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .input-group {
+    flex-wrap: nowrap !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .input-group > .form-select {
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0 !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .input-group-text {
+    background-color: var(--dior-color-surface-muted, #F8FAFC) !important;
+    border-color: var(--dior-color-border, #E2E8F0) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .input-group-text i {
+    color: var(--dior-color-primary, #1A528E) !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .input-group:focus-within .input-group-text {
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .form-select,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .form-control {
+    border-color: var(--dior-color-border, #E2E8F0) !important;
+    box-shadow: none !important;
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .form-select:focus,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .form-control:focus {
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    box-shadow: 0 0 0 3px rgba(26, 82, 142, 0.14) !important;
+}
+
+/* ---------- 4. Refresh button: kill the parent theme's magenta hover ----- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn:focus,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn:focus-visible {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    background-color: var(--dior-color-surface, #FFFFFF) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn:active {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    background-image: none !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary-hover, #00346C) !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-refresh-btn i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+/* ---------- 5. Cards, headers and the stat ribbon ------------------------ */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .card {
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-card, 12px) !important;
+    box-shadow: var(--dior-shadow-card, 0 1px 3px rgba(15, 23, 42, 0.06)) !important;
+    background: var(--dior-color-surface, #FFFFFF) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .card-header {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    border-bottom: 1px solid var(--dior-color-border, #E2E8F0) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .border,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .border-top,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .border-bottom,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .border-end {
+    border-color: var(--dior-color-border, #E2E8F0) !important;
+}
+
+/* Stat ribbon labels read as quiet small caps, values keep their accent. */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .text-uppercase {
+    color: var(--dior-color-text-muted, #64748B) !important;
+    font-size: 11px !important;
+    letter-spacing: 0.06em !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- 6. Inner tabs (Personal Information / Prescriptions / ...) --- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link {
+    background-color: var(--dior-color-surface-muted, #F8FAFC) !important;
+    background-image: none !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    border: 1px solid var(--dior-color-border, #E2E8F0) !important;
+    border-radius: var(--dior-radius-control, 8px) !important;
+    box-shadow: none !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link:hover {
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border-color: var(--dior-color-border-strong, #CBD5E1) !important;
+    color: var(--dior-color-text, #0F172A) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link.active,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link.active:hover {
+    background-color: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    box-shadow: 0 4px 12px rgba(26, 82, 142, 0.25) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-nav-tabs .nav-link.active i {
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* ---------- 7. Buttons: pin every variant to the palette ---------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-primary {
+    background-color: var(--dior-color-primary, #1A528E) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-primary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-primary:active,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-primary:focus {
+    background-color: var(--dior-color-primary-hover, #00346C) !important;
+    border-color: var(--dior-color-primary-hover, #00346C) !important;
+    color: var(--dior-color-text-inverse, #FFFFFF) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-primary i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-primary {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    background-color: var(--dior-color-surface, #FFFFFF) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-primary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-primary:active {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary-hover, #00346C) !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-primary i,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+/* Outline-secondary is the variant the parent theme turns magenta on hover. */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary:focus,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary:focus-visible {
+    background: var(--dior-color-surface, #FFFFFF) !important;
+    background-color: var(--dior-color-surface, #FFFFFF) !important;
+    background-image: none !important;
+    border: 1px solid var(--dior-color-border-strong, #CBD5E1) !important;
+    color: var(--dior-color-text-secondary, #334155) !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary:hover,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary:active,
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary.active {
+    background: var(--dior-color-primary-soft, #F0F6FC) !important;
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    background-image: none !important;
+    border-color: var(--dior-color-primary, #1A528E) !important;
+    color: var(--dior-color-primary-hover, #00346C) !important;
+    box-shadow: none !important;
+}
+
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .btn-outline-secondary:hover i {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+/* ---------- 8. Badges and inline accents -------------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile .badge.bg-primary-subtle {
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+    border-color: var(--dior-color-border, #E2E8F0) !important;
+}
+
+/* ---------- 9. Empty state ---------------------------------------------- */
+#dior-doctor-app #dior-doc-content #tab-doc-patients-profile #pp-empty-state .bg-primary-subtle {
+    background-color: var(--dior-color-primary-soft, #F0F6FC) !important;
+    color: var(--dior-color-primary, #1A528E) !important;
+}
